@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="headers">
+      <UniqueIdentifier>{ea74ad2d-c5d0-402a-a5b0-53cefd7ca9cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source">
+      <UniqueIdentifier>{10305b44-b9fb-41ff-a83e-8726bfefadf9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\m_controller.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mesh.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DisplayHandler.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameManager.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameState.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AssetManager.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture2D.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameObject.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Kinematic.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Mesh.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\m_controller.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameState.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\GameManager.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DisplayHandler.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AssetManager.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Texture2D.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Kinematic.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
