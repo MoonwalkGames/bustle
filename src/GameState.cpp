@@ -80,8 +80,13 @@ void TestState::update()
 	//Moves the gameobjects using the controllers
 	for (int i = 0; i < 4; i++)
 	{
+		//Check sticks
 		controllers[i].getInputs(); //Internally updates the inputs (ie: basically like calling update on the controller)
 		playerObjects[i].setPosition(glm::vec3(controllers[i].lX + offsets[i].x, controllers[i].lY + offsets[i].y, offsets[i].z)); //Allows the controllers to move the objects
+
+		//Check buttons
+		if (controllers[i].checkButton(BUTTON_A))
+			cout << "[A] PRESSED BY CONTROLLER # " << i << endl;
 	}
 
 	//Updates and draws the gameobjects

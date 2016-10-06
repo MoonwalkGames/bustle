@@ -31,7 +31,7 @@ public:
 	int		index;
 	XINPUT_STATE state;
 	void	getInputs();
-	bool	checkInputs(DWORD button);
+	bool	checkButton(DWORD button);
 	bool	isConnected();
 	std::vector<DWORD> inputs;
 	float	getLeftStickAngle();

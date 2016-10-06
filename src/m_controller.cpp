@@ -85,7 +85,7 @@ void MController::getInputs()
 /*
 *Indexes through the vector of inputs, if the given button is being pressed return true, else return false
 */
-bool MController::checkInputs(DWORD button)
+bool MController::checkButton(DWORD button)
 {
 	if(std::find(this->inputs.begin(), this->inputs.end(), button)!= this->inputs.end())
 		return true;
