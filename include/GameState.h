@@ -57,8 +57,8 @@ public:
 	virtual void update();
 
 private:
-	GameObject monkey;
 	bool isVisible;
+	GameObject monkeyObj;
 };
 
 #endif

@@ -1,5 +1,5 @@
 #include "GameObject.h"
-
+#include "glm\gtx\string_cast.hpp"
 /*
 	Constructors and destructor
 */
@@ -7,9 +7,11 @@ GameObject::GameObject()
 {
 	position = glm::vec3(0.0f);
 	rotation = glm::vec3(0.0f);
-	scale = glm::vec3(0.0f);
+	scale = glm::vec3(1.0f);
 	mesh = 0;
 	texture = 0;
+	localToWorld = glm::mat4(0.0f);
+	colour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 GameObject::GameObject(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl)
@@ -19,15 +21,19 @@ GameObject::GameObject(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl)
 	scale = scl;
 	mesh = 0;
 	texture = 0;
+	localToWorld = glm::mat4(0.0f);
+	colour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 GameObject::GameObject(MESH_NAME meshName, TEXTURE_NAME texName)
 {
 	position = glm::vec3(0.0f);
 	rotation = glm::vec3(0.0f);
-	scale = glm::vec3(0.0f);
+	scale = glm::vec3(1.0f);
 	mesh = &AM::assets()->getMesh(meshName);
 	texture = &AM::assets()->getTexture2D(texName);
+	localToWorld = glm::mat4(0.0f);
+	colour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 GameObject::GameObject(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, MESH_NAME meshName, TEXTURE_NAME texName)
@@ -37,6 +43,8 @@ GameObject::GameObject(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, MESH_NAME me
 	scale = scl;
 	mesh = &AM::assets()->getMesh(meshName);
 	texture = &AM::assets()->getTexture2D(texName);
+	localToWorld = glm::mat4(0.0f);
+	colour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 GameObject::~GameObject()
@@ -128,6 +136,10 @@ void GameObject::setTexture(TEXTURE_NAME newTexture) {
 	texture = &AM::assets()->getTexture2D(newTexture);
 }
 
+void GameObject::setColour(glm::vec4 newColourRGBA) {
+	colour = newColourRGBA;
+}
+
 /*
 	Getters
 */
@@ -141,6 +153,10 @@ glm::vec3 GameObject::getRotation() const {
 
 glm::vec3 GameObject::getScale() const {
 	return scale;
+}
+
+glm::mat4 GameObject::getLocalToWorldMatrix() const {
+	return localToWorld;
 }
 
 void GameObject::addToPosition(glm::vec3 addition) {
@@ -158,9 +174,6 @@ void GameObject::addToScale(glm::vec3 addition) {
 //Update function that properly handles positioning the game object and also drawing the model
 void GameObject::update(float dt)
 {
-	/* Properly transforms the object */
-	//=================================//
-
 	//Create the scaling matrix
 	glm::mat4 scaleMatrix = glm::scale(scale);
 
@@ -176,22 +189,29 @@ void GameObject::update(float dt)
 	//Compiles the transformation together in the correct order: Scale -> Rotate -> Translate (Note the right to left notation)
 	localToWorld = translationMatrix * fullRotationMatrix * scaleMatrix;
 
-	/* Properly draws the object */
-	//=================================//
+	//Passes the matrix to OpenGL which automatically applies the transformations
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(glm::value_ptr(localToWorld));
 
-	//Checks if there is a texture assigned before trying to bind it
+	//Checks if there is a texture assigned before trying to bind it, otherwise temporarily disables textures so it renders with colours
 	if (texture != 0)
 		texture->bind();
-
+	else
+	{
+		glDisable(GL_TEXTURE_2D);
+		glColor4f(colour.x, colour.y, colour.z, colour.w);
+	}
+		
 	//Checks if there is a mesh assigned before tyring to draw it
 	if (mesh != 0)
 		mesh->draw();
 		
-	//Checks if there is a texture assigned before trying to unbind it
+	//Checks if there is a texture assigned before trying to unbind it, otherwise re-enables textures
 	if (texture != 0)
 		texture->unbind();
+	else
+		glEnable(GL_TEXTURE_2D);
 
+	//Loads identity for cleanliness
 	glLoadIdentity();
 }

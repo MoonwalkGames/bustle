@@ -14,9 +14,13 @@ Mesh::Mesh(const string& fileName)
 
 void Mesh::draw() const
 {
-	/* Passes OpenGL each of the vertices for the mesh every frame */
-	for (int i = 0; i < numFaces; i++)
-		faces[i].draw();
+	glBegin(GL_TRIANGLES);
+	{
+		/* Passes OpenGL each of the vertices for the mesh every frame */
+		for (int i = 0; i < numFaces; i++)
+			faces[i].draw();
+	}
+	glEnd();
 }
 
 void Mesh::loadOBJ(const string& fileName)

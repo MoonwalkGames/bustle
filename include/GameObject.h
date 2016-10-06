@@ -44,10 +44,12 @@ public:
 
 	void setMesh(MESH_NAME newMesh); //Change the mesh by passing one of the mesh names from the enum in asset manager
 	void setTexture(TEXTURE_NAME newTexture); //Change the texture by passing one of the texture names from the enum in asset manager
+	void setColour(glm::vec4 colourRGBA); //Change the colour and alpha value of the mesh
 
 	glm::vec3 getPosition() const; //Returns the position 
 	glm::vec3 getRotation() const; //Returns the rotation
 	glm::vec3 getScale() const; //Returns the scale
+	glm::mat4 getLocalToWorldMatrix() const; //Returns the local to world matrix
 
 	void addToPosition(glm::vec3 addition); //Can alter the position easily
 	void addToRotation(glm::vec3 addition); //Can alter the rotation easily
@@ -59,6 +61,7 @@ protected:
 	glm::vec3 position; //The position stored as an x,y,z
 	glm::vec3 rotation; //The rotation (in degress) stored as an x,y,z
 	glm::vec3 scale; //The scale stored as an x,y,z
+	glm::vec4 colour; //The colour in RGBA
 	Mesh* mesh; //Pointer to a pre-loaded mesh in asset manager allows this to be changed at runtime without having to load a new mesh 
 	Texture2D* texture; //Pointer to a pre-loaded texture in asset manager allows this to changed at runtime without having to load a new mesh
 	glm::mat4 localToWorld; //Matrix that will be used to convert the object's transformations to the world so it is positioned properly

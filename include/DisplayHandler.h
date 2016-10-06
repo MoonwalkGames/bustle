@@ -32,6 +32,8 @@ struct DisplayHandler
 	static int getMouseX(); //Returns the mouse cursor's X position
 	static int getMouseY(); //Returns the mouse cursor's Y position
 	static float getDeltaTime(); //Returns dt
+	static float degToRad(float angle); //Converts an angle from degrees to radians and returns it
+	static float radToDeg(float angle); //Converts an angle from radians to degrees and returns it
 
 	static const int FRAMES_PER_SECOND = 60; //Const representing how many FPS we want in the window
 	static const int FRAME_DELAY = 1000 / FRAMES_PER_SECOND; //The frame delay in milliseconds, passed to the timer function

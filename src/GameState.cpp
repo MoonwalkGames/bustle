@@ -1,5 +1,6 @@
 #include "GameState.h"
 #include "DisplayHandler.h"
+#include "glm\gtx\string_cast.hpp"
 
 int GameState::numStates = 0;
 
@@ -47,70 +48,16 @@ int GameState::getTotalNumStates() {
 //Test update function which simply draws a red quad
 void TestState::load()
 {
-	monkey = GameObject(glm::vec3(0, 0, -100), glm::vec3(0.0f), glm::vec3(1.0));
-	monkey.setMesh(MESH_MONKEY);
-	isVisible = true;
+	monkeyObj = GameObject(glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	monkeyObj.setMesh(MESH_MONKEY);
+	monkeyObj.setColour(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-
-	gluLookAt(0, 0, 0, monkey.getPosition().x, monkey.getPosition().y, monkey.getPosition().z, 0, 1, 0);
-	//glOrtho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 10000.0f);
-	
-	glMatrixMode(GL_MODELVIEW);
+	glOrtho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 100.0f);
 }
 
 void TestState::update()
 {
-	//Moves the monkey around
-	if (DisplayHandler::getKey('w'))
-		monkey.addToPosition(glm::vec3(0.0f, 0.0f, 5.0f));
-	else if (DisplayHandler::getKey('s'))
-		monkey.addToPosition(glm::vec3(0.0f, 0.0f, -5.0f));
-
-	if (DisplayHandler::getKey('a'))
-		monkey.addToPosition(glm::vec3(-5.0f, 0.0f, 0.0f));
-	else if (DisplayHandler::getKey('d'))
-		monkey.addToPosition(glm::vec3(5.0f, 0.0f, 0.0f));
-
-	if (DisplayHandler::getKey('i'))
-		monkey.addToPosition(glm::vec3(0.0f, 5.0f, 0.0f));
-	else if (DisplayHandler::getKey('k'))
-		monkey.addToPosition(glm::vec3(0.0f, -5.0f, 0.0f));
-
-	//Rotates the monkey
-	if (DisplayHandler::getKey('q'))
-		monkey.addToRotation(glm::vec3(0, 0, -5.0f));
-	else if (DisplayHandler::getKey('e'))
-		monkey.addToRotation(glm::vec3(0, 0, 5.0f));
-
-	//Scales the monkey
-	if (DisplayHandler::getKey('u'))
-		monkey.addToScale(glm::vec3(1.0f));
-	else if (DisplayHandler::getKey('j'))
-		monkey.addToScale(glm::vec3(-1.0f));
-
-	//Makes the monkey visible or invisible
-	if (DisplayHandler::getKey('v'))
-		isVisible = !isVisible;
-
-	//Outputs the monkey's transform
-	cout << "\nMonkey ===== " << endl;
-	cout << "POS: " << monkey.getPosition().x << ", " << monkey.getPosition().y << ", " << monkey.getPosition().z << endl;
-	cout << "ROT: " << monkey.getRotation().x << ", " << monkey.getRotation().y << ", " << monkey.getRotation().z << endl;
-	cout << "POS: " << monkey.getScale().x << ", " << monkey.getScale().y << ", " << monkey.getScale().z << endl;
-
-	//Disables textures because the monkey doesn't have an active texture
-	glDisable(GL_TEXTURE_2D);
-
-	//Draws the monkey
-	glBegin(GL_TRIANGLES);
-	{
-		if (isVisible)
-		{
-			glColor3f(0.8f, 0.25f, 0.25f);
-			monkey.update(DisplayHandler::getDeltaTime());
-		}
-	}
-	glEnd();
+	monkeyObj.update(1 / 60);
 }
