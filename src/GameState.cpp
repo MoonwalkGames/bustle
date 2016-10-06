@@ -81,7 +81,7 @@ void TestState::update()
 	for (int i = 0; i < 4; i++)
 	{
 		controllers[i].getInputs(); //Internally updates the inputs (ie: basically like calling update on the controller)
-		playerObjects[i].setPosition(glm::vec3(controllers[i].sticks.lX + offsets[i].x, controllers[i].sticks.lY + offsets[i].y, offsets[i].z)); //Allows the controllers to move the objects
+		playerObjects[i].setPosition(glm::vec3(controllers[i].lX + offsets[i].x, controllers[i].lY + offsets[i].y, offsets[i].z)); //Allows the controllers to move the objects
 	}
 
 	//Updates and draws the gameobjects
