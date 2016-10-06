@@ -7,6 +7,7 @@
 #include <stdlib.h> //Weird thing where stdlib HAS to be included and HAS to be above glut.h due to glut redefining exit in a weird way
 #include <GLUT\glut.h>
 #include "Kinematic.h"
+#include "m_controller.h"
 
 using namespace std::chrono;
 
@@ -58,7 +59,9 @@ public:
 
 private:
 	bool isVisible;
-	GameObject monkeyObj;
+	GameObject playerObjects[4]; //List of player gameobjects
+	MController controllers[4]; //List of controllers
+	glm::vec3 offsets[4]; //Offsets...simply keeps the objects near the corners
 };
 
 #endif

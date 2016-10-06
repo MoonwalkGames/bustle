@@ -18,6 +18,7 @@ public:
 class MController
 {
 public:
+	MController() {}
 	MController(int id);
 	int index;
 	XINPUT_STATE state;
