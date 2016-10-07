@@ -1,7 +1,7 @@
 #include "DisplayHandler.h"
 
-int DisplayHandler::windowWidth = 800;
-int DisplayHandler::windowHeight = 800;
+int DisplayHandler::windowWidth = 1600;
+int DisplayHandler::windowHeight = 900;
 float DisplayHandler::aspectRatio = 1.0f;
 int DisplayHandler::mousePosX = 0;
 int DisplayHandler::mousePosY = 0;
@@ -67,8 +67,8 @@ void DisplayHandler::reshapeWindow(int w, int h)
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-
-	glOrtho(-10.0f, 10.0f, -10.0f, 10.0f, 0.10f, 10000.0f);
+	float stretch = getOrthoStretch();
+	glOrtho(-10.0f * getOrthoStretch() , 10.0f * getOrthoStretch(), -10.0f, 10.0f, 0.10f, 10000.0f);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -112,6 +112,14 @@ int DisplayHandler::getHeight() {
 //Returns the aspect ratio
 float DisplayHandler::getAspectRatio() {
 	return aspectRatio;
+}
+
+//Returns the value the sides of the orthographic window should be multiplied by to correct "aspect ratio"
+float DisplayHandler::getOrthoStretch()
+{
+	float result;
+	result = ((aspectRatio - 1) * 0.5) + 1;
+	return result;
 }
 
 //Returns the cursor position X

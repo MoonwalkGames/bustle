@@ -29,6 +29,7 @@ struct DisplayHandler
 	static int getWidth(); //Returns the window width in pixels
 	static int getHeight(); //Returns the window height in pixels
 	static float getAspectRatio(); //Returns the aspect ratio (width / height)
+	static float getOrthoStretch(); //Returns the value the sides of the orthographic window should be multiplied by to correct "aspect ratio"
 	static int getMouseX(); //Returns the mouse cursor's X position
 	static int getMouseY(); //Returns the mouse cursor's Y position
 	static float getDeltaTime(); //Returns dt

@@ -16,6 +16,8 @@ enum STATE : int
 {
 	STATE_TEST,
 
+	STATE_GAMEPLAY,
+
 	NUM_STATES
 };
 
@@ -62,6 +64,20 @@ private:
 	GameObject playerObjects[4]; //List of player gameobjects
 	MController controllers[4]; //List of controllers
 	glm::vec3 offsets[4]; //Offsets...simply keeps the objects near the corners
+};
+
+class GameplayState : public GameState
+{
+public:
+	virtual void load();
+	virtual void update();
+
+private:
+	bool isVisible;
+	GameObject playerObjects[4]; //List of player gameobjects
+	MController controllers[4]; //List of controllers
+	glm::vec3 spawnPoints[4]; //Offsets...simply keeps the objects near the corners
+	void drawLevel();
 };
 
 #endif
