@@ -43,7 +43,7 @@ public:
 	float getMass() const; //Returns the mass
 	bool getAffectedByGravity() const; //Returns if the object is affecte by gravity
 
-	void update(float dt); //Polymorphic update function, positions the object using physics and then calls the parent update function to draw it properly
+	virtual void update(float dt); //Polymorphic update function, positions the object using physics and then calls the parent update function to draw it properly
 
 private:
 	bool affectedByGravity; //If the object is affected by gravity or not...important because it will affect the inital acceleration passed into the constructor
@@ -53,6 +53,8 @@ private:
 
 	static float dragConstant; //Constant drag force applied to all objects opposite their direction of travel, slows them down and stops them if no force is applied
 	static glm::vec3 gravity; //Constant downward force, not necessarily -9.81 m/s/s but currently set to this
+
+	friend std::ostream& operator << (std::ostream& os, const Kinematic& kinematicObject); //Overloaded stream insertion operator to display values, starts by calling parent GameObject's operator and then adds on the physics values
 };
 
 #endif

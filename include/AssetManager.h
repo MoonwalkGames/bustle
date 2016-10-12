@@ -17,6 +17,7 @@ enum MESH_NAME
 {
 	MESH_MONKEY, //Test monkey model, remove later
 	MESH_SPHERE, //Test sphere model, remove later
+	MESH_CHEST, //Test chest model, remove later
 	
 	NUM_MESHES
 };
@@ -24,6 +25,7 @@ enum MESH_NAME
 enum TEXTURE_NAME
 {
 	TEX_EARTH, //Test earth texture, remove later
+	TEX_CHEST, //Test chest texture, remove later
 
 	NUM_TEXTURES
 };
@@ -48,7 +50,7 @@ enum TEXTURE_NAME
 	- Add asset name into the appropriate enum using that naming convention
 	- Call vector.push_back with the appropriate constructor in the brackets Ex: loadedMeshes.push_back(Mesh("./res/mesh/mesh_Monkey.obj") OR loadedTextures.push_back("./res/img/tex_Monkey.png")
 	- Ensure the push_back call is under the correct heading
-	- OPTIONAL: Create GameObject using the constructor that takes a mesh and a texture (along with other params) like so: GameObject object(- other params -, AM::assets()->getMesh(MESH_MONKEY), AM::assets()->getTexture(TEX_MONKEY));
+	- OPTIONAL: Create GameObject using the constructor that takes a mesh and a texture (along with other params) like so: GameObject object(- other params -, MESH_MONKEY, TEX_MONKEY));
 	- You should be good to go!
 */
 class AssetManager

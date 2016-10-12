@@ -32,7 +32,7 @@ float GameState::getTimeOnState() const
 	duration<float> timeElapsed = timeNow - timeOfStateStart;
 	seconds timeElapsedSeconds = duration_cast<seconds>(timeElapsed);
 
-	return timeElapsedSeconds.count();
+	return (float)timeElapsedSeconds.count();
 }
 
 //Returns how many states there are total
@@ -46,54 +46,95 @@ int GameState::getTotalNumStates() {
 
 /* FOR THE TEST STATE */
 //Test update function which simply draws a red quad
+//void TestState::load()
+//{
+//	playerObjects[0] = GameObject(glm::vec3(-2.5, 2.5, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+//	playerObjects[0].setMesh(MESH_MONKEY);
+//	playerObjects[0].setColour(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+//
+//	playerObjects[1] = GameObject(glm::vec3(2.5, 2.5, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+//	playerObjects[1].setMesh(MESH_MONKEY);
+//	playerObjects[1].setColour(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+//
+//	playerObjects[2] = GameObject(glm::vec3(2.5, -2.5, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+//	playerObjects[2].setMesh(MESH_MONKEY);
+//	playerObjects[2].setColour(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
+//
+//	playerObjects[3] = GameObject(glm::vec3(-2.5, -2.5, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+//	playerObjects[3].setMesh(MESH_MONKEY);
+//	playerObjects[3].setColour(glm::vec4(0.8f, 0.23f, 0.4f, 1.0f));
+//
+//	for (int i = 0; i < 4; i++)
+//	{
+//		controllers[i] = MController(i);
+//		offsets[i] = playerObjects[i].getPosition();
+//	}
+//
+//	glMatrixMode(GL_PROJECTION);
+//	glLoadIdentity();
+//	glOrtho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 100.0f);
+//}
+//
+//void TestState::update()
+//{
+//	//Moves the gameobjects using the controllers
+//	for (int i = 0; i < 4; i++)
+//	{
+//		//Check sticks
+//		controllers[i].getInputs(); //Internally updates the inputs (ie: basically like calling update on the controller)
+//		playerObjects[i].setPosition(glm::vec3(controllers[i].lX + offsets[i].x, controllers[i].lY + offsets[i].y, offsets[i].z)); //Allows the controllers to move the objects
+//
+//		//Check buttons
+//		if (controllers[i].checkButton(BUTTON_A))
+//			cout << "[A] PRESSED BY CONTROLLER # " << i << endl;
+//	}
+//
+//	//Updates and draws the gameobjects
+//	for (int i = 0; i < 4; i++)
+//		playerObjects[i].update(DisplayHandler::getDeltaTime());
+//}
+
 void TestState::load()
 {
-	playerObjects[0] = GameObject(glm::vec3(-2.5, 2.5, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	playerObjects[0].setMesh(MESH_MONKEY);
-	playerObjects[0].setColour(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+	playerObjects[0] = Player(glm::vec3(0, 0, -50), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	playerObjects[0].setMesh(MESH_CHEST);
+	playerObjects[0].setTexture(TEX_CHEST);
+	playerObjects[0].setAffectedByGravity(false);
 
-	playerObjects[1] = GameObject(glm::vec3(2.5, 2.5, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	playerObjects[1].setMesh(MESH_MONKEY);
-	playerObjects[1].setColour(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+	controllers[0] = MController(0);
 
-	playerObjects[2] = GameObject(glm::vec3(2.5, -2.5, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	playerObjects[2].setMesh(MESH_MONKEY);
-	playerObjects[2].setColour(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
-
-	playerObjects[3] = GameObject(glm::vec3(-2.5, -2.5, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
-	playerObjects[3].setMesh(MESH_MONKEY);
-	playerObjects[3].setColour(glm::vec4(0.8f, 0.23f, 0.4f, 1.0f));
-
-	for (int i = 0; i < 4; i++)
-	{
-		controllers[i] = MController(i);
-		offsets[i] = playerObjects[i].getPosition();
-	}
-		
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 100.0f);
+	gluPerspective(90, DisplayHandler::getAspectRatio(), 0.1f, 10000.0f);
+	gluLookAt(0, 10, 5, 0, 0, playerObjects[0].getPosition().z, 0, 1, 0);
 }
 
 void TestState::update()
 {
-	//Moves the gameobjects using the controllers
-	for (int i = 0; i < 4; i++)
+	//Rotates object using a & d
+	if (DH::getKey('a'))
+		playerObjects[0].addToRotation(glm::vec3(0.0f, -0.05f, 0.0f));
+	else if (DH::getKey('d'))
+		playerObjects[0].addToRotation(glm::vec3(0.0f, 0.05f, 0.0f));
+
+	//Moves object forward and backward using w & s
+	if (DH::getKey('w'))
+		playerObjects[0].addToPosition(glm::vec3(0.0f, 0.0f, -0.5f));
+	else if (DH::getKey('s'))
+		playerObjects[0].addToPosition(glm::vec3(0.0f, 0.0f, 0.5f));
+
+	playerObjects[0].update(DH::getDeltaTime());
+
+	//Check so we only output time once per second
+	static float lastTime = 0.1f;
+	float currentTime = (float)getTimeOnState();
+
+	if (lastTime != currentTime)
 	{
-		//Check sticks
-		controllers[i].getInputs(); //Internally updates the inputs (ie: basically like calling update on the controller)
-		playerObjects[i].setPosition(glm::vec3(controllers[i].lX + offsets[i].x, controllers[i].lY + offsets[i].y, offsets[i].z)); //Allows the controllers to move the objects
-
-		//Check buttons
-		if (controllers[i].checkButton(BUTTON_A))
-			cout << "[A] PRESSED BY CONTROLLER # " << i << endl;
+		printf("%f\n", currentTime);
+		lastTime = currentTime;
 	}
-
-	//Updates and draws the gameobjects
-	for (int i = 0; i < 4; i++)
-		playerObjects[i].update(DisplayHandler::getDeltaTime());
 }
-
 void GameplayState::load()
 {
 	playerObjects[0] = GameObject(glm::vec3(-2.5, 2.5, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));

@@ -1,5 +1,4 @@
 #include "Mesh.h"
-
 Mesh::Mesh()
 {
 	numFaces = 0;
@@ -12,13 +11,12 @@ Mesh::Mesh(const string& fileName)
 	loadOBJ(fileName);
 }
 
-void Mesh::draw() const
+void Mesh::draw(bool textured) const
 {
 	glBegin(GL_TRIANGLES);
 	{
-		/* Passes OpenGL each of the vertices for the mesh every frame */
 		for (int i = 0; i < numFaces; i++)
-			faces[i].draw();
+			faces[i].draw(textured);
 	}
 	glEnd();
 }
@@ -109,6 +107,8 @@ void Mesh::loadOBJ(const string& fileName)
 			abort();
 		}
 	}
+
+	inOBJ.close(); //Closes the file since we finished reading from it
 
 	/* Sorts the data into the actual faces of the mesh */
 	numFaces = faceData.size() / 9;

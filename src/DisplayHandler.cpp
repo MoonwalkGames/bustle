@@ -16,8 +16,8 @@ void DisplayHandler::init()
 	//Enabling GL states
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_TEXTURE_2D);
-	//glEnable(GL_CULL_FACE);
-	//glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 
 	//Enabling and initializing the DevIL image loader
 	ilInit();

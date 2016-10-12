@@ -61,6 +61,11 @@ struct Face
 		vertices[0] = a;
 		vertices[1] = b;
 		vertices[2] = c;
+
+		//Calculate and store the face normal for lighting
+		glm::vec3 p0 = vertices[1].position - vertices[0].position;
+		glm::vec3 p1 = vertices[2].position - vertices[0].position;
+		faceNormal = glm::cross(p0, p1);
 	}
 
 	~Face()
@@ -69,15 +74,20 @@ struct Face
 		//vertices = 0;
 	}
 
-	void draw() const
+	void draw(bool textured) const
 	{
-		for (int i = 0; i < 3; i++)
-			glVertex3f(vertices[i].position.x, vertices[i].position.y, vertices[i].position.z);
+		//Pass the face normal to OpenGl for lighting
+		glNormal3f(faceNormal.x, faceNormal.y, faceNormal.z);
 
-		//Pass the normals to OpenGl for the lighting
-		glNormal3f(vertices[0].normal.x, vertices[0].normal.y, vertices[0].normal.z);
-		glNormal3f(vertices[1].normal.x, vertices[1].normal.y, vertices[1].normal.z);
-		glNormal3f(vertices[2].normal.x, vertices[2].normal.y, vertices[2].normal.z);
+		for (int i = 0; i < 3; i++)
+		{
+			//If the object is textured, passes the tex coords to opengl too
+			if (textured)
+				glTexCoord2f(vertices[i].uvCoord.x, vertices[i].uvCoord.y);
+
+			//Passes the vertices to OpenGl
+			glVertex3f(vertices[i].position.x, vertices[i].position.y, vertices[i].position.z);
+		}
 	}
 
 	void output() const
@@ -91,6 +101,7 @@ struct Face
 	}
 
 	Vertex* vertices;
+	glm::vec3 faceNormal;
 };
 
 /*
@@ -104,7 +115,7 @@ public:
 	Mesh(const string& fileName); //The mesh takes a string for the fileName that it is loading in OBJ format, this will be passed to the OBJLoader in order to get the vertices from it
 	~Mesh() {};
 
-	void draw() const; //Called every frame...passes the vertices to immediate openGl in the main screen callback function
+	void draw(bool textured) const; //Called every frame...passes the vertices to immediate openGl in the main screen callback function
 	void output() const;
 
 private:

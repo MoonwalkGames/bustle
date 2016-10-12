@@ -8,6 +8,8 @@
 #include <GLUT\glut.h>
 #include "Kinematic.h"
 #include "m_controller.h"
+#include "Player.h"
+#include "glm/gtx/string_cast.hpp"
 
 using namespace std::chrono;
 
@@ -51,7 +53,7 @@ private:
 /*
 	Simple test state class, TO BE DELETED LATER
 	Mainly for testing the structure of the code
-	Update simply draws a red quad in an ortho projection
+	Update simply draws 4 different coloured monkeys, each of which is controlled by a separate controller
 */
 class TestState : public GameState
 {
@@ -61,7 +63,7 @@ public:
 
 private:
 	bool isVisible;
-	GameObject playerObjects[4]; //List of player gameobjects
+	Player playerObjects[4]; //List of player gameobjects
 	MController controllers[4]; //List of controllers
 	glm::vec3 offsets[4]; //Offsets...simply keeps the objects near the corners
 };

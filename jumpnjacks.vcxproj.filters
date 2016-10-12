@@ -39,6 +39,9 @@
     <ClCompile Include="src\Kinematic.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="src\Player.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Mesh.h">
@@ -66,6 +69,12 @@
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="include\GameObject.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Player.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\State_Gameplay.h">
       <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>

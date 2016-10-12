@@ -47,4 +47,6 @@ struct DisplayHandler
 	static bool keyDown[256]; //Array of all of the keys, holding if they are down that frame or not
 };
 
+typedef DisplayHandler DH;
+
 #endif

@@ -24,9 +24,11 @@ void AssetManager::loadAssets()
 	/* ========== MESHES (Naming: mesh_XXXXXX.obj) ========== */
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Monkey.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Sphere.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Chest.obj"));
 
 	/* ========== TEXTURES (Naming: tex_XXXXXX.png) ========== */
 	loadedTextures.push_back(Texture2D("./res/img/tex_Earth.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_ChestDiffuse.png"));
 }
 
 //Returns a reference to the desired mesh, allows for multiple objects to use the same mesh with only one loading time

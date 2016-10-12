@@ -1,4 +1,5 @@
 #include "Kinematic.h"
+#include "glm\gtx\string_cast.hpp"
 
 float Kinematic::dragConstant = 0.5f;
 glm::vec3 Kinematic::gravity = glm::vec3(0.0f, -9.81f, 0.0f);
@@ -13,7 +14,7 @@ Kinematic::Kinematic()
 	affectedByGravity = true;
 	acceleration = gravity;
 	velocity = glm::vec3(0.0f);
-	mass = 0.0f;
+	mass = 1.0f;
 }
 
 Kinematic::Kinematic(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl)
@@ -22,7 +23,7 @@ Kinematic::Kinematic(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl)
 	affectedByGravity = true;
 	acceleration = gravity;
 	velocity = glm::vec3(0.0f);
-	mass = 0.0f;
+	mass = 1.0f;
 }
 
 Kinematic::Kinematic(bool gravityAffected, glm::vec3 accel, glm::vec3 vel, float startMass)
@@ -44,7 +45,7 @@ Kinematic::Kinematic(MESH_NAME meshName, TEXTURE_NAME texName)
 {
 	acceleration = gravity;
 	velocity = glm::vec3(0.0f);
-	mass = 0.0f;
+	mass = 1.0f;
 }
 
 Kinematic::Kinematic(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, bool gravityAffected, glm::vec3 accel, glm::vec3 vel, float startMass)
@@ -152,7 +153,13 @@ float Kinematic::getMass() const {
 }
 
 //Gravity setter and getter
-void Kinematic::setAffectedByGravity(bool affected) {
+void Kinematic::setAffectedByGravity(bool affected) 
+{
+	if (affectedByGravity)
+		acceleration -= gravity;
+	else
+		acceleration += gravity;
+
 	affectedByGravity = affected;
 }
 
@@ -176,9 +183,37 @@ void Kinematic::update(float dt)
 	position.z += (velocity.z * dt) + (0.5 * dt * dt * acceleration.z);
 	
 	//Prevents the object from falling below y = 1
-	if (position.y < 1)
-		position.y = 1;
+	//if (position.y < 1)
+		//position.y = 1;
 
 	//Calls the parent update function which positions the object properly in the scene and then renders it
 	GameObject::update(dt);
+}
+
+/*
+	Overloaded operators
+*/
+std::ostream& operator << (std::ostream& os, const Kinematic& kinematic)
+{
+	glm::vec3 pos = kinematic.getPosition();
+	glm::vec3 rot = kinematic.getRotation();
+	glm::vec3 scl = kinematic.getScale();
+	glm::vec4 col = kinematic.getColour();
+
+	os << "----- Kinematic -----" << std::endl;
+	os << "POS: " << pos.x << ", " << pos.y << ", " << pos.z << std::endl;
+	os << "ROT: " << rot.x << ", " << rot.y << ", " << rot.z << std::endl;
+	os << "SCL: " << scl.x << ", " << scl.y << ", " << scl.z << std::endl;
+	os << "COLOUR: " << col.x << ", " << col.y << ", " << col.z << ", " << col.w << std::endl;
+	os << "MATRIX: \n" << glm::to_string(kinematic.getLocalToWorldMatrix()) << std::endl << std::endl;
+
+	glm::vec3 vel = kinematic.getVelocity();
+	glm::vec3 accel = kinematic.getAccel();
+
+	os << "AFFECTED BY GRAVITY: " << kinematic.getAffectedByGravity() << std::endl;
+	os << "MASS: " << kinematic.getMass() << std::endl;
+	os << "VEL: " << vel.x << ", " << vel.y << ", " << vel.z << std::endl;
+	os << "ACCEL: " << accel.x << ", " << accel.y << ", " << accel.z << std::endl << std::endl;
+
+	return os;
 }

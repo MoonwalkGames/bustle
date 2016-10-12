@@ -50,10 +50,14 @@ public:
 	glm::vec3 getRotation() const; //Returns the rotation
 	glm::vec3 getScale() const; //Returns the scale
 	glm::mat4 getLocalToWorldMatrix() const; //Returns the local to world matrix
+	glm::vec4 getColour() const; //Returns the colour as a vec4 (RGBA)
 
 	void addToPosition(glm::vec3 addition); //Can alter the position easily
+	void addToPosition(float additionX, float additionY, float additionZ);
 	void addToRotation(glm::vec3 addition); //Can alter the rotation easily
+	void addToRotation(float additionX, float additionY, float additionZ);
 	void addToScale(glm::vec3 addition); //Can alter the scale easily
+	void addToScale(float additionX, float additionY, float additionZ);
 
 	virtual void update(float dt); //Polymorphic update function, handles the movement and drawing of the gameobject every frame
 
@@ -65,5 +69,7 @@ protected:
 	Mesh* mesh; //Pointer to a pre-loaded mesh in asset manager allows this to be changed at runtime without having to load a new mesh 
 	Texture2D* texture; //Pointer to a pre-loaded texture in asset manager allows this to changed at runtime without having to load a new mesh
 	glm::mat4 localToWorld; //Matrix that will be used to convert the object's transformations to the world so it is positioned properly
+
+	friend std::ostream& operator << (std::ostream& os, const GameObject& gameObject); //Overloaded stream insertion operator, allows us to easily output properties of this object
 };
 #endif

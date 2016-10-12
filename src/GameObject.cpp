@@ -159,16 +159,35 @@ glm::mat4 GameObject::getLocalToWorldMatrix() const {
 	return localToWorld;
 }
 
+glm::vec4 GameObject::getColour() const {
+	return colour;
+}
+
+/*
+	Adders
+*/
 void GameObject::addToPosition(glm::vec3 addition) {
 	position += addition;
+}
+
+void GameObject::addToPosition(float additionX, float additionY, float additionZ) {
+	position += glm::vec3(additionX, additionY, additionZ);
 }
 
 void GameObject::addToRotation(glm::vec3 addition) {
 	rotation += addition;
 }
 
+void GameObject::addToRotation(float additionX, float additionY, float additionZ) {
+	rotation += glm::vec3(additionX, additionY, additionZ);
+}
+
 void GameObject::addToScale(glm::vec3 addition) {
 	scale += addition;
+}
+
+void GameObject::addToScale(float additionX, float additionY, float additionZ) {
+	scale += glm::vec3(additionX, additionY, additionZ);
 }
 
 //Update function that properly handles positioning the game object and also drawing the model
@@ -204,7 +223,12 @@ void GameObject::update(float dt)
 		
 	//Checks if there is a mesh assigned before tyring to draw it
 	if (mesh != 0)
-		mesh->draw();
+	{
+		if (texture != 0)
+			mesh->draw(true);
+		else
+			mesh->draw(false);
+	}
 		
 	//Checks if there is a texture assigned before trying to unbind it, otherwise re-enables textures
 	if (texture != 0)
@@ -214,4 +238,24 @@ void GameObject::update(float dt)
 
 	//Loads identity for cleanliness
 	glLoadIdentity();
+}
+
+/*
+	Overloaded operators
+*/
+std::ostream& operator << (std::ostream& os, const GameObject& object)
+{
+	glm::vec3 pos = object.getPosition();
+	glm::vec3 rot = object.getRotation();
+	glm::vec3 scl = object.getScale();
+	glm::vec4 col = object.getColour();
+
+	os << "----- GameObject -----" << std::endl;
+	os << "POS: " << pos.x << ", " << pos.y << ", " << pos.z << std::endl;
+	os << "ROT: " << rot.x << ", " << rot.y << ", " << rot.z << std::endl;
+	os << "SCL: " << scl.x << ", " << scl.y << ", " << scl.z << std::endl;
+	os << "COLOUR: " << col.x << ", " << col.y << ", " << col.z << ", " << col.w << std::endl;
+	os << "MATRIX: \n" << glm::to_string(object.getLocalToWorldMatrix()) << std::endl << std::endl;
+
+	return os;
 }
