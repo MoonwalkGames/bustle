@@ -111,6 +111,11 @@ void TestState::load()
 
 void TestState::update()
 {
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(90, DisplayHandler::getAspectRatio(), 0.1f, 10000.0f);
+	gluLookAt(0, 10, 5, 0, 0, playerObjects[0].getPosition().z, 0, 1, 0);
+
 	//Rotates object using a & d
 	if (DH::getKey('a'))
 		playerObjects[0].addToRotation(glm::vec3(0.0f, -0.05f, 0.0f));
@@ -179,8 +184,6 @@ void GameplayState::update()
 		playerObjects[i].setPosition(glm::vec3(controllers[i].lX + spawnPoints[i].x, spawnPoints[i].y, spawnPoints[i].z + controllers[i].lY)); //Allows the controllers to move the objects
 	}
 	
-	
-
 	gluLookAt
 	(0.0f, 15.0f, -35.0f,	//camera position
 		0.0f, 0.0f, 0.0f,		//focal point
