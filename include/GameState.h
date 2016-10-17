@@ -62,8 +62,9 @@ public:
 	virtual void update();
 
 private:
+	int collisionCounter;
 	bool isVisible;
-	Player playerObjects[4]; //List of player gameobjects
+	GameObject playerObjects[4]; //List of player gameobjects
 	MController controllers[4]; //List of controllers
 	glm::vec3 offsets[4]; //Offsets...simply keeps the objects near the corners
 };

@@ -18,6 +18,7 @@ enum MESH_NAME
 	MESH_MONKEY, //Test monkey model, remove later
 	MESH_SPHERE, //Test sphere model, remove later
 	MESH_CHEST, //Test chest model, remove later
+	MESH_UNITCUBE, //Test cube, remove later
 	
 	NUM_MESHES
 };

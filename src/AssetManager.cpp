@@ -25,6 +25,7 @@ void AssetManager::loadAssets()
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Monkey.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Sphere.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Chest.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_UnitCube.obj"));
 
 	/* ========== TEXTURES (Naming: tex_XXXXXX.png) ========== */
 	loadedTextures.push_back(Texture2D("./res/img/tex_Earth.png"));

@@ -94,6 +94,7 @@
   <ItemGroup>
     <ClInclude Include="include\AssetManager.h" />
     <ClInclude Include="include\Collision.h" />
+    <ClInclude Include="include\CollisionBoxes.h" />
     <ClInclude Include="include\DisplayHandler.h" />
     <ClInclude Include="include\GameManager.h" />
     <ClInclude Include="include\GameObject.h" />

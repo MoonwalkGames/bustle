@@ -1,5 +1,7 @@
 #include "GameObject.h"
 #include "glm\gtx\string_cast.hpp"
+#include "DisplayHandler.h"
+
 /*
 	Constructors and destructor
 */
@@ -12,6 +14,7 @@ GameObject::GameObject()
 	texture = 0;
 	localToWorld = glm::mat4(0.0f);
 	colour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	collisionBox = Col_OBB(position, scale);
 }
 
 GameObject::GameObject(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl)
@@ -23,6 +26,7 @@ GameObject::GameObject(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl)
 	texture = 0;
 	localToWorld = glm::mat4(0.0f);
 	colour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	collisionBox = Col_OBB(position, scale);
 }
 
 GameObject::GameObject(MESH_NAME meshName, TEXTURE_NAME texName)
@@ -34,6 +38,7 @@ GameObject::GameObject(MESH_NAME meshName, TEXTURE_NAME texName)
 	texture = &AM::assets()->getTexture2D(texName);
 	localToWorld = glm::mat4(0.0f);
 	colour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	collisionBox = Col_OBB(position, scale);
 }
 
 GameObject::GameObject(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, MESH_NAME meshName, TEXTURE_NAME texName)
@@ -45,6 +50,7 @@ GameObject::GameObject(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, MESH_NAME me
 	texture = &AM::assets()->getTexture2D(texName);
 	localToWorld = glm::mat4(0.0f);
 	colour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	collisionBox = Col_OBB(position, scale);
 }
 
 GameObject::~GameObject()
@@ -140,6 +146,10 @@ void GameObject::setColour(glm::vec4 newColourRGBA) {
 	colour = newColourRGBA;
 }
 
+void GameObject::setCollisionBox(glm::vec3 position, glm::vec3 extent) {
+	collisionBox = Col_OBB(position, extent);
+}
+
 /*
 	Getters
 */
@@ -161,6 +171,32 @@ glm::mat4 GameObject::getLocalToWorldMatrix() const {
 
 glm::vec4 GameObject::getColour() const {
 	return colour;
+}
+
+Col_OBB GameObject::getCollisionBox() const {
+	return collisionBox;
+}
+
+glm::mat4 GameObject::getInverseTransformMatrix() const
+{
+	//Create the temp rotation matrices
+	glm::mat3 rotMatrix_X = glm::rotate(DH::degToRad(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+	glm::mat3 rotMatrix_Y = glm::rotate(DH::degToRad(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat3 rotMatrix_Z = glm::rotate(DH::degToRad(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+	glm::mat3 rotMatrixFull = rotMatrix_Z * rotMatrix_Y * rotMatrix_X;
+	glm::mat3 rotMatrixFullTransposed = glm::transpose(rotMatrixFull);
+	glm::vec3 rotatedNegativeTranslationVector = rotMatrixFull * -position;
+	
+	//Will eventually hold the full inverted transform matrix
+	glm::mat4 matrix(rotMatrixFullTransposed);
+	matrix[0][3] = rotatedNegativeTranslationVector.x;
+	matrix[1][3] = rotatedNegativeTranslationVector.y;
+	matrix[2][3] = rotatedNegativeTranslationVector.z;
+
+	//Sets bottom right to 1 for homogenous stuff
+	matrix[3][3] = 1.0f;
+
+	return matrix;
 }
 
 /*
@@ -197,9 +233,9 @@ void GameObject::update(float dt)
 	glm::mat4 scaleMatrix = glm::scale(scale);
 
 	//Create the individual rotation matrices and then the concatenated one
-	glm::mat4 rotMatrix_X = glm::rotate(rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-	glm::mat4 rotMatrix_Y = glm::rotate(rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-	glm::mat4 rotMatrix_Z = glm::rotate(rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+	glm::mat4 rotMatrix_X = glm::rotate(DH::degToRad(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+	glm::mat4 rotMatrix_Y = glm::rotate(DH::degToRad(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 rotMatrix_Z = glm::rotate(DH::degToRad(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
 	glm::mat4 fullRotationMatrix = rotMatrix_Z * rotMatrix_Y * rotMatrix_X;
 
 	//Create the translation matrix

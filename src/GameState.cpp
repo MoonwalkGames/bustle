@@ -1,6 +1,7 @@
 #include "GameState.h"
 #include "DisplayHandler.h"
 #include "glm\gtx\string_cast.hpp"
+#include "Collision.h"
 
 int GameState::numStates = 0;
 
@@ -94,7 +95,7 @@ int GameState::getTotalNumStates() {
 //		playerObjects[i].update(DisplayHandler::getDeltaTime());
 //}
 
-void TestState::load()
+/*void TestState::load()
 {
 	playerObjects[0] = Player(glm::vec3(0, 0, -50), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
 	playerObjects[0].setMesh(MESH_CHEST);
@@ -139,7 +140,84 @@ void TestState::update()
 		printf("%f\n", currentTime);
 		lastTime = currentTime;
 	}
+}*/
+
+void TestState::load()
+{
+	playerObjects[0] = GameObject(glm::vec3(-2.5, 2.5, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	playerObjects[0].setMesh(MESH_UNITCUBE);
+	playerObjects[0].setColour(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+
+	playerObjects[1] = GameObject(glm::vec3(2.5, 2.5, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	playerObjects[1].setMesh(MESH_UNITCUBE);
+	playerObjects[1].setColour(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(45, DisplayHandler::getAspectRatio(), 0.1f, 10000.0f);
+	gluLookAt(0, 10, 5, 0, 0, playerObjects[0].getPosition().z, 0, 1, 0);
+
+	collisionCounter = 0;
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glDisable(GL_CULL_FACE);
 }
+
+void TestState::update()
+{
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(45, DisplayHandler::getAspectRatio(), 0.1f, 10000.0f);
+	gluLookAt(0, 10, 1, 0, 0, 0, 0, 1, 0);
+
+	//Handling input
+	if (DH::getKey('w'))
+		playerObjects[0].addToPosition(0, 0, -0.025f);
+	else if (DH::getKey('s'))
+		playerObjects[0].addToPosition(0, 0, 0.025f);
+
+	if (DH::getKey('a'))
+		playerObjects[0].addToPosition(-0.025f, 0, 0);
+	else if (DH::getKey('d'))
+		playerObjects[0].addToPosition(0.025f, 0, 0);
+
+	if (DH::getKey('r'))
+		playerObjects[0].addToPosition(0, 0.025f, 0);
+	else if (DH::getKey('f'))
+		playerObjects[0].addToPosition(0, -0.025f, 0);
+
+	if (DH::getKey('q'))
+		playerObjects[0].addToRotation(0, 5.0f, 0);
+	else if (DH::getKey('e'))
+		playerObjects[0].addToRotation(0, -5.0f, 0);
+
+	if (DH::getKey('u'))
+		playerObjects[1].addToRotation(0, 5.0f, 0);
+	else if (DH::getKey('o'))
+		playerObjects[1].addToRotation(0, -5.0f, 0);
+
+	glm::vec4 aExtentBase = glm::vec4(0.5f, 0.5f, 0.5f, 0.0f);
+	glm::vec4 bExtentBase = glm::vec4(0.5f, 0.5f, 0.5f, 0.0f);
+
+	//Update the players
+	playerObjects[0].update(DH::getDeltaTime());
+	playerObjects[1].update(DH::getDeltaTime());
+
+	//Getting gameobject's matrices
+	glm::mat4 aMatrix = playerObjects[0].getLocalToWorldMatrix();
+	glm::mat4 bMatrix = playerObjects[1].getLocalToWorldMatrix();
+
+	//Update the collision boxes
+	playerObjects[0].setCollisionBox(playerObjects[0].getPosition(), aExtentBase);
+	playerObjects[1].setCollisionBox(playerObjects[1].getPosition(), bExtentBase);
+
+	if (CH::OBJECTvOBJECT(playerObjects[0], playerObjects[1]))
+	{
+		collisionCounter++;
+		printf("COLLIDING # %d\n", collisionCounter);
+	}
+}
+
 void GameplayState::load()
 {
 	playerObjects[0] = GameObject(glm::vec3(-2.5, 2.5, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
@@ -163,11 +241,6 @@ void GameplayState::load()
 		controllers[i] = MController(i);
 		spawnPoints[i] = playerObjects[i].getPosition();
 	}
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 100.0f);
-	
 }
 
 void GameplayState::update()
@@ -177,7 +250,7 @@ void GameplayState::update()
 	for (int i = 0; i < 4; i++)
 		playerObjects[i].update(DisplayHandler::getDeltaTime());
 
-	//Moves the gameobjects using the controllers
+	//Moves the gameobjects using the controllers;
 	for (int i = 0; i < 4; i++)
 	{
 		controllers[i].getInputs(); //Internally updates the inputs (ie: basically like calling update on the controller)
