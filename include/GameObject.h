@@ -67,7 +67,7 @@ public:
 
 protected:
 	glm::vec3 position; //The position stored as an x,y,z
-	glm::vec3 rotation; //The rotation (in degress) stored as an x,y,z
+	glm::vec3 rotation; //The rotation (in degresss) stored as an x,y,z
 	glm::vec3 scale; //The scale stored as an x,y,z
 	glm::vec4 colour; //The colour in RGBA
 	Mesh* mesh; //Pointer to a pre-loaded mesh in asset manager allows this to be changed at runtime without having to load a new mesh 

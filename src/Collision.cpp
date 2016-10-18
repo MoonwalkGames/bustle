@@ -95,54 +95,24 @@ Collision CH::OBJECTvOBJECT(const GameObject& a, const GameObject& b)
 	Col_OBB collisionBoxA = a.getCollisionBox();
 	Col_OBB collisionBoxB = b.getCollisionBox();
 
-	//Calculate A and B's vertices (mainly for drawing)
-	glm::vec3 verticesA[8];
-	verticesA[0] = glm::vec3(collisionBoxA.position + glm::vec3(collisionBoxA.extent.x, collisionBoxA.extent.y, collisionBoxA.extent.z));
-	verticesA[1] = glm::vec3(collisionBoxA.position + glm::vec3(collisionBoxA.extent.x, collisionBoxA.extent.y, -collisionBoxA.extent.z));
-	verticesA[2] = glm::vec3(collisionBoxA.position + glm::vec3(collisionBoxA.extent.x, -collisionBoxA.extent.y, collisionBoxA.extent.z));
-	verticesA[3] = glm::vec3(collisionBoxA.position + glm::vec3(-collisionBoxA.extent.x, collisionBoxA.extent.y, collisionBoxA.extent.z));
-	verticesA[4] = glm::vec3(collisionBoxA.position + glm::vec3(-collisionBoxA.extent.x, -collisionBoxA.extent.y, collisionBoxA.extent.z));
-	verticesA[5] = glm::vec3(collisionBoxA.position + glm::vec3(-collisionBoxA.extent.x, collisionBoxA.extent.y, -collisionBoxA.extent.z));
-	verticesA[6] = glm::vec3(collisionBoxA.position + glm::vec3(collisionBoxA.extent.x, -collisionBoxA.extent.y, -collisionBoxA.extent.z));
-	verticesA[7] = glm::vec3(collisionBoxA.position + glm::vec3(-collisionBoxA.extent.x, -collisionBoxA.extent.y, -collisionBoxA.extent.z));
-
-	glm::vec3 verticesB[8];
-	verticesB[0] = glm::vec3(collisionBoxB.position + glm::vec3(collisionBoxB.extent.x, collisionBoxB.extent.y, collisionBoxB.extent.z));
-	verticesB[1] = glm::vec3(collisionBoxB.position + glm::vec3(collisionBoxB.extent.x, collisionBoxB.extent.y, -collisionBoxB.extent.z));
-	verticesB[2] = glm::vec3(collisionBoxB.position + glm::vec3(collisionBoxB.extent.x, -collisionBoxB.extent.y, collisionBoxB.extent.z));
-	verticesB[3] = glm::vec3(collisionBoxB.position + glm::vec3(-collisionBoxB.extent.x, collisionBoxB.extent.y, collisionBoxB.extent.z));
-	verticesB[4] = glm::vec3(collisionBoxB.position + glm::vec3(-collisionBoxB.extent.x, -collisionBoxB.extent.y, collisionBoxB.extent.z));
-	verticesB[5] = glm::vec3(collisionBoxB.position + glm::vec3(-collisionBoxB.extent.x, collisionBoxB.extent.y, -collisionBoxB.extent.z));
-	verticesB[6] = glm::vec3(collisionBoxB.position + glm::vec3(collisionBoxB.extent.x, -collisionBoxB.extent.y, -collisionBoxB.extent.z));
-	verticesB[7] = glm::vec3(collisionBoxB.position + glm::vec3(-collisionBoxB.extent.x, -collisionBoxB.extent.y, -collisionBoxB.extent.z));
-	
-	//Vec4 versions of above
-	glm::vec4 verticesA_4[8];
-	glm::vec4 verticesB_4[8];
-	
-	for (int i = 0; i < 8; i++)
-	{
-		verticesA_4[i] = glm::vec4(verticesA[i], 0.0f);
-		verticesB_4[i] = glm::vec4(verticesB[i], 0.0f);
-	}
-
 	//A's inverted local to world matrix which we will be using to make B relative to A
 	glm::mat4 invertedLocalToWorldA = a.getInverseTransformMatrix();
+	//printf("%f, %f, %f\n", collisionBoxA.position.x, collisionBoxA.position.y, collisionBoxA.position.z);
+	collisionBoxA.position = invertedLocalToWorldA * glm::vec4(collisionBoxA.position, 0.0f);
 
-	//Transform A and B's vertices so we can properly see the collision box
-	for (int i = 0; i < 8; i++)
-	{
-		verticesA_4[i] = invertedLocalToWorldA * verticesA_4[i];
-		verticesB_4[i] = invertedLocalToWorldA * verticesB_4[i];
-	}
+	//printf("%f, %f, %f\n\n\n\n\n", collisionBoxA.position.x, collisionBoxA.position.y, collisionBoxA.position.z);
 
-	//Draw the collision boxes
-	drawCollisionBox(verticesA_4, glm::vec3(1.0f, 0.0f, 0.0f));
-	drawCollisionBox(verticesB_4, glm::vec3(0.0f, 1.0f, 0.0f));
 
-	//Invert A's transformations so it returns to the origin
-	
-	//Make B relative to A by applying the same inverted transformation
+
+
+
+
+
+
+
+
+
+
 
 	//Axis overlap testing
 	for (int i = 0; i < 3; i++)

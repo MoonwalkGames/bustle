@@ -186,7 +186,8 @@ glm::mat4 GameObject::getInverseTransformMatrix() const
 	glm::mat3 rotMatrixFull = rotMatrix_Z * rotMatrix_Y * rotMatrix_X;
 	glm::mat3 rotMatrixFullTransposed = glm::transpose(rotMatrixFull);
 	glm::vec3 rotatedNegativeTranslationVector = rotMatrixFull * -position;
-	
+	printf("%f, %f, %f\n", rotatedNegativeTranslationVector.x, rotatedNegativeTranslationVector.y, rotatedNegativeTranslationVector.z);
+
 	//Will eventually hold the full inverted transform matrix
 	glm::mat4 matrix(rotMatrixFullTransposed);
 	matrix[0][3] = rotatedNegativeTranslationVector.x;

@@ -144,11 +144,11 @@ void TestState::update()
 
 void TestState::load()
 {
-	playerObjects[0] = GameObject(glm::vec3(-2.5, 2.5, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	playerObjects[0] = GameObject(glm::vec3(-2.5, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
 	playerObjects[0].setMesh(MESH_UNITCUBE);
 	playerObjects[0].setColour(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
 
-	playerObjects[1] = GameObject(glm::vec3(2.5, 2.5, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
+	playerObjects[1] = GameObject(glm::vec3(2.5, 0, 0), glm::vec3(0, 0, 0), glm::vec3(1, 1, 1));
 	playerObjects[1].setMesh(MESH_UNITCUBE);
 	playerObjects[1].setColour(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
 
@@ -186,6 +186,16 @@ void TestState::update()
 	else if (DH::getKey('f'))
 		playerObjects[0].addToPosition(0, -0.025f, 0);
 
+	if (DH::getKey('i'))
+		playerObjects[1].addToPosition(0, 0, -0.025f);
+	else if (DH::getKey('k'))
+		playerObjects[1].addToPosition(0, 0, 0.025f);
+
+	if (DH::getKey('j'))
+		playerObjects[1].addToPosition(-0.025f, 0, 0);
+	else if (DH::getKey('l'))
+		playerObjects[1].addToPosition(0.025f, 0, 0);
+
 	if (DH::getKey('q'))
 		playerObjects[0].addToRotation(0, 5.0f, 0);
 	else if (DH::getKey('e'))
@@ -209,7 +219,7 @@ void TestState::update()
 
 	//Update the collision boxes
 	playerObjects[0].setCollisionBox(playerObjects[0].getPosition(), aExtentBase);
-	playerObjects[1].setCollisionBox(playerObjects[1].getPosition(), bExtentBase);
+	playerObjects[1].setCollisionBox(playerObjects[1].getPosition(), bMatrix * bExtentBase );
 
 	if (CH::OBJECTvOBJECT(playerObjects[0], playerObjects[1]))
 	{
