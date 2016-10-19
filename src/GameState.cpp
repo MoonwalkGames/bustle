@@ -213,19 +213,27 @@ void TestState::update()
 	playerObjects[0].update(DH::getDeltaTime());
 	playerObjects[1].update(DH::getDeltaTime());
 
+	//is this part of the problem? should collision boxes be moved to the players' position??
+	playerObjects[0].setCollisionBox(playerObjects[0].getPosition(), aExtentBase);
+	playerObjects[1].setCollisionBox(playerObjects[1].getPosition(), bExtentBase);
+
 	//Getting gameobject's matrices
 	glm::mat4 aMatrix = playerObjects[0].getLocalToWorldMatrix();
 	glm::mat4 bMatrix = playerObjects[1].getLocalToWorldMatrix();
 
 	//Update the collision boxes
-	playerObjects[0].setCollisionBox(playerObjects[0].getPosition(), aExtentBase);
-	playerObjects[1].setCollisionBox(playerObjects[1].getPosition(), bMatrix * bExtentBase );
+	
 
 	if (CH::OBJECTvOBJECT(playerObjects[0], playerObjects[1]))
 	{
 		collisionCounter++;
 		printf("COLLIDING # %d\n", collisionCounter);
 	}
+
+	
+
+	//drawCollisionBox(playerObjects[0].getCollisionBox(), glm::vec3(1, 0, 0));
+	//drawCollisionBox(playerObjects[1].getCollisionBox(), glm::vec3(0, 1, 0));
 }
 
 void GameplayState::load()
@@ -258,7 +266,11 @@ void GameplayState::update()
 	drawLevel();
 	//Updates and draws the gameobjects
 	for (int i = 0; i < 4; i++)
-		playerObjects[i].update(DisplayHandler::getDeltaTime());
+	{
+	playerObjects[i].update(DisplayHandler::getDeltaTime());
+	
+	}
+
 
 	//Moves the gameobjects using the controllers;
 	for (int i = 0; i < 4; i++)

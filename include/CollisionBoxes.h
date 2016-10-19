@@ -1,6 +1,8 @@
 #pragma once
 #include "glm\glm.hpp"
 #include "GLUT\glut.h"
+#include "glm\gtx\rotate_vector.hpp"
+
 
 struct Col_Sphere
 {
@@ -22,10 +24,12 @@ struct Col_OBB
 	Col_OBB(glm::vec3 pos, glm::vec3 ext) : position(pos), extent(ext) {}
 	glm::vec3 position;
 	glm::vec3 extent;
+	glm::vec3 rotation;
 };
 
-static void drawCollisionBox(const Col_OBB& boxToDraw)
+static void drawCollisionBox(const Col_OBB& boxToDraw, glm::vec3 colour)
 {
+	float degreestoradians = 57.2957795f;
 	//Calculate points
 	glm::vec3 vertices[8];
 	vertices[0] = glm::vec3(boxToDraw.position + glm::vec3(boxToDraw.extent.x, boxToDraw.extent.y, boxToDraw.extent.z));
@@ -38,12 +42,18 @@ static void drawCollisionBox(const Col_OBB& boxToDraw)
 	vertices[7] = glm::vec3(boxToDraw.position + glm::vec3(-boxToDraw.extent.x, -boxToDraw.extent.y, -boxToDraw.extent.z));
 
 	//Draw points
-	glColor3f(0.0f, 1.0f, 0.0f);
+	glColor3f(colour.x, colour.y, colour.z);
 	glPointSize(10.0f);
 	glBegin(GL_POINTS);
 	{
+		
 		for (int i = 0; i < 8; i++)
+		{
+			vertices[i] = glm::rotate(vertices[i], boxToDraw.rotation.x / degreestoradians, glm::vec3(1, 0, 0));
+			vertices[i] = glm::rotate(vertices[i], boxToDraw.rotation.y / degreestoradians, glm::vec3(0, 1, 0));
+			vertices[i] = glm::rotate(vertices[i], boxToDraw.rotation.z / degreestoradians, glm::vec3(0, 0, 1));
 			glVertex3f(vertices[i].x, vertices[i].y, vertices[i].z);
+		}
 	}
 	glEnd();
 	glPointSize(1.0f);

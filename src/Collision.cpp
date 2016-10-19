@@ -1,5 +1,7 @@
 #include "Collision.h"
 #include "glm\gtx\string_cast.hpp"
+#include "glm\gtx\rotate_vector.hpp"
+#include "DisplayHandler.h"
 /*
 	Collision test functions
 	- Takes in two types of colliders
@@ -86,8 +88,10 @@ Collision OBBvAABB(const Col_OBB& a, const Col_AABB& b) {
 }
 
 //GameObject VS GameObject
-Collision CH::OBJECTvOBJECT(const GameObject& a, const GameObject& b)
+Collision CH::OBJECTvOBJECT(GameObject& a, GameObject& b)
 {
+	static float tick = 0;
+	tick += 0.1;
 	//The normal we will be projecting on, gets set every frame
 	glm::vec3 normal(0.0f);
 
@@ -96,12 +100,29 @@ Collision CH::OBJECTvOBJECT(const GameObject& a, const GameObject& b)
 	Col_OBB collisionBoxB = b.getCollisionBox();
 
 	//A's inverted local to world matrix which we will be using to make B relative to A
-	glm::mat4 invertedLocalToWorldA = a.getInverseTransformMatrix();
+	//glm::mat4 invertedLocalToWorldA = a.getInverseTransformMatrix();
+	
 	//printf("%f, %f, %f\n", collisionBoxA.position.x, collisionBoxA.position.y, collisionBoxA.position.z);
-	collisionBoxA.position = invertedLocalToWorldA * glm::vec4(collisionBoxA.position, 0.0f);
+	//collisionBoxA.position = invertedLocalToWorldA * glm::vec4(collisionBoxA.position, 0.0f);
 
 	//printf("%f, %f, %f\n\n\n\n\n", collisionBoxA.position.x, collisionBoxA.position.y, collisionBoxA.position.z);
 
+	glm::vec3 aInvertedPositionVector = -a.getPosition();
+	collisionBoxA.position = glm::vec3(0, 0, 0);
+	//ROTATE B BY OPPOSITE OF A's ROTATION
+	glm::vec3 aInvertedRotation = a.getRotation();
+	aInvertedRotation.x = -aInvertedRotation.x;
+	aInvertedRotation.y = -aInvertedRotation.y;
+	aInvertedRotation.z = -aInvertedRotation.z;
+	
+	//printf("%f %f %f\n", aInvertedRotation.x, aInvertedRotation.y, aInvertedRotation.z);
+	//printf("%f %f %f\n", collisionBoxB.position.x, collisionBoxB.position.y, collisionBoxB.position.z);
+	collisionBoxB.position = b.getPosition() + aInvertedPositionVector;
+	//printf("%f %f %f\n", collisionBoxB.position.x, collisionBoxB.position.y, collisionBoxB.position.z);
+	//collisionBoxB.position = glm::rotate(collisionBoxB.position, DH::degToRad(aInvertedRotation.y), glm::vec3(0, 1, 0));
+	printf("Inverted rotation: %f, %f, %f\n", aInvertedRotation.x, aInvertedRotation.y, aInvertedRotation.z);
+	printf("B's Position After Rotation: %f %f %f\n\n\n", collisionBoxB.position.x, collisionBoxB.position.y, collisionBoxB.position.z);
+	collisionBoxB.rotation = aInvertedRotation + b.getRotation();
 
 
 
@@ -112,8 +133,8 @@ Collision CH::OBJECTvOBJECT(const GameObject& a, const GameObject& b)
 
 
 
-
-
+	drawCollisionBox(collisionBoxA, glm::vec3(1, 0, 0));
+	drawCollisionBox(collisionBoxB, glm::vec3(0, 1, 0));
 	//Axis overlap testing
 	for (int i = 0; i < 3; i++)
 	{
@@ -148,5 +169,6 @@ Collision CH::OBJECTvOBJECT(const GameObject& a, const GameObject& b)
 	glm::vec3 penetration(0.0f);
 	//Calculate penetration vector here
 	//....
+	
 	return Collision(true, penetration);
 }
