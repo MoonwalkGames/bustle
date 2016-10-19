@@ -1,7 +1,7 @@
 #include "Kinematic.h"
 #include "glm\gtx\string_cast.hpp"
 
-float Kinematic::dragConstant = 0.5f;
+float Kinematic::dragConstant = 0.0f;
 glm::vec3 Kinematic::gravity = glm::vec3(0.0f, -9.81f, 0.0f);
 
 /*
@@ -183,8 +183,8 @@ void Kinematic::update(float dt)
 	position.z += (velocity.z * dt) + (0.5 * dt * dt * acceleration.z);
 	
 	//Prevents the object from falling below y = 1
-	//if (position.y < 1)
-		//position.y = 1;
+	if (position.y < 1)
+		position.y = 1;
 
 	//Calls the parent update function which positions the object properly in the scene and then renders it
 	GameObject::update(dt);

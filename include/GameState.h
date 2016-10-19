@@ -16,8 +16,6 @@ using namespace std::chrono;
 //All of the states in the game, state number is represented by a word (ie: STATE_TEST represents 0)
 enum STATE : int
 {
-	STATE_TEST,
-
 	STATE_GAMEPLAY,
 
 	NUM_STATES
@@ -28,6 +26,8 @@ enum STATE : int
 	- Each part of the game (Menu, credits, main game, etc) are all unique states
 	- All unique states will be their own class that inherits from this one
 	- Polymorphism allows for a pointer to a GameState within GameManager to call the virtual load and update functions for each unique state
+	- This header wil contain the definition of all of the game states, the implementation takes place in unique CPP files under the game state filter
+	- Follow the naming convention of STATE_XXXX in the enum, and State_XXXX for the class and CPP names
 */
 class GameState
 {
@@ -49,38 +49,26 @@ private:
 	static int numStates; //A static int that is incremented every time a new state is created in order to keep track of how many states are loaded
 };
 
-
-/*
-	Simple test state class, TO BE DELETED LATER
-	Mainly for testing the structure of the code
-	Update simply draws 4 different coloured monkeys, each of which is controlled by a separate controller
-*/
-class TestState : public GameState
+class State_Gameplay : public GameState
 {
 public:
-	virtual void load();
-	virtual void update();
+	State_Gameplay() {}
+	~State_Gameplay() {}
+
+	void load();
+	void update();
 
 private:
-	int collisionCounter;
-	bool isVisible;
-	GameObject playerObjects[4]; //List of player gameobjects
-	MController controllers[4]; //List of controllers
-	glm::vec3 offsets[4]; //Offsets...simply keeps the objects near the corners
-};
+	GameObject levelMesh;
+	Player buses[4];
+	glm::vec3 busTargets[4];
+	MController controllers[4];
+	std::vector<Kinematic> passengers;
+	glm::vec3 cameraPos;
+	float busTurnSpeed;
+	float busMovementSpeed;
 
-class GameplayState : public GameState
-{
-public:
-	virtual void load();
-	virtual void update();
-
-private:
-	bool isVisible;
-	GameObject playerObjects[4]; //List of player gameobjects
-	MController controllers[4]; //List of controllers
-	glm::vec3 spawnPoints[4]; //Offsets...simply keeps the objects near the corners
-	void drawLevel();
+	void launchPassenger(int busNumber);
 };
 
 #endif

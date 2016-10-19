@@ -37,6 +37,10 @@ void DisplayHandler::update()
 void DisplayHandler::checkKeyDown(unsigned char key, int x, int y)
 {
 	keyDown[key] = true;
+
+	//Exits if hitting escape
+	if (key == 27)
+		exit(0);
 }
 
 //Called when a key is released
@@ -133,7 +137,7 @@ int DisplayHandler::getMouseY() {
 }
 
 float DisplayHandler::getDeltaTime() {
-	return FRAME_DELAY;
+	return (1.0f / float(FRAMES_PER_SECOND));
 }
 
 float DisplayHandler::degToRad(float angle) {

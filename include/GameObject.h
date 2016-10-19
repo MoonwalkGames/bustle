@@ -51,6 +51,9 @@ public:
 	glm::vec3 getPosition() const; //Returns the position 
 	glm::vec3 getRotation() const; //Returns the rotation
 	glm::vec3 getScale() const; //Returns the scale
+	glm::vec3 getForwardVector() const; //Returns the forward vector
+	glm::vec3 getRightVector() const; //Calculates and returns the right vector
+	glm::vec3 getUpVector() const; //Calculates and returns the up vector
 	glm::mat4 getLocalToWorldMatrix() const; //Returns the local to world matrix
 	glm::vec4 getColour() const; //Returns the colour as a vec4 (RGBA)
 	Col_OBB getCollisionBox() const; //Returns the collision box object attached to this gameobject
@@ -62,6 +65,10 @@ public:
 	void addToRotation(float additionX, float additionY, float additionZ);
 	void addToScale(glm::vec3 addition); //Can alter the scale easily
 	void addToScale(float additionX, float additionY, float additionZ);
+	void recalculateForwardVector(); //Private utility function to recalculate the forward vector after the object rotates. Called anywhere the object's rotatation is changed
+
+	void seek(glm::vec3 target, float movementSpeed, float turnSpeed); //Uses the basic seek algorithm to make this object seek the point passed
+	void flee(glm::vec3 taget, float movementSpeed, float turnSpeed); //Uses the basic flee algorithm to make this object flee from the point passed
 
 	virtual void update(float dt); //Polymorphic update function, handles the movement and drawing of the gameobject every frame
 
@@ -69,6 +76,7 @@ protected:
 	glm::vec3 position; //The position stored as an x,y,z
 	glm::vec3 rotation; //The rotation (in degresss) stored as an x,y,z
 	glm::vec3 scale; //The scale stored as an x,y,z
+	glm::vec3 forwardVector; //The direction the object is facing (normalized)
 	glm::vec4 colour; //The colour in RGBA
 	Mesh* mesh; //Pointer to a pre-loaded mesh in asset manager allows this to be changed at runtime without having to load a new mesh 
 	Texture2D* texture; //Pointer to a pre-loaded texture in asset manager allows this to changed at runtime without having to load a new mesh

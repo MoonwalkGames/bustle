@@ -22,14 +22,17 @@ AssetManager::~AssetManager()
 void AssetManager::loadAssets()
 {
 	/* ========== MESHES (Naming: mesh_XXXXXX.obj) ========== */
-	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Monkey.obj"));
-	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Sphere.obj"));
-	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Chest.obj"));
-	loadedMeshes.push_back(Mesh("./res/mesh/mesh_UnitCube.obj"));
-
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Bus2.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Level.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Passenger.obj"));
+	
 	/* ========== TEXTURES (Naming: tex_XXXXXX.png) ========== */
-	loadedTextures.push_back(Texture2D("./res/img/tex_Earth.png"));
-	loadedTextures.push_back(Texture2D("./res/img/tex_ChestDiffuse.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus_Red.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus_Blue.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus_Green.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus_Yellow.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Level.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Passenger.png"));
 }
 
 //Returns a reference to the desired mesh, allows for multiple objects to use the same mesh with only one loading time

@@ -29,8 +29,6 @@ void Player::takePointsFrom(Player target, int amount)
 }
 
 //Calls parent update
-void Player::update(float deltaTime)
-{
+void Player::update(float deltaTime) {
 	Kinematic::update(deltaTime);
-	cout << "Pos: " << position.x << ", " << position.y << ", " << position.z << endl;
 }

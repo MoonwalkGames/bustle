@@ -7,6 +7,9 @@
     <Filter Include="source">
       <UniqueIdentifier>{10305b44-b9fb-41ff-a83e-8726bfefadf9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="game states">
+      <UniqueIdentifier>{3969c482-9480-4f04-86a9-911b646696be}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -45,6 +48,9 @@
     <ClCompile Include="src\Collision.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="src\State_Gameplay.cpp">
+      <Filter>game states</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Mesh.h">
@@ -77,13 +83,13 @@
     <ClInclude Include="include\Player.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="include\State_Gameplay.h">
-      <Filter>headers</Filter>
-    </ClInclude>
     <ClInclude Include="include\Collision.h">
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="include\CollisionBoxes.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MathHelper.h">
       <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>

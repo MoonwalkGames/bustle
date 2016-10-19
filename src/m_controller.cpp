@@ -82,6 +82,7 @@ void MController::getInputs()
 	this->rT = (float)state.Gamepad.bRightTrigger / 255;
 
 }
+
 /*
 *Indexes through the vector of inputs, if the given button is being pressed return true, else return false
 */
@@ -96,14 +97,11 @@ bool MController::checkButton(DWORD button)
 bool MController::isConnected()
 {
 	DWORD dwResult = XInputGetState(this->index, &state);
+
 	if (dwResult == ERROR_SUCCESS)
-	{
 		return true;
-	}
 	else
-	{
 		return false;
-	}
 }
 float MController::getLeftStickAngle()
 {

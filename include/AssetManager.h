@@ -15,18 +15,21 @@
 */
 enum MESH_NAME
 {
-	MESH_MONKEY, //Test monkey model, remove later
-	MESH_SPHERE, //Test sphere model, remove later
-	MESH_CHEST, //Test chest model, remove later
-	MESH_UNITCUBE, //Test cube, remove later
-	
+	MESH_BUS,
+	MESH_LEVEL,
+	MESH_PASSENGER,
+
 	NUM_MESHES
 };
 
 enum TEXTURE_NAME
 {
-	TEX_EARTH, //Test earth texture, remove later
-	TEX_CHEST, //Test chest texture, remove later
+	TEX_BUS_RED,
+	TEX_BUS_BLUE,
+	TEX_BUS_GREEN,
+	TEX_BUS_YELLOW,
+	TEX_LEVEL,
+	TEX_PASSENGER,
 
 	NUM_TEXTURES
 };

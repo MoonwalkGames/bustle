@@ -17,13 +17,12 @@ Texture2D::Texture2D(char* fileName)
 
 void Texture2D::loadPNG(char* fileName)
 {
-	try
+	textureID = ilutGLLoadImage(fileName);
+	
+	//Error checking
+	if (textureID == 0)
 	{
-		textureID = ilutGLLoadImage(fileName);
-	}
-	catch (...)
-	{
-		std::cout << "Unknown error when trying to load texture (" << fileName << ")! Aborting!" << std::endl;
+		std::cout << "The texture at fileName (" << fileName << ") could not be loaded! Exiting!" << std::endl;
 		abort();
 	}
 

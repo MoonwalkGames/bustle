@@ -89,6 +89,7 @@
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\m_controller.cpp" />
     <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\State_Gameplay.cpp" />
     <ClCompile Include="src\Texture2D.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -100,10 +101,10 @@
     <ClInclude Include="include\GameObject.h" />
     <ClInclude Include="include\GameState.h" />
     <ClInclude Include="include\Kinematic.h" />
+    <ClInclude Include="include\MathHelper.h" />
     <ClInclude Include="include\Mesh.h" />
     <ClInclude Include="include\m_controller.h" />
     <ClInclude Include="include\Player.h" />
-    <ClInclude Include="include\State_Gameplay.h" />
     <ClInclude Include="include\Texture2D.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

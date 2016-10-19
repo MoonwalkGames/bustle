@@ -1,6 +1,8 @@
 #include "GameObject.h"
 #include "glm\gtx\string_cast.hpp"
+#include "glm\gtx\rotate_vector.hpp"
 #include "DisplayHandler.h"
+#include "MathHelper.h"
 
 /*
 	Constructors and destructor
@@ -15,6 +17,7 @@ GameObject::GameObject()
 	localToWorld = glm::mat4(0.0f);
 	colour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	collisionBox = Col_OBB(position, scale);
+	forwardVector = glm::vec3(1.0f, 0.0f, 0.0f);
 }
 
 GameObject::GameObject(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl)
@@ -27,6 +30,8 @@ GameObject::GameObject(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl)
 	localToWorld = glm::mat4(0.0f);
 	colour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	collisionBox = Col_OBB(position, scale);
+	forwardVector = glm::vec3(1.0f, 0.0f, 0.0f);
+	recalculateForwardVector(); //Recalculating the forward vector because the object has an initial rotation
 }
 
 GameObject::GameObject(MESH_NAME meshName, TEXTURE_NAME texName)
@@ -39,6 +44,7 @@ GameObject::GameObject(MESH_NAME meshName, TEXTURE_NAME texName)
 	localToWorld = glm::mat4(0.0f);
 	colour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	collisionBox = Col_OBB(position, scale);
+	forwardVector = glm::vec3(1.0f, 0.0f, 0.0f);
 }
 
 GameObject::GameObject(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, MESH_NAME meshName, TEXTURE_NAME texName)
@@ -51,15 +57,17 @@ GameObject::GameObject(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, MESH_NAME me
 	localToWorld = glm::mat4(0.0f);
 	colour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	collisionBox = Col_OBB(position, scale);
+	forwardVector = glm::vec3(1.0f, 0.0f, 0.0f);
+	recalculateForwardVector(); //Recalculating the forward vector because the object has an initial rotation
 }
 
 GameObject::~GameObject()
 {
-	delete mesh;
+	/*delete mesh;
 	delete texture;
 
 	mesh = NULL;
-	texture = NULL;
+	texture = NULL;*/
 }
 
 /*
@@ -88,24 +96,34 @@ void GameObject::setPositionZ(float newZ) {
 /*
 	Rotation setters
 */
-void GameObject::setRotation(glm::vec3 newRotation) {
+void GameObject::setRotation(glm::vec3 newRotation) 
+{
 	rotation = newRotation;
+	recalculateForwardVector();
 }
 
-void GameObject::setRotation(float newX, float newY, float newZ) {
+void GameObject::setRotation(float newX, float newY, float newZ) 
+{
 	rotation = glm::vec3(newX, newY, newZ);
+	recalculateForwardVector();
 }
 
-void GameObject::setRotationX(float newX) {
+void GameObject::setRotationX(float newX) 
+{
 	rotation.x = newX;
+	recalculateForwardVector();
 }
 
-void GameObject::setRotationY(float newY) {
+void GameObject::setRotationY(float newY) 
+{
 	rotation.y = newY;
+	recalculateForwardVector();
 }
 
-void GameObject::setRotationZ(float newZ) {
+void GameObject::setRotationZ(float newZ) 
+{
 	rotation.z = newZ;
+	recalculateForwardVector();
 }
 
 /*
@@ -165,6 +183,20 @@ glm::vec3 GameObject::getScale() const {
 	return scale;
 }
 
+glm::vec3 GameObject::getForwardVector() const {
+	return forwardVector;
+}
+
+glm::vec3 GameObject::getRightVector() const {
+	return glm::cross(forwardVector, glm::vec3(0.0f, 1.0f, 0.0f));
+}
+
+glm::vec3 GameObject::getUpVector() const
+{
+	glm::vec3 rightVector = getRightVector();
+	return glm::cross(forwardVector, rightVector);
+}
+
 glm::mat4 GameObject::getLocalToWorldMatrix() const {
 	return localToWorld;
 }
@@ -186,7 +218,6 @@ glm::mat4 GameObject::getInverseTransformMatrix() const
 	glm::mat3 rotMatrixFull = rotMatrix_Z * rotMatrix_Y * rotMatrix_X;
 	glm::mat3 rotMatrixFullTransposed = glm::transpose(rotMatrixFull);
 	glm::vec3 rotatedNegativeTranslationVector = rotMatrixFull * -position;
-	printf("%f, %f, %f\n", rotatedNegativeTranslationVector.x, rotatedNegativeTranslationVector.y, rotatedNegativeTranslationVector.z);
 
 	//Will eventually hold the full inverted transform matrix
 	glm::mat4 matrix(rotMatrixFullTransposed);
@@ -225,6 +256,31 @@ void GameObject::addToScale(glm::vec3 addition) {
 
 void GameObject::addToScale(float additionX, float additionY, float additionZ) {
 	scale += glm::vec3(additionX, additionY, additionZ);
+}
+
+/*
+	Steering behaviours
+*/
+void GameObject::seek(glm::vec3 target, float movementSpeed, float turnSpeed)
+{
+	glm::vec3 direction = target - position;
+	rotation.y = DH::radToDeg(atan2(direction.z, direction.x));
+	
+	printf("Angle: %f Direction vector: %f %f %f\n", rotation.y, direction.x, direction.y, direction.z);
+
+	//Checks it the object has reached its target using an arbitrarily small value. If it has, returns since there is nothing left to do. If it hasn't moves the object using the properly scaled direction vector
+	if (direction.length() == 0.0f)
+		return;
+	else
+		direction = glm::normalize(direction);
+
+	//Scales the direction vector by speed
+	direction *= movementSpeed;
+	position += direction;
+}
+
+void GameObject::flee(glm::vec3 target, float movementSpeed, float turnSpeed) {
+	seek(-target, movementSpeed, turnSpeed);
 }
 
 //Update function that properly handles positioning the game object and also drawing the model
@@ -295,4 +351,25 @@ std::ostream& operator << (std::ostream& os, const GameObject& object)
 	os << "MATRIX: \n" << glm::to_string(object.getLocalToWorldMatrix()) << std::endl << std::endl;
 
 	return os;
+}
+
+/*
+	Utility functions
+*/
+void GameObject::recalculateForwardVector()
+{
+	//Starts with a clean base vector for first rotation, then rotates that vector for other rotations
+	glm::vec3 baseForwardVector(0.0f, 0.0f, 1.0f);
+
+	//Pitch rotation - around the x axis//
+	forwardVector = glm::rotate(baseForwardVector, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+
+	//Yaw rotation - around the y axis//
+	forwardVector = glm::rotate(forwardVector, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+
+	//Roll rotation - around the z axis//
+	forwardVector = glm::rotate(forwardVector, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+
+	//Normalize forward vector
+	forwardVector = glm::normalize(forwardVector);
 }
