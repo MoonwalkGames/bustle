@@ -16,7 +16,7 @@ GameObject::GameObject()
 	texture = 0;
 	localToWorld = glm::mat4(0.0f);
 	colour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	collisionBox = Col_OBB(position, scale);
+	collisionSphere = Col_Sphere(position, 1.0f);
 	forwardVector = glm::vec3(1.0f, 0.0f, 0.0f);
 }
 
@@ -29,7 +29,7 @@ GameObject::GameObject(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl)
 	texture = 0;
 	localToWorld = glm::mat4(0.0f);
 	colour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	collisionBox = Col_OBB(position, scale);
+	collisionSphere = Col_Sphere(position, 1.0f);
 	forwardVector = glm::vec3(1.0f, 0.0f, 0.0f);
 	recalculateForwardVector(); //Recalculating the forward vector because the object has an initial rotation
 }
@@ -43,7 +43,7 @@ GameObject::GameObject(MESH_NAME meshName, TEXTURE_NAME texName)
 	texture = &AM::assets()->getTexture2D(texName);
 	localToWorld = glm::mat4(0.0f);
 	colour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	collisionBox = Col_OBB(position, scale);
+	collisionSphere = Col_Sphere(position, 1.0f);
 	forwardVector = glm::vec3(1.0f, 0.0f, 0.0f);
 }
 
@@ -56,7 +56,7 @@ GameObject::GameObject(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, MESH_NAME me
 	texture = &AM::assets()->getTexture2D(texName);
 	localToWorld = glm::mat4(0.0f);
 	colour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	collisionBox = Col_OBB(position, scale);
+	collisionSphere = Col_Sphere(position, 1.0f);
 	forwardVector = glm::vec3(1.0f, 0.0f, 0.0f);
 	recalculateForwardVector(); //Recalculating the forward vector because the object has an initial rotation
 }
@@ -164,8 +164,8 @@ void GameObject::setColour(glm::vec4 newColourRGBA) {
 	colour = newColourRGBA;
 }
 
-void GameObject::setCollisionBox(glm::vec3 position, glm::vec3 extent) {
-	collisionBox = Col_OBB(position, extent);
+void GameObject::setCollisionSphere(glm::vec3 position, float radius) {
+	collisionSphere = Col_Sphere(position, radius);
 }
 
 /*
@@ -205,8 +205,8 @@ glm::vec4 GameObject::getColour() const {
 	return colour;
 }
 
-Col_OBB GameObject::getCollisionBox() const {
-	return collisionBox;
+Col_Sphere GameObject::getCollisionSphere() const {
+	return collisionSphere;
 }
 
 glm::mat4 GameObject::getInverseTransformMatrix() const
@@ -286,6 +286,9 @@ void GameObject::flee(glm::vec3 target, float movementSpeed, float turnSpeed) {
 //Update function that properly handles positioning the game object and also drawing the model
 void GameObject::update(float dt)
 {
+	//Update the bounding collider
+	collisionSphere.position = position;
+
 	//Create the scaling matrix
 	glm::mat4 scaleMatrix = glm::scale(scale);
 

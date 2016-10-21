@@ -3,7 +3,8 @@
 
 #include <vector>
 #include <iostream>
-#include "GameState.h"
+#include "State_Gameplay.h"
+
 
 /*
 	GameManager class

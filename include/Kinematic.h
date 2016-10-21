@@ -45,7 +45,7 @@ public:
 
 	virtual void update(float dt); //Polymorphic update function, positions the object using physics and then calls the parent update function to draw it properly
 
-private:
+protected:
 	bool affectedByGravity; //If the object is affected by gravity or not...important because it will affect the inital acceleration passed into the constructor
 	glm::vec3 acceleration; //The instantaneous acceleration of the object, initially set to gravity constant below
 	glm::vec3 velocity; //The instantaneous velocity of the object, calculated by integrating acceleration into the previous frame's velocity

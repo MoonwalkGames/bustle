@@ -86,67 +86,19 @@ Collision OBBvAABB(const Col_OBB& a, const Col_AABB& b) {
 }
 
 //GameObject VS GameObject
-Collision CH::OBJECTvOBJECT(const GameObject& a, const GameObject& b)
+bool CollisionHandler::OBJECTvOBJECT(const GameObject& a, const GameObject& b)
 {
-	//The normal we will be projecting on, gets set every frame
-	glm::vec3 normal(0.0f);
+	Col_Sphere aSphere = a.getCollisionSphere();
+	Col_Sphere bSphere = b.getCollisionSphere();
 
-	//The collision boxes we are working with
-	Col_OBB collisionBoxA = a.getCollisionBox();
-	Col_OBB collisionBoxB = b.getCollisionBox();
+	if (aSphere.radius == 0.0f || bSphere.radius == 0.0f)
+		return false;
 
-	//A's inverted local to world matrix which we will be using to make B relative to A
-	glm::mat4 invertedLocalToWorldA = a.getInverseTransformMatrix();
-	//printf("%f, %f, %f\n", collisionBoxA.position.x, collisionBoxA.position.y, collisionBoxA.position.z);
-	collisionBoxA.position = invertedLocalToWorldA * glm::vec4(collisionBoxA.position, 0.0f);
+	glm::vec3 distance = bSphere.position - aSphere.position;
 
-	//printf("%f, %f, %f\n\n\n\n\n", collisionBoxA.position.x, collisionBoxA.position.y, collisionBoxA.position.z);
-
-
-
-
-
-
-
-
-
-
-
-
-
-	//Axis overlap testing
-	for (int i = 0; i < 3; i++)
-	{
-		//Decides which axis to use based on the iteration of the loop (checks x first, then y, then z)
-		if (i == 0)
-			normal = glm::vec3(1, 0, 0);
-		else if (i == 1)
-			normal = glm::vec3(0, 1, 0);
-		else if (i == 2)
-			normal = glm::vec3(0, 0, 1);
-
-		glm::vec3 centerToCenter = collisionBoxB.position - collisionBoxA.position;
-
-		//Calculating dot products of all the extents onto the normal vector
-		float dotA_Normal = glm::dot(collisionBoxA.extent, normal);
-		float dotB_Normal = glm::dot(collisionBoxB.extent, normal);
-		float dotC_Normal = glm::dot(centerToCenter, normal);
-
-	/*	printf("\n-----------------------\n");
-		printf("Dot A-N: %f\n", dotA_Normal);
-		printf("Dot B-N: %f\n", dotB_Normal);
-		printf("Dot C-N: %f\n", dotC_Normal);
-		printf("Ext A: %f, %f, %f\n", collisionBoxAExtent_Vec4.x, collisionBoxAExtent_Vec4.y, collisionBoxAExtent_Vec4.z);
-		printf("Ext B: %f, %f, %f\n", collisionBoxBExtent_Vec4.x, collisionBoxBExtent_Vec4.y, collisionBoxBExtent_Vec4.z);
-		printf("Pos A: %f, %f, %f\n", collisionBoxAPosition_Vec4.x, collisionBoxAPosition_Vec4.y, collisionBoxAPosition_Vec4.z);
-		printf("Pos B: %f, %f, %f\n", collisionBoxBPosition_Vec4.x, collisionBoxBPosition_Vec4.y, collisionBoxBPosition_Vec4.z);*/
-
-		//Actual overlap test performed here. Only checks the next axis if this succeeds, otherwise fails immediately
-		if (glm::abs(dotC_Normal) > glm::abs(dotA_Normal + dotB_Normal))
-			return Collision(false, glm::vec3(0.0f));
-	}
-	glm::vec3 penetration(0.0f);
-	//Calculate penetration vector here
-	//....
-	return Collision(true, penetration);
+	if ((aSphere.radius + bSphere.radius) < distance.length())
+		return true;
+	
+	return false;
 }
+

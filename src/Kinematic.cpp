@@ -182,9 +182,16 @@ void Kinematic::update(float dt)
 	position.y += (velocity.y * dt) + (0.5 * dt * dt * acceleration.y);
 	position.z += (velocity.z * dt) + (0.5 * dt * dt * acceleration.z);
 	
-	//Prevents the object from falling below y = 1
-	if (position.y < 1)
-		position.y = 1;
+	//DELETE LATER - Restricting the objects to the world bounds//
+	if (position.x > 40.0f)
+		position.x = 40.0f;
+	else if (position.x < -30.0f)
+		position.x = -30.0f;
+
+	if (position.z > 30.0f)
+		position.z = 30.0f;
+	else if (position.z < -40.0f)
+		position.z = -40.0f;	
 
 	//Calls the parent update function which positions the object properly in the scene and then renders it
 	GameObject::update(dt);

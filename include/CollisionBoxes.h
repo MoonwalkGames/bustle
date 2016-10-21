@@ -4,6 +4,7 @@
 
 struct Col_Sphere
 {
+	Col_Sphere() {}
 	Col_Sphere(glm::vec3 pos, float rad) : position(pos), radius(rad) {}
 	glm::vec3 position;
 	float radius;

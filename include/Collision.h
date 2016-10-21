@@ -34,7 +34,7 @@ public:
 	static Collision OBBvAABB(const Col_OBB& a, const Col_AABB& b);
 
 	//Gameobject VS Gameobject
-	static Collision OBJECTvOBJECT(const GameObject& a, const GameObject& b);
+	static bool OBJECTvOBJECT(const GameObject& a, const GameObject& b);
 };
 typedef CollisionHandler CH;
 

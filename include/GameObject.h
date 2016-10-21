@@ -46,7 +46,7 @@ public:
 	void setMesh(MESH_NAME newMesh); //Change the mesh by passing one of the mesh names from the enum in asset manager
 	void setTexture(TEXTURE_NAME newTexture); //Change the texture by passing one of the texture names from the enum in asset manager
 	void setColour(glm::vec4 colourRGBA); //Change the colour and alpha value of the mesh
-	void setCollisionBox(glm::vec3 position, glm::vec3 extent); //Change the position and extent of the collision box if the default is not desired
+	void setCollisionSphere(glm::vec3 position, float radius); //Change the position and extent of the collision box if the default is not desired
 
 	glm::vec3 getPosition() const; //Returns the position 
 	glm::vec3 getRotation() const; //Returns the rotation
@@ -56,7 +56,7 @@ public:
 	glm::vec3 getUpVector() const; //Calculates and returns the up vector
 	glm::mat4 getLocalToWorldMatrix() const; //Returns the local to world matrix
 	glm::vec4 getColour() const; //Returns the colour as a vec4 (RGBA)
-	Col_OBB getCollisionBox() const; //Returns the collision box object attached to this gameobject
+	Col_Sphere getCollisionSphere() const; //Returns the collision box object attached to this gameobject
 	glm::mat4 getInverseTransformMatrix() const; //Calculates and returns the proper inverse local to world matrix
 
 	void addToPosition(glm::vec3 addition); //Can alter the position easily
@@ -81,7 +81,7 @@ protected:
 	Mesh* mesh; //Pointer to a pre-loaded mesh in asset manager allows this to be changed at runtime without having to load a new mesh 
 	Texture2D* texture; //Pointer to a pre-loaded texture in asset manager allows this to changed at runtime without having to load a new mesh
 	glm::mat4 localToWorld; //Matrix that will be used to convert the object's transformations to the world so it is positioned properly
-	Col_OBB collisionBox; //Automatically generates an OBB collider that fits the gameobject
+	Col_Sphere collisionSphere; //Automatically generates an OBB collider that fits the gameobject
 
 	friend std::ostream& operator << (std::ostream& os, const GameObject& gameObject); //Overloaded stream insertion operator, allows us to easily output properties of this object
 };

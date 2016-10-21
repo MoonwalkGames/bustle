@@ -1,7 +1,8 @@
-#include "GameState.h"
+#include "State_Gameplay.h"
 #include "DisplayHandler.h"
 #include "glm\gtx\rotate_vector.hpp"
 #include "MathHelper.h"
+#include "Collision.h"
 
 void State_Gameplay::load()
 {
@@ -20,6 +21,14 @@ void State_Gameplay::load()
 	//Init the controllers
 	for (int i = 0; i < 4; i++)
 		controllers[i] = MController(i);
+
+	for (int i = 0; i < 4; i++)
+	{
+		if (!controllers[i].isConnected())
+			buses[i].setCollisionSphere(glm::vec3(0.0f), 0.0f);
+		else
+			buses[i].setCollisionSphere(buses[i].getPosition(), 0.1f);
+	}
 
 	//Init the bus movement speed and the bus turn speed
  	busMovementSpeed = 0.5f;
@@ -40,7 +49,7 @@ void State_Gameplay::update()
 	//Set up the camera
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(-75.0f, 75.0f, -75.0f, 75.0f, 0.1f, 1000.0f);
+	glOrtho(-60.0f, 60.0f, -55.0f, 55.0f, 0.1f, 1000.0f);
 	gluLookAt(cameraPos.x, cameraPos.y, cameraPos.z, 0, 0, 0, 0, 1, 0);
 
 	//Moves the bus targets based on the controller inputs
@@ -56,7 +65,7 @@ void State_Gameplay::update()
 			buses[i].setRotationY(DH::radToDeg(atan2(-worldRotatedController.z, worldRotatedController.x)));
 			
 		//Spawn passenger
-		if (controllers[i].checkButton(BUTTON_A))
+		if (controllers[i].checkButton(BUTTON_A) && controllers[i].isConnected())
 			launchPassenger(i);
 	}
 	
@@ -70,22 +79,10 @@ void State_Gameplay::update()
 	else if (DH::getKey('d'))
 		cameraPos += 0.5f;
 
-	//Detect collisions
-	//for (int i = 0; i < 4; i++)
-	//{
-	//	for (int j = 0; j < 4; j++)
-	//	{
-	//		if (i == j) //Doesn't check the same bus for a collision
-	//			continue;
-	//		else
-	//		{
-	//			Collision col = Collision::ObjectvObject(buses[i], buses[j]);
-
-	//			if (col)
-	//				buses[i].addToPosition(-col.penetration);
-	//		}
-	//	}
-	//}
+	if (DH::getKey('r'))
+		cameraPos.y += 0.5f;
+	else if (DH::getKey('f'))
+		cameraPos -= 0.5f;
 
 	//Draw the level mesh
 	levelMesh.update(DH::getDeltaTime());
@@ -97,8 +94,50 @@ void State_Gameplay::update()
 	//Update the buses
 	for (int i = 0; i < 4; i++)
 	{
-		if (controllers[i].isConnected())
-			buses[i].update(DH::getDeltaTime());
+		buses[i].update(DH::getDeltaTime());
+	}
+
+	//Detect collisions
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			if (controllers[i].isConnected())
+			{
+				glm::vec3 distance = buses[j].getPosition() - buses[i].getPosition();
+
+				//if ((abs(buses[j].getPosition().x - buses[i].getPosition().x) < abs(buses[j].getCollisionSphere().radius + buses[i].getCollisionSphere().radius)) && abs((buses[j].getPosition().z - buses[i].getPosition().z) < abs(buses[j].getCollisionSphere().radius + buses[i].getCollisionSphere().radius)))
+					//if (CH::OBJECTvOBJECT(buses[i], passengers[j]))
+				//if (abs(distance.length()) < (buses[i].getCollisionSphere().radius + buses[i].getCollisionSphere().radius))
+				if (distance.length() < 1.0f)
+				{
+					std::cout << "Creating the passenger from bus # " << i << std::endl;
+					launchPassenger(i);
+					buses[i].addPoints(1);
+				}
+			}
+		}
+
+		//Check collisions with passengers
+		for (int j = 0; j < passengers.size(); j++)
+		{
+			if (controllers[i].isConnected())
+			{
+				if (passengers[j].getAbleToBePickedUp())
+				{
+					//float distance = abs(passengers[j].getPosition() - buses[i].getPosition()).length();
+
+					if ((abs(passengers[j].getPosition().x - buses[i].getPosition().x) < abs(passengers[j].getCollisionSphere().radius + buses[i].getCollisionSphere().radius)) && abs((passengers[j].getPosition().z - buses[i].getPosition().z) < abs(passengers[j].getCollisionSphere().radius + buses[i].getCollisionSphere().radius)))
+					//if (distance < 2.0f)
+					{
+						std::cout << "Erasing the passenger from bus #" << i << std::endl;
+						passengers.erase(passengers.begin() + j);
+						buses[i].takePoints(1);
+						j--;
+					}
+				}
+			}
+		}
 	}
 		
 	//Reset the scene if 'r' is pressed or start is pressed on a button
@@ -112,14 +151,15 @@ void State_Gameplay::update()
 void State_Gameplay::launchPassenger(int busNumber)
 {
 	glm::vec3 startPosition = buses[busNumber].getPosition();
-	float launchSpeed = 15.0f;
+	glm::vec3 startRotation = MathHelper::randomVec3(0.0f, 360.0f);
+	glm::vec3 startScale = MathHelper::randomVec3(0.5f, 1.75f);
+
+	float launchSpeed = 25.0f;
 	glm::vec3 launchVel = MathHelper::randomVec3(-1.0f, 1.0f);
-	launchVel.y = 1.0f;
+	launchVel.y = 1.5f;
 	launchVel = glm::normalize(launchVel);
 	launchVel *= launchSpeed;
 
-	Kinematic newPassenger(startPosition, glm::vec3(0.0f), glm::vec3(1.0f), true, glm::vec3(0.0f, -9.81f, 0.0f), launchVel, 1.0f);
-	newPassenger.setMesh(MESH_PASSENGER);
-	newPassenger.setTexture(TEX_PASSENGER);
+	Passenger newPassenger = Passenger(startPosition, startRotation, startScale, true, glm::vec3(0.0f, -9.81f, 0.0f), launchVel, 1.0f, MESH_PASSENGER, TEX_PASSENGER);
 	passengers.push_back(newPassenger);
 }

@@ -6,9 +6,6 @@
 #include <chrono>
 #include <stdlib.h> //Weird thing where stdlib HAS to be included and HAS to be above glut.h due to glut redefining exit in a weird way
 #include <GLUT\glut.h>
-#include "Kinematic.h"
-#include "m_controller.h"
-#include "Player.h"
 #include "glm/gtx/string_cast.hpp"
 
 using namespace std::chrono;
@@ -47,28 +44,6 @@ private:
 	int stateNumber; //Essentially the ID of the game state
 	high_resolution_clock::time_point timeOfStateStart; //The time in seconds of when this state was loaded as a float
 	static int numStates; //A static int that is incremented every time a new state is created in order to keep track of how many states are loaded
-};
-
-class State_Gameplay : public GameState
-{
-public:
-	State_Gameplay() {}
-	~State_Gameplay() {}
-
-	void load();
-	void update();
-
-private:
-	GameObject levelMesh;
-	Player buses[4];
-	glm::vec3 busTargets[4];
-	MController controllers[4];
-	std::vector<Kinematic> passengers;
-	glm::vec3 cameraPos;
-	float busTurnSpeed;
-	float busMovementSpeed;
-
-	void launchPassenger(int busNumber);
 };
 
 #endif
