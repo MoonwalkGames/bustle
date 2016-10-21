@@ -5,8 +5,8 @@ GameManager* GameManager::inst = 0; //The singleton instance of this class
 //The constructor, sets the first active state and loads it
 GameManager::GameManager()
 {
-	activeStateNumber = STATE_TEST;
-	activeState = new TestState();
+	activeStateNumber = STATE_COLLISION_TEST;
+	activeState = new CollisionTestState();
 	activeState->load();
 	stillPlaying = true;
 }
@@ -34,14 +34,14 @@ void GameManager::setActiveState(STATE newActiveState)
 	activeStateNumber = newActiveState;
 	delete activeState;
 
-	if (newActiveState == STATE_TEST)
-		activeState = new TestState();
+	if (newActiveState == STATE_COLLISION_TEST)
+		activeState = new CollisionTestState();
 	else if (newActiveState == STATE_GAMEPLAY)
 		activeState = new GameplayState();
 	else
 	{
 		std::cout << "ERROR: INVALID STATE NUMBER, DEFAULTING TO TEST STATE!!!" << std::endl;
-		activeState = new TestState();
+		activeState = new CollisionTestState();
 	}
 
 	loadActiveState();

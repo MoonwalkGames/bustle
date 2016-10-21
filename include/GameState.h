@@ -16,7 +16,7 @@ using namespace std::chrono;
 //All of the states in the game, state number is represented by a word (ie: STATE_TEST represents 0)
 enum STATE : int
 {
-	STATE_TEST,
+	STATE_COLLISION_TEST,
 
 	STATE_GAMEPLAY,
 
@@ -55,7 +55,7 @@ private:
 	Mainly for testing the structure of the code
 	Update simply draws 4 different coloured monkeys, each of which is controlled by a separate controller
 */
-class TestState : public GameState
+class CollisionTestState : public GameState
 {
 public:
 	virtual void load();

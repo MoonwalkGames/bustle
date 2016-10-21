@@ -29,6 +29,7 @@ struct Col_OBB
 
 static void drawCollisionBox(const Col_OBB& boxToDraw, glm::vec3 colour)
 {
+	//temporary thing, header didn't like having DH included, bleh
 	float degreestoradians = 57.2957795f;
 	//Calculate points
 	glm::vec3 vertices[8];
@@ -44,11 +45,13 @@ static void drawCollisionBox(const Col_OBB& boxToDraw, glm::vec3 colour)
 	//Draw points
 	glColor3f(colour.x, colour.y, colour.z);
 	glPointSize(10.0f);
+
 	glBegin(GL_POINTS);
 	{
-		
+		//Broken in a way that works, it's rotating all of the vertices around the origin. 
 		for (int i = 0; i < 8; i++)
 		{
+			//this needs to rotate around itself, not origin
 			vertices[i] = glm::rotate(vertices[i], boxToDraw.rotation.x / degreestoradians, glm::vec3(1, 0, 0));
 			vertices[i] = glm::rotate(vertices[i], boxToDraw.rotation.y / degreestoradians, glm::vec3(0, 1, 0));
 			vertices[i] = glm::rotate(vertices[i], boxToDraw.rotation.z / degreestoradians, glm::vec3(0, 0, 1));
