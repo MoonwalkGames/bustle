@@ -68,9 +68,10 @@ public:
 	Mesh& getMesh(MESH_NAME meshName); //Returns a reference to the desired mesh, this is what allows for the mesh to be loaded once but used multiple times
 	Texture2D& getTexture2D(TEXTURE_NAME textureName); //Returns a reference to desired texture, this is what allows for the texture to be loaded once but used multiple times
 
-	static AssetManager* assets(); //Singleton pattern
-
 	void loadAssets(); //Called in main(), actually loads in and sets up all of the assets that will be used in the game
+	void bindTexture(TEXTURE_NAME textureName); //Binds the texture that will be used for the next drawing calls
+
+	static AssetManager* assets(); //Singleton pattern
 
 private:
 	static AssetManager* inst; //Singleton pattern

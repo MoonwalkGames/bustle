@@ -69,6 +69,7 @@ void State_Gameplay::update()
 			launchPassenger(i);
 	}
 	
+	//Move the camera around
 	if (DH::getKey('w'))
 		cameraPos.z -= 0.5f;
 	else if (DH::getKey('s'))
@@ -85,67 +86,44 @@ void State_Gameplay::update()
 		cameraPos -= 0.5f;
 
 	//Draw the level mesh
+	AM::assets()->bindTexture(TEX_LEVEL);
 	levelMesh.update(DH::getDeltaTime());
 
-	//Update the passengers
+	//Update and draw the passengers
+	AM::assets()->bindTexture(TEX_PASSENGER);
 	for (int i = 0; i < passengers.size(); i++)
 		passengers[i].update(DH::getDeltaTime());
 
-	//Update the buses
-	for (int i = 0; i < 4; i++)
-	{
-		buses[i].update(DH::getDeltaTime());
-	}
+	//Output the number of passengers to the console
+	std::cout << "NUM PASSENGERS = " << passengers.size() << std::endl;
 
-	//Detect collisions
-	for (int i = 0; i < 4; i++)
-	{
-		for (int j = 0; j < 4; j++)
-		{
-			if (controllers[i].isConnected())
-			{
-				glm::vec3 distance = buses[j].getPosition() - buses[i].getPosition();
+	//Update and draw the buses
+	AM::assets()->bindTexture(TEX_BUS_RED); //Red bus (player 1)
+	buses[0].update(DH::getDeltaTime());
 
-				//if ((abs(buses[j].getPosition().x - buses[i].getPosition().x) < abs(buses[j].getCollisionSphere().radius + buses[i].getCollisionSphere().radius)) && abs((buses[j].getPosition().z - buses[i].getPosition().z) < abs(buses[j].getCollisionSphere().radius + buses[i].getCollisionSphere().radius)))
-					//if (CH::OBJECTvOBJECT(buses[i], passengers[j]))
-				//if (abs(distance.length()) < (buses[i].getCollisionSphere().radius + buses[i].getCollisionSphere().radius))
-				if (distance.length() < 1.0f)
-				{
-					std::cout << "Creating the passenger from bus # " << i << std::endl;
-					launchPassenger(i);
-					buses[i].addPoints(1);
-				}
-			}
-		}
+	AM::assets()->bindTexture(TEX_BUS_BLUE); //Blue bus (player 2)
+	buses[1].update(DH::getDeltaTime());
 
-		//Check collisions with passengers
-		for (int j = 0; j < passengers.size(); j++)
-		{
-			if (controllers[i].isConnected())
-			{
-				if (passengers[j].getAbleToBePickedUp())
-				{
-					//float distance = abs(passengers[j].getPosition() - buses[i].getPosition()).length();
+	AM::assets()->bindTexture(TEX_BUS_GREEN); //Green bus (player 3)
+	buses[2].update(DH::getDeltaTime());
 
-					if ((abs(passengers[j].getPosition().x - buses[i].getPosition().x) < abs(passengers[j].getCollisionSphere().radius + buses[i].getCollisionSphere().radius)) && abs((passengers[j].getPosition().z - buses[i].getPosition().z) < abs(passengers[j].getCollisionSphere().radius + buses[i].getCollisionSphere().radius)))
-					//if (distance < 2.0f)
-					{
-						std::cout << "Erasing the passenger from bus #" << i << std::endl;
-						passengers.erase(passengers.begin() + j);
-						buses[i].takePoints(1);
-						j--;
-					}
-				}
-			}
-		}
-	}
-		
+	AM::assets()->bindTexture(TEX_BUS_YELLOW); //Yellow bus (player 4)
+	buses[3].update(DH::getDeltaTime());
+
+	//Detect collisions HERE
+	//*********************
+	//*********************
+	//Detect collision HERE^
+	
 	//Reset the scene if 'r' is pressed or start is pressed on a button
 	if (DH::getKey('r') || controllers[0].checkButton(BUTTON_START) || controllers[1].checkButton(BUTTON_START) || controllers[2].checkButton(BUTTON_START) || controllers[3].checkButton(BUTTON_START))
 	{
 		passengers.clear();
 		load();
 	}
+
+	//Bind a NULL texture at the end of the frame for cleanliness
+	glBindTexture(GL_TEXTURE_2D, NULL);
 }
 
 void State_Gameplay::launchPassenger(int busNumber)

@@ -12,6 +12,12 @@ namespace MathHelper
 		return ((1 - t) * P1) + (t * P2);
 	}
 
+	template <typename T>
+	static float inverseLERP(T& p1, T& p2, T& currentPoint)
+	{
+		return float((currentPoint - p1) / (p2 - p1));
+	}
+
 	static float randomFloat(float min, float max)
 	{
 		if (min > max)

@@ -30,14 +30,15 @@ struct DisplayHandler
 	static int getHeight(); //Returns the window height in pixels
 	static float getAspectRatio(); //Returns the aspect ratio (width / height)
 	static float getOrthoStretch(); //Returns the value the sides of the orthographic window should be multiplied by to correct "aspect ratio"
-	static int getMouseX(); //Returns the mouse cursor's X position
-	static int getMouseY(); //Returns the mouse cursor's Y position
+	static float getMouseX(); //Returns the mouse cursor's X position
+	static float getMouseY(); //Returns the mouse cursor's Y position
 	static float getDeltaTime(); //Returns dt
 	static float degToRad(float angle); //Converts an angle from degrees to radians and returns it
 	static float radToDeg(float angle); //Converts an angle from radians to degrees and returns it
 
 	static const int FRAMES_PER_SECOND = 60; //Const representing how many FPS we want in the window
 	static const int FRAME_DELAY = 1000 / FRAMES_PER_SECOND; //The frame delay in milliseconds, passed to the timer function
+	static float deltaTime; //The accurate delta time that is calculated every frame in order to handle frame dips without messing up physics
 	static int windowWidth; //The window width in pixels
 	static int windowHeight; //The window height in pixels
 	static float aspectRatio; //The aspect ratio, stored as float

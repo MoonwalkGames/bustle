@@ -309,17 +309,18 @@ void GameObject::update(float dt)
 	glLoadMatrixf(glm::value_ptr(localToWorld));
 
 	//Checks if there is a texture assigned before trying to bind it, otherwise temporarily disables textures so it renders with colours
-	if (texture != 0)
+	/*if (texture != 0)
 		texture->bind();
 	else
 	{
 		glDisable(GL_TEXTURE_2D);
 		glColor4f(colour.x, colour.y, colour.z, colour.w);
-	}
+	}*/
 		
 	//Checks if there is a mesh assigned before tyring to draw it
 	if (mesh != 0)
 	{
+		//Checks if there is a texture, if there is draws the mesh with texture coordinates too
 		if (texture != 0)
 			mesh->draw(true);
 		else
@@ -327,10 +328,10 @@ void GameObject::update(float dt)
 	}
 		
 	//Checks if there is a texture assigned before trying to unbind it, otherwise re-enables textures
-	if (texture != 0)
+	/*if (texture != 0)
 		texture->unbind();
 	else
-		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_TEXTURE_2D);*/
 
 	//Loads identity for cleanliness
 	glLoadIdentity();

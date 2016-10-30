@@ -116,7 +116,8 @@ public:
 	~Mesh() {};
 
 	void draw(bool textured) const; //Called every frame...passes the vertices to immediate openGl in the main screen callback function
-	void output() const;
+	void output() const; //Outputs mesh data to the screen
+ 	std::vector<Vertex> getVertices() const; //Returns all of the vertices in the mesh (good for morhping)
 
 private:
 	std::vector<Face> faces; //Vector of faces

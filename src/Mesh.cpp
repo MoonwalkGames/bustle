@@ -91,7 +91,7 @@ void Mesh::loadOBJ(const string& fileName)
 					if (div2 > div1 + 1)
 						faceData.push_back(stof(nextInput.substr(div1 + 1, div2 - div1 - 1)));
 					else
-						faceData.push_back(0);
+						faceData.push_back(1);
 
 					faceData.push_back(stof(nextInput.substr(div2 + 1, string::npos)));
 				}
@@ -162,6 +162,19 @@ void Mesh::output() const
 
 	for (int i = 0; i < numFaces; i++)
 		faces[i].output();
+}
+
+std::vector<Vertex> Mesh::getVertices() const 
+{
+	std::vector<Vertex> vertexList;
+
+	for (int i = 0; i < faces.size(); i++)
+	{
+		for (int j = 0; j < 3; i++)
+			vertexList.push_back(faces[i].vertices[j]);
+	}
+
+	return vertexList;
 }
 
 //Need to order the vertices in a counter clockwise direction, basically calculates the z direction of the face normal (towards or away from the camera) and rewinds the vertices if needed

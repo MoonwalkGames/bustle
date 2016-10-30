@@ -30,9 +30,15 @@ void AssetManager::loadAssets()
 	loadedTextures.push_back(Texture2D("./res/img/tex_Bus_Red.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Bus_Blue.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Bus_Green.png"));
-	loadedTextures.push_back(Texture2D("./res/img/tex_Bus_Yellow.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus_Yellow.png"));	
 	loadedTextures.push_back(Texture2D("./res/img/tex_Level.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Passenger.png"));
+}
+
+void AssetManager::bindTexture(TEXTURE_NAME textureName)
+{
+	//glBindTexture(GL_TEXTURE_2D, NULL);
+	loadedTextures[textureName].bind();
 }
 
 //Returns a reference to the desired mesh, allows for multiple objects to use the same mesh with only one loading time

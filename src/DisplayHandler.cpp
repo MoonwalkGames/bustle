@@ -2,6 +2,7 @@
 
 int DisplayHandler::windowWidth = 1600;
 int DisplayHandler::windowHeight = 900;
+float DisplayHandler::deltaTime = 0.0f;
 float DisplayHandler::aspectRatio = 1.0f;
 int DisplayHandler::mousePosX = 0;
 int DisplayHandler::mousePosY = 0;
@@ -57,6 +58,12 @@ void DisplayHandler::idle()
 //Called every frame?
 void DisplayHandler::timer(int value)
 {
+	//Calculates deltaTime every frame to account for not running at exactly 60 fps
+	static unsigned int oldElapsedTime = 0;
+	unsigned int currentElapsedTime = glutGet(GLUT_ELAPSED_TIME);
+	deltaTime = float(currentElapsedTime - oldElapsedTime) / 1000.0f;
+	oldElapsedTime = currentElapsedTime;
+
 	glutPostRedisplay();
 	glutTimerFunc(FRAME_DELAY, timer, 0);
 }
@@ -127,16 +134,18 @@ float DisplayHandler::getOrthoStretch()
 }
 
 //Returns the cursor position X
-int DisplayHandler::getMouseX() {
-	return mousePosX;
+float DisplayHandler::getMouseX() {
+	return float(mousePosX);
 }
 
 //Returns the cursor position Y
-int DisplayHandler::getMouseY() {
-	return mousePosY;
+float DisplayHandler::getMouseY() {
+	return float(mousePosY);
 }
 
-float DisplayHandler::getDeltaTime() {
+float DisplayHandler::getDeltaTime()
+{
+	//return deltaTime;
 	return (1.0f / float(FRAMES_PER_SECOND));
 }
 
