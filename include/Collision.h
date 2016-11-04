@@ -4,14 +4,21 @@
 #include "glm\glm.hpp"
 #include "glm\gtx\projection.hpp"
 #include "CollisionBoxes.h"
-#include "GameObject.h"
-
+#include "GameObject.h"	
+class Player;
+class Passenger;
+enum result
+{
+	win,
+	partial_loss,
+	full_loss
+};
 struct Collision
 {
 	Collision(bool _status, glm::vec3 pen) : status(_status), penetration(pen) {}
 	bool status;
 	glm::vec3 penetration;
-	
+	int outcome;
 	operator bool() const { return status; }
 };
 
@@ -34,7 +41,10 @@ public:
 	static Collision OBBvAABB(const Col_OBB& a, const Col_AABB& b);
 
 	//Gameobject VS Gameobject
-	static bool OBJECTvOBJECT(const GameObject& a, const GameObject& b);
+	static Collision OBJECTvOBJECT(const GameObject& a, const GameObject& b);
+	static Collision PLAYERvPLAYER(const Player& a, const Player& b);
+	static Collision PLAYERvPASSENGER(const Player& a, const Passenger& b);
+	static Collision TRAFFIC_LIGHTvTRAFFIC_LIGHT(const Player& a, const Player& b, int aStage, int bStage);
 };
 typedef CollisionHandler CH;
 

@@ -11,7 +11,7 @@ class State_Gameplay : public GameState
 public:
 	State_Gameplay() {}
 	~State_Gameplay() {}
-
+	void toggleDebugDrawing();
 	void load();
 	void update();
 
@@ -24,7 +24,8 @@ private:
 	glm::vec3 cameraPos;
 	float busTurnSpeed;
 	float busMovementSpeed;
+	bool debugDrawing;
 
-	void launchPassenger(int busNumber);
+	void launchPassengers(int busNumber, int amount);
 };
 #endif

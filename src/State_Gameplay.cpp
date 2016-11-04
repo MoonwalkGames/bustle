@@ -4,6 +4,11 @@
 #include "MathHelper.h"
 #include "Collision.h"
 
+void State_Gameplay::toggleDebugDrawing()
+{
+	debugDrawing = !debugDrawing;
+}
+
 void State_Gameplay::load()
 {
 	//Seed the random number generator
@@ -66,7 +71,7 @@ void State_Gameplay::update()
 			
 		//Spawn passenger
 		if (controllers[i].checkButton(BUTTON_A) && controllers[i].isConnected())
-			launchPassenger(i);
+			launchPassengers(i, 1);
 	}
 	
 	//Move the camera around
@@ -95,7 +100,7 @@ void State_Gameplay::update()
 		passengers[i].update(DH::getDeltaTime());
 
 	//Output the number of passengers to the console
-	std::cout << "NUM PASSENGERS = " << passengers.size() << std::endl;
+	//std::cout << "NUM PASSENGERS = " << passengers.size() << std::endl;
 
 	//Update and draw the buses
 	AM::assets()->bindTexture(TEX_BUS_RED); //Red bus (player 1)
@@ -111,8 +116,47 @@ void State_Gameplay::update()
 	buses[3].update(DH::getDeltaTime());
 
 	//Detect collisions HERE
-	//*********************
-	//*********************
+	//Player vs Player Collisions
+	Collision res(false, glm::vec3(0));
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			if (i != j)
+			{
+				res = CollisionHandler::PLAYERvPLAYER(buses[i], buses[j]);
+				if (res)
+				{
+					launchPassengers(i, 1);
+					launchPassengers(j, 1);
+					if (abs(res.penetration.x) > abs(res.penetration.z))
+					{
+						buses[i].addToPosition(res.penetration.x * 0.5, 0.0f, 0.0f);
+						buses[j].addToPosition(-res.penetration.x * 0.5, 0.0f, 0.0f);
+					}
+					else
+					{
+						buses[i].addToPosition(0.0f, 0.0f, res.penetration.z);
+						buses[j].addToPosition(0.0f, 0.0f, -res.penetration.z);
+					}
+				}
+			}			
+		}
+	}
+	//player vs passenger collisions
+	int passengerVectorSize = passengers.size();
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < passengerVectorSize; j++)
+		{
+			if (CollisionHandler::PLAYERvPASSENGER(buses[i], passengers[j]))
+			{
+				passengers.erase(passengers.begin() + j);
+				passengerVectorSize--;
+				buses[i].addPoints(1);
+			}
+		}
+	}
 	//Detect collision HERE^
 	
 	//Reset the scene if 'r' is pressed or start is pressed on a button
@@ -126,18 +170,24 @@ void State_Gameplay::update()
 	glBindTexture(GL_TEXTURE_2D, NULL);
 }
 
-void State_Gameplay::launchPassenger(int busNumber)
+void State_Gameplay::launchPassengers(int busNumber, int amount)
 {
 	glm::vec3 startPosition = buses[busNumber].getPosition();
-	glm::vec3 startRotation = MathHelper::randomVec3(0.0f, 360.0f);
-	glm::vec3 startScale = MathHelper::randomVec3(0.5f, 1.75f);
+	glm::vec3 startRotation;
+	glm::vec3 startScale;
 
 	float launchSpeed = 25.0f;
-	glm::vec3 launchVel = MathHelper::randomVec3(-1.0f, 1.0f);
-	launchVel.y = 1.5f;
-	launchVel = glm::normalize(launchVel);
-	launchVel *= launchSpeed;
-
-	Passenger newPassenger = Passenger(startPosition, startRotation, startScale, true, glm::vec3(0.0f, -9.81f, 0.0f), launchVel, 1.0f, MESH_PASSENGER, TEX_PASSENGER);
-	passengers.push_back(newPassenger);
+	glm::vec3 launchVel;
+	
+	for (int i = 0; i < amount; i++)
+	{
+		startRotation = MathHelper::randomVec3(0.0f, 360.0f);
+		startScale = MathHelper::randomVec3(0.5f, 1.75f);
+		launchVel = MathHelper::randomVec3(-1.0f, 1.0f);
+		launchVel.y = 1.5f;
+		launchVel = glm::normalize(launchVel);
+		launchVel *= launchSpeed;
+		Passenger newPassenger = Passenger(startPosition, startRotation, startScale, true, glm::vec3(0.0f, -9.81f, 0.0f), launchVel, 1.0f, MESH_PASSENGER, TEX_PASSENGER);
+		passengers.push_back(newPassenger);
+	}
 }

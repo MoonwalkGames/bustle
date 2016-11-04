@@ -15,7 +15,7 @@ class Passenger : public Kinematic
 public:
 	Passenger(glm::vec3 pos, glm::vec3 launchRotation, glm::vec3 scl, bool gravityAffected, glm::vec3 accel, glm::vec3 launchVel, float mass, MESH_NAME mesh, TEXTURE_NAME texture);
 	~Passenger() {}
-
+	int getState() const { return currentState; }
 	bool getAbleToBePickedUp() const;
 	virtual void update(float deltaTime);
 
@@ -27,9 +27,4 @@ protected:
 	PASSENGER_STATE currentState; //What state the passenger is in..flying up, falling down, or on the ground. Informs what the update function does
 	bool ableToBePickedUp;
 };
-
-
-
-
-
 #endif

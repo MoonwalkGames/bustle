@@ -17,8 +17,11 @@ Passenger::Passenger(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, bool gravityAf
 void Passenger::update(float deltaTime)
 {
 	//DELETE LATER - Prevents the object from falling below y = 1
-	if (position.y < 1.5f)
+	if (position.y < 1.5f && this->currentState != FLYING_UP)
 	{
+		//applying "normal force"
+		velocity.y = 0;
+		acceleration.y = 0;
 		position.y = 1.5f;
 		rotation = glm::vec3(0, rotation.y, 0);
 	}

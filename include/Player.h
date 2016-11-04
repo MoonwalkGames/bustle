@@ -3,6 +3,14 @@
 
 #include "Kinematic.h"
 #define INITIAL_POINTS 0
+enum busStages
+{
+	firstStage,
+	secondStage,
+	thirdStage,
+	fourthStage,
+	fifthStage
+};
 /*
 Player class, child of Kinematic
 Game object with physics (Kinematic) but it also contains extra information like points, controller id, etc.
@@ -21,7 +29,8 @@ public:
 
 	void addPoints(int points); // Gives the player points
 	void takePoints(int points);//Takes points away from the player
-	int getPoints();            //Gets number of points
+	int getPoints(); //Gets number of points
+	int getStage() const { return stage; }
 
 	void transferPointsTo(Player target, int amount); //Transfers some points to the target player
 	void takePointsFrom(Player target, int amount);   //Takes points from the target player
@@ -29,6 +38,7 @@ public:
 
 private:
 	int points = 0;
+	int stage = thirdStage;
 };
 
 #endif

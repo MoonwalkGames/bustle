@@ -1,6 +1,18 @@
 #pragma once
 #include "glm\glm.hpp"
 #include "GLUT\glut.h"
+#include <vector>
+
+enum trafficLightAccessors
+{
+	roughSphere,
+	firstSphere,
+	secondSphere,
+	thirdSphere,
+	fourthSphere,
+	fifthSphere,
+	sixthSphere
+};
 
 struct Col_Sphere
 {
@@ -23,6 +35,15 @@ struct Col_OBB
 	Col_OBB(glm::vec3 pos, glm::vec3 ext) : position(pos), extent(ext) {}
 	glm::vec3 position;
 	glm::vec3 extent;
+};
+
+struct Col_Traffic_Light
+{
+	Col_Traffic_Light(int stage, glm::vec3 pos, glm::vec3 rot, glm::vec3 ext);
+	glm::vec3 position;
+	glm::vec3 extent;
+	glm::vec3 rotation;
+	std::vector<Col_Sphere> bubbles;	//vector of spheres, order is front to back. access using the enumeration. 
 };
 
 static void drawCollisionBox(const Col_OBB& boxToDraw)
