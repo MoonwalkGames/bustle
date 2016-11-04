@@ -45,7 +45,7 @@ void State_Gameplay::load()
 	//Set up the camera
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(-75.0f, 75.0f, -75.0f, 75.0f, 0.1f, 1000.0f);
+	glOrtho(-60.0f, 60.0f, -55.0f, 55.0f, 0.1f, 1000.0f);
 	gluLookAt(cameraPos.x, cameraPos.y, cameraPos.z, 0, 0, 0, 0, 1, 0);
 }
 

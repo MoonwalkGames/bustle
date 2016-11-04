@@ -33,6 +33,11 @@ public:
 	void addVelocity(glm::vec3 amount); //Add velocity onto the existing amount
 	void addVelocity(float amountX, float amountY, float amountZ);
 
+	void setImpulse(glm::vec3 newImpulse); //Setters for impulse
+	void setImpulse(float newX, float newY, float newZ);
+	void addImpulse(glm::vec3 amount); //Adders for impulse, usually use these instead
+	void addImpulse(float amountX, float amountY, float amountZ);
+
 	void setMass(float newMass); //Set the mass
 	void addMass(float amount); //Add to the mass
 
@@ -49,6 +54,7 @@ protected:
 	bool affectedByGravity; //If the object is affected by gravity or not...important because it will affect the inital acceleration passed into the constructor
 	glm::vec3 acceleration; //The instantaneous acceleration of the object, initially set to gravity constant below
 	glm::vec3 velocity; //The instantaneous velocity of the object, calculated by integrating acceleration into the previous frame's velocity
+	glm::vec3 impulse; //Essentially instantaneous acceleration...gets zeroed out within the same frame it is added. Use this for things like collision or jumping
 	float mass; //How heavy the object is (in kg)
 
 	static float dragConstant; //Constant drag force applied to all objects opposite their direction of travel, slows them down and stops them if no force is applied

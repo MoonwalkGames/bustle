@@ -127,6 +127,25 @@ void Kinematic::addVelocity(float amountX, float amountY, float amountZ) {
 }
 
 /*
+	Impulse Setters
+*/
+void Kinematic::setImpulse(glm::vec3 newVel) {
+	impulse = newVel;
+}
+
+void Kinematic::setImpulse(float newX, float newY, float newZ) {
+	impulse = glm::vec3(newX, newY, newZ);
+}
+
+void Kinematic::addImpulse(glm::vec3 amount) {
+	impulse += amount;
+}
+
+void Kinematic::addImpulse(float amountX, float amountY, float amountZ) {
+	impulse += glm::vec3(amountX, amountY, amountZ);
+}
+
+/*
 	Mass setters
 */
 void Kinematic::setMass(float newMass) {
@@ -172,6 +191,12 @@ bool Kinematic::getAffectedByGravity() const {
 */
 void Kinematic::update(float dt)
 {
+	//Need to be able to reset the acceleration at the end of the frame, back to only the constant accels, without impulse
+	glm::vec3 constantAcceleration = acceleration;
+
+	//Integrates the impulse into accleration
+	acceleration += impulse;
+
 	//Integrates acceleration into velocity
 	velocity.x = velocity.x + (dt * acceleration.x) + ((-velocity.x) * dragConstant);
 	velocity.y = velocity.y + (dt * acceleration.y) + ((-velocity.y) * dragConstant);
@@ -181,7 +206,7 @@ void Kinematic::update(float dt)
 	position.x += (velocity.x * dt) + (0.5 * dt * dt * acceleration.x);
 	position.y += (velocity.y * dt) + (0.5 * dt * dt * acceleration.y);
 	position.z += (velocity.z * dt) + (0.5 * dt * dt * acceleration.z);
-	
+
 	//DELETE LATER - Restricting the objects to the world bounds//
 	if (position.x > 40.0f)
 		position.x = 40.0f;
@@ -192,6 +217,12 @@ void Kinematic::update(float dt)
 		position.z = 30.0f;
 	else if (position.z < -40.0f)
 		position.z = -40.0f;	
+
+	//Zeroes out the impulse since it only lasts for one frame
+	impulse = glm::vec3(0.0f);
+
+	//Resets the acceleration to the constants so impulse can be added back the next frame again
+	acceleration = constantAcceleration;
 
 	//Calls the parent update function which positions the object properly in the scene and then renders it
 	GameObject::update(dt);
