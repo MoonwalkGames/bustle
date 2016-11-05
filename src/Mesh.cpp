@@ -170,11 +170,15 @@ std::vector<Vertex> Mesh::getVertices() const
 
 	for (int i = 0; i < faces.size(); i++)
 	{
-		for (int j = 0; j < 3; i++)
+		for (int j = 0; j < 3; j++)
 			vertexList.push_back(faces[i].vertices[j]);
 	}
 
 	return vertexList;
+}
+
+int Mesh::getNumVertices() const {
+	return getVertices().size();
 }
 
 //Need to order the vertices in a counter clockwise direction, basically calculates the z direction of the face normal (towards or away from the camera) and rewinds the vertices if needed

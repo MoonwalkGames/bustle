@@ -5,6 +5,7 @@
 #include <ctime>
 #include <chrono>
 #include <stdlib.h> //Weird thing where stdlib HAS to be included and HAS to be above glut.h due to glut redefining exit in a weird way
+#include "GL\glew.h"
 #include <GLUT\glut.h>
 #include "glm/gtx/string_cast.hpp"
 

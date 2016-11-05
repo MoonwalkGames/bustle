@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include "GL\glew.h"
 #include "GLUT\glut.h"
 #include "IL\ilut.h"
 #include "GameManager.h"

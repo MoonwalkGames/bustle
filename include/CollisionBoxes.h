@@ -1,5 +1,6 @@
 #pragma once
 #include "glm\glm.hpp"
+#include "GL\glew.h"
 #include "GLUT\glut.h"
 #include <vector>
 

@@ -3,6 +3,7 @@
 #include "glm\gtx\rotate_vector.hpp"
 #include "DisplayHandler.h"
 #include "MathHelper.h"
+#include "ShaderManager.h"
 
 /*
 	Constructors and destructor
@@ -286,8 +287,58 @@ void GameObject::flee(glm::vec3 target, float movementSpeed, float turnSpeed) {
 //Update function that properly handles positioning the game object and also drawing the model
 void GameObject::update(float dt)
 {
-	//Update the bounding collider
-	collisionSphere.position = position;
+	////Update the bounding collider
+	//collisionSphere.position = position;
+
+	////Create the scaling matrix
+	//glm::mat4 scaleMatrix = glm::scale(scale);
+
+	////Create the individual rotation matrices and then the concatenated one
+	//glm::mat4 rotMatrix_X = glm::rotate(DH::degToRad(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+	//glm::mat4 rotMatrix_Y = glm::rotate(DH::degToRad(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+	//glm::mat4 rotMatrix_Z = glm::rotate(DH::degToRad(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+	//glm::mat4 fullRotationMatrix = rotMatrix_Z * rotMatrix_Y * rotMatrix_X;
+
+	////Create the translation matrix
+	//glm::mat4 translationMatrix = glm::translate(position);
+
+	////Compiles the transformation together in the correct order: Scale -> Rotate -> Translate (Note the right to left notation)
+	//localToWorld = translationMatrix * fullRotationMatrix * scaleMatrix;
+
+	////Passes the matrix to OpenGL which automatically applies the transformations
+	//glMatrixMode(GL_MODELVIEW);
+	//glLoadMatrixf(glm::value_ptr(localToWorld));
+
+	////Checks if there is a texture assigned before trying to bind it, otherwise temporarily disables textures so it renders with colours
+	///*if (texture != 0)
+	//	texture->bind();
+	//else
+	//{
+	//	glDisable(GL_TEXTURE_2D);
+	//	glColor4f(colour.x, colour.y, colour.z, colour.w);
+	//}*/
+	//	
+	////Checks if there is a mesh assigned before tyring to draw it
+	//if (mesh != 0)
+	//{
+	//	//Checks if there is a texture, if there is draws the mesh with texture coordinates too
+	//	if (texture != 0)
+	//		mesh->draw(true);
+	//	else
+	//		mesh->draw(false);
+	//}
+		
+	//Checks if there is a texture assigned before trying to unbind it, otherwise re-enables textures
+	/*if (texture != 0)
+		texture->unbind();
+	else
+		glEnable(GL_TEXTURE_2D);*/
+
+	//Loads identity for cleanliness
+	//glLoadIdentity();
+
+	// Modern version
+	localToWorld = glm::mat4(1.0f); //Loads identity on the localToWorld matrix
 
 	//Create the scaling matrix
 	glm::mat4 scaleMatrix = glm::scale(scale);
@@ -304,37 +355,13 @@ void GameObject::update(float dt)
 	//Compiles the transformation together in the correct order: Scale -> Rotate -> Translate (Note the right to left notation)
 	localToWorld = translationMatrix * fullRotationMatrix * scaleMatrix;
 
-	//Passes the matrix to OpenGL which automatically applies the transformations
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(glm::value_ptr(localToWorld));
+	//Passes the local to world matrix to glsl as the model matrix
+	GLuint modelLocation = glGetUniformLocation(SM::shaders()->getActiveShader(), "model");
+	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, &localToWorld[0][0]);
 
-	//Checks if there is a texture assigned before trying to bind it, otherwise temporarily disables textures so it renders with colours
-	/*if (texture != 0)
-		texture->bind();
-	else
-	{
-		glDisable(GL_TEXTURE_2D);
-		glColor4f(colour.x, colour.y, colour.z, colour.w);
-	}*/
-		
-	//Checks if there is a mesh assigned before tyring to draw it
-	if (mesh != 0)
-	{
-		//Checks if there is a texture, if there is draws the mesh with texture coordinates too
-		if (texture != 0)
-			mesh->draw(true);
-		else
-			mesh->draw(false);
-	}
-		
-	//Checks if there is a texture assigned before trying to unbind it, otherwise re-enables textures
-	/*if (texture != 0)
-		texture->unbind();
-	else
-		glEnable(GL_TEXTURE_2D);*/
-
-	//Loads identity for cleanliness
-	glLoadIdentity();
+	//Draw the object using glsl...need to ensure the correct VBO is bound before this
+	std::cout << "Number of vertices in vbo: " << AM::assets()->getNumVerticesInActiveVBO() << std::endl;
+	glDrawArrays(GL_TRIANGLES, 0, AM::assets()->getNumVerticesInActiveVBO());
 }
 
 /*

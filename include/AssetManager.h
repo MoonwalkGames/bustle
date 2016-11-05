@@ -67,16 +67,19 @@ public:
 
 	Mesh& getMesh(MESH_NAME meshName); //Returns a reference to the desired mesh, this is what allows for the mesh to be loaded once but used multiple times
 	Texture2D& getTexture2D(TEXTURE_NAME textureName); //Returns a reference to desired texture, this is what allows for the texture to be loaded once but used multiple times
+	int getNumVerticesInActiveVBO() const; //Returns the number of vertices in the active VBO...useful when calling glDrawArrays
 
 	void loadAssets(); //Called in main(), actually loads in and sets up all of the assets that will be used in the game
 	void bindTexture(TEXTURE_NAME textureName); //Binds the texture that will be used for the next drawing calls
-
+	void bindMesh(MESH_NAME meshName); //Binds the mesh VBO requested...vbo's are ordered EXACTLY how the meshes are
 	static AssetManager* assets(); //Singleton pattern
 
 private:
+	int activeVBO; //Which VBO is currently bound
 	static AssetManager* inst; //Singleton pattern
 	std::vector<Mesh> loadedMeshes; //Vector of all of the meshes in the game, should be in .obj format
 	std::vector<Texture2D>loadedTextures; //Vector of all of the textures in the game, should be in .png format
+	std::vector<GLuint> meshVBOs; //Vector of the gl references to the mesh vbo's...ordered EXACTLY how the mesh vector is
 };
 
 typedef AssetManager AM; //Typedef in order to make calling the singleton easier

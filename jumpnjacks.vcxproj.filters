@@ -10,6 +10,9 @@
     <Filter Include="game states">
       <UniqueIdentifier>{3969c482-9480-4f04-86a9-911b646696be}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{4e9b8a55-f0be-4bea-94d1-05119ea2a0c9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -55,6 +58,12 @@
       <Filter>source</Filter>
     </ClCompile>
     <ClCompile Include="src\CollisionBoxes.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ShaderManager.cpp">
       <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -104,5 +113,25 @@
     <ClInclude Include="include\State_Gameplay.h">
       <Filter>game states</Filter>
     </ClInclude>
+    <ClInclude Include="include\Shader.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ShaderManager.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\shaders\passThru_f.glsl">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="res\shaders\passThru_v.glsl">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="res\shaders\shader_Base.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="res\shaders\shader_Base.vert">
+      <Filter>shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

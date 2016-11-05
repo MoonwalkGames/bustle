@@ -1,4 +1,7 @@
 #include "AssetManager.h"
+#include "ShaderManager.h"
+#include "GL\glew.h"
+#include "GLUT\glut.h"
 
 AssetManager* AssetManager::inst = 0; //The singleton instance of this class
 
@@ -7,6 +10,8 @@ AssetManager::AssetManager()
 {
 	loadedMeshes.reserve(NUM_MESHES);
 	loadedTextures.reserve(NUM_TEXTURES);
+
+	activeVBO = 0;
 }
 
 //Destructor, currently does nothing
@@ -33,12 +38,71 @@ void AssetManager::loadAssets()
 	loadedTextures.push_back(Texture2D("./res/img/tex_Bus_Yellow.png"));	
 	loadedTextures.push_back(Texture2D("./res/img/tex_Level.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Passenger.png"));
+
+	/* ========== Generate VBO's For Meshes ========== */
+	for (unsigned int i = 0; i < loadedMeshes.size(); i++)
+	{
+		//Gets the vertex data and then sets up the sub-vectors for the vertex attributes
+		std::vector<Vertex> meshVertices = loadedMeshes[i].getVertices();
+		std::vector<glm::vec3> vertexPositions;
+		std::vector<glm::vec3> vertexNormals;
+		std::vector<glm::vec2> uvCoords;
+
+		//Copies the mesh data into the vertex attribute arrays so we can create VBO's and also enable the attributes
+		for (unsigned int j = 0; j < meshVertices.size(); j++)
+		{
+			vertexPositions.push_back(meshVertices[i].position);
+			vertexNormals.push_back(meshVertices[i].normal);
+			uvCoords.push_back(meshVertices[i].uvCoord);
+		}
+
+		//Create the new VBO with the data subdivided into the various attributes. Need to allocate enough space for all of the different data types together
+		GLuint newVBO;
+		glGenBuffers(1, &newVBO);
+		glBindBuffer(GL_ARRAY_BUFFER, newVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertexPositions) + sizeof(vertexNormals) + sizeof(uvCoords), NULL, GL_STATIC_DRAW);
+
+		//Set up the vertex position subdivision within the array buffer...starts at the first (0) position and it requires
+		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertexPositions), vertexPositions.data());
+
+		//Set up the vertex normal subdivision within the array buffer...need to start at the end of the position data and it requires the size of the normal array
+		glBufferSubData(GL_ARRAY_BUFFER, sizeof(vertexPositions), sizeof(vertexNormals), vertexNormals.data());
+
+		//Set up the vertex uv coords subdivision within the array buffer...need to start at the end of the vertex position data which is that plus the position data and it requires the size of the uv data
+		glBufferSubData(GL_ARRAY_BUFFER, sizeof(vertexPositions) + sizeof(vertexNormals), sizeof(uvCoords), uvCoords.data());
+
+		//Points to the position data in the buffer so that glsl knows what the position in the shader should be
+		GLuint vPosition = glGetAttribLocation(SM::shaders()->getActiveShader(), "v_Position_In");
+		glVertexAttribPointer(vPosition, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+		glEnableVertexAttribArray(vPosition);
+
+		//Points to the normal data in the buffer so that glsl knows what the normal in the shader should be
+		GLuint vNormal = glGetAttribLocation(SM::shaders()->getActiveShader(), "v_Normal_In");
+		glVertexAttribPointer(vNormal, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(sizeof(vertexPositions)));
+		glEnableVertexAttribArray(vNormal);
+
+		//Points to the uv data in the buffer so that glsl knows what the uv in the shader should be
+		GLuint vUV = glGetAttribLocation(SM::shaders()->getActiveShader(), "v_UV_In");
+		glVertexAttribPointer(vUV, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(sizeof(vertexPositions) + sizeof(vertexNormals)));
+		glEnableVertexAttribArray(vUV);
+
+		//Unbinds the VBO now that it has been set up
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		//Adds the VBO to the vector
+		meshVBOs.push_back(newVBO);
+	}
 }
 
 void AssetManager::bindTexture(TEXTURE_NAME textureName)
 {
-	//glBindTexture(GL_TEXTURE_2D, NULL);
 	loadedTextures[textureName].bind();
+}
+
+void AssetManager::bindMesh(MESH_NAME meshName)
+{
+	activeVBO = meshName;
+	glBindBuffer(GL_ARRAY_BUFFER, meshVBOs[meshName]);
 }
 
 //Returns a reference to the desired mesh, allows for multiple objects to use the same mesh with only one loading time
@@ -78,6 +142,11 @@ Texture2D& AssetManager::getTexture2D(TEXTURE_NAME textureName)
 		std::cout << "Unknown error when trying to get the texture! Aborting!" << std::endl;
 		abort();
 	}
+}
+
+int AssetManager::getNumVerticesInActiveVBO() const
+{
+	return loadedMeshes[activeVBO].getNumVertices();
 }
 
 /* Singleton Pattern */

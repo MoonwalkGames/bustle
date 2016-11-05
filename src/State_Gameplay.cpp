@@ -3,6 +3,7 @@
 #include "glm\gtx\rotate_vector.hpp"
 #include "MathHelper.h"
 #include "Collision.h"
+#include "ShaderManager.h"
 
 void State_Gameplay::toggleDebugDrawing()
 {
@@ -15,7 +16,7 @@ void State_Gameplay::load()
 	srand(time(0));
 
 	//Init the level mesh
-	levelMesh = GameObject(glm::vec3(1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(2.0f, 2.0f, 2.0f), MESH_LEVEL, TEX_LEVEL);
+	levelMesh = GameObject(glm::vec3(1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(2.75f, 2.75f, 2.75f), MESH_LEVEL, TEX_LEVEL);
 
 	//Init the buses
 	buses[0] = Player(glm::vec3(-25.0f, 1.25f, -25.0f), glm::vec3(0.0f, -45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS, TEX_BUS_RED);
@@ -42,20 +43,34 @@ void State_Gameplay::load()
 	//Delete later but allows us to control the camera position
 	cameraPos = glm::vec3(34.0f, 35.0f, -34.0f);
 
+	// OLD OPENGL, DELETE ONCE MODERN IS WORKING PROPERLY!!!!! //
 	//Set up the camera
-	glMatrixMode(GL_PROJECTION);
+	/*glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(-60.0f, 60.0f, -55.0f, 55.0f, 0.1f, 1000.0f);
-	gluLookAt(cameraPos.x, cameraPos.y, cameraPos.z, 0, 0, 0, 0, 1, 0);
+	glOrtho(-60.0f, 60.0f, -55.0f, 55.0f, -5.0f, 1000.0f);
+	gluLookAt(cameraPos.x, cameraPos.y, cameraPos.z, 0, 0, 0, 0, 1, 0);*/
+
+	//Create the projection matrix and pass it on to glsl
+	glm::mat4 projection;
+	projection = glm::ortho(-60.0f, 60.0f, -55.0f, 55.0f, -5.0f, 1000.0f);
+	GLuint projectionLocation = glGetUniformLocation(SM::shaders()->getActiveShader(), "projection");
+	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
+
+	//Create the view matrix and pass it on to glsl
+	glm::mat4 view;
+	view = glm::lookAt(cameraPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	GLuint viewLocation = glGetUniformLocation(SM::shaders()->getActiveShader(), "view");
+	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
 }
 
 void State_Gameplay::update()
 {
+	// OLD OPENGL, DELETE ONCE MODERN IS WORKING PROPERLY!!!!! //
 	//Set up the camera
-	glMatrixMode(GL_PROJECTION);
+	/*glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(-60.0f, 60.0f, -55.0f, 55.0f, 0.1f, 1000.0f);
-	gluLookAt(cameraPos.x, cameraPos.y, cameraPos.z, 0, 0, 0, 0, 1, 0);
+	glOrtho(-60.0f, 60.0f, -55.0f, 55.0f, -5.0f, 1000.0f);
+	gluLookAt(cameraPos.x, cameraPos.y, cameraPos.z, 0, 0, 0, 0, 1, 0);*/
 
 	//Moves the bus targets based on the controller inputs
 	for (int i = 0; i < 4; i++)
@@ -92,10 +107,12 @@ void State_Gameplay::update()
 
 	//Draw the level mesh
 	AM::assets()->bindTexture(TEX_LEVEL);
+	AM::assets()->bindMesh(MESH_LEVEL);
 	levelMesh.update(DH::getDeltaTime());
 
 	//Update and draw the passengers
 	AM::assets()->bindTexture(TEX_PASSENGER);
+	AM::assets()->bindMesh(MESH_PASSENGER);
 	for (int i = 0; i < passengers.size(); i++)
 		passengers[i].update(DH::getDeltaTime());
 
@@ -103,6 +120,8 @@ void State_Gameplay::update()
 	//std::cout << "NUM PASSENGERS = " << passengers.size() << std::endl;
 
 	//Update and draw the buses
+	AM::assets()->bindMesh(MESH_BUS);
+
 	AM::assets()->bindTexture(TEX_BUS_RED); //Red bus (player 1)
 	buses[0].update(DH::getDeltaTime());
 

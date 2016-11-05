@@ -1,4 +1,5 @@
 #include "DisplayHandler.h"
+#include "ShaderManager.h"
 
 int DisplayHandler::windowWidth = 1600;
 int DisplayHandler::windowHeight = 900;
