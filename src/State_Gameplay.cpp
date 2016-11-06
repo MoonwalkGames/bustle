@@ -3,7 +3,7 @@
 #include "glm\gtx\rotate_vector.hpp"
 #include "MathHelper.h"
 #include "Collision.h"
-
+#include "SteeringBehaviors.h"
 void State_Gameplay::toggleDebugDrawing()
 {
 	debugDrawing = !debugDrawing;
@@ -22,6 +22,17 @@ void State_Gameplay::load()
 	buses[1] = Player(glm::vec3(-25.0f, 1.25f, 25.0f), glm::vec3(0.0f, 45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS, TEX_BUS_BLUE);
 	buses[2] = Player(glm::vec3(30.0f, 1.25f, 25.0f), glm::vec3(0.0f, 135.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS, TEX_BUS_GREEN);
 	buses[3] = Player(glm::vec3(30.0f, 1.25f, -25.0f), glm::vec3(0.0f, 225.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS, TEX_BUS_YELLOW);
+
+	busTargets[0] = buses[0].getPosition();
+	busTargets[1] = buses[1].getPosition();
+	busTargets[2] = buses[2].getPosition();
+	busTargets[3] = buses[3].getPosition();
+
+	for (unsigned int i = 0; i < 4; i++)
+	{
+		glm::vec3 busVelocity = buses[i].getForwardVector() * 5.0f;
+		buses[i].setVelocity(busVelocity);
+	}
 
 	//Init the controllers
 	for (int i = 0; i < 4; i++)
@@ -57,6 +68,7 @@ void State_Gameplay::update()
 	glOrtho(-60.0f, 60.0f, -55.0f, 55.0f, 0.1f, 1000.0f);
 	gluLookAt(cameraPos.x, cameraPos.y, cameraPos.z, 0, 0, 0, 0, 1, 0);
 
+	glm::vec3 targetDirection;
 	//Moves the bus targets based on the controller inputs
 	for (int i = 0; i < 4; i++)
 	{
@@ -69,6 +81,46 @@ void State_Gameplay::update()
 		if (worldRotatedController.x != 0.0f && worldRotatedController.z != 0.0f)
 			buses[i].setRotationY(DH::radToDeg(atan2(-worldRotatedController.z, worldRotatedController.x)));
 			
+		if (controllers[i].isConnected())
+		{
+
+			busTargets[i] += worldRotatedController;
+			//targetDirection = SteeringBehaviour::seek(buses[i].getPosition(), busTargets[i], 10.0f);
+			targetDirection = busTargets[i] - buses[i].getPosition();
+			glm::vec3 direction = glm::normalize(MathHelper::LERP(buses[i].getForwardVector(), targetDirection, DH::deltaTime * busTurnSpeed));
+			buses[i].setVelocity(busMovementSpeed * direction);
+
+			glPointSize(10.0f);
+			glBegin(GL_POINTS);
+			glVertex3f(busTargets[i].x, 1.0f, busTargets[i].z);
+			glEnd();
+		}
+
+		if (worldRotatedController.x != 0.0f && worldRotatedController.z != 0.0f)
+		{
+			glm::vec3 busPos(buses[i].getPosition().x, buses[i].getPosition().y, buses[i].getPosition().z);
+			//calculate the new forward vector
+			glm::vec3 desired = (busTargets[i] - buses[i].getPosition());
+			//glEnd();
+			printf("%f, %f, %f\n", desired.x, desired.y, desired.z);
+			glm::vec3 lastFrame = buses[i].getForwardVector();
+
+			glm::vec3 current = MathHelper::LERP(lastFrame, desired, DH::deltaTime * busTurnSpeed);
+
+			//printf("%f, %f, %f\n", current.x, current.y, current.z);
+			//buses[i].setForwardVector(current);
+
+			glm::vec3 forwardVec(buses[i].getForwardVector().x, buses[i].getForwardVector().y + 5, buses[i].getForwardVector().z);
+			forwardVec *= 3.0f;
+			//glBegin(GL_LINES);
+			//{
+			//	glVertex3f(busPos.x, busPos.y + 5, busPos.z);
+			//	glVertex3f(busPos.x + forwardVec.x, busPos.y + forwardVec.y, busPos.z + forwardVec.z);
+			//}
+			//glEnd();
+		}
+
+
 		//Spawn passenger
 		if (controllers[i].checkButton(BUTTON_A) && controllers[i].isConnected())
 			launchPassengers(i, 1);
@@ -97,7 +149,17 @@ void State_Gameplay::update()
 	//Update and draw the passengers
 	AM::assets()->bindTexture(TEX_PASSENGER);
 	for (int i = 0; i < passengers.size(); i++)
+	{
+		//seek behaviour
+		//passengers[i].addImpulse(SteeringBehaviour::seek(passengers[i], buses[0].getPosition(), 3.0f));
+		//flee behaviour
+		//passengers[i].addImpulse(SteeringBehaviour::flee(passengers[i], buses[0].getPosition(), 10.0f));
+		//wander behaviour
+		passengers[i].addImpulse(SteeringBehaviour::wander(passengers[i], 50.0f, 100.0f));
+
 		passengers[i].update(DH::getDeltaTime());
+
+	}
 
 	//Output the number of passengers to the console
 	//std::cout << "NUM PASSENGERS = " << passengers.size() << std::endl;
@@ -134,14 +196,14 @@ void State_Gameplay::update()
 						buses[i].addToPosition(res.penetration.x * 0.5, 0.0f, 0.0f);
 						buses[j].addToPosition(-res.penetration.x * 0.5, 0.0f, 0.0f);
 
-						buses[j].addImpulse(-res.penetration * 1000.0f);
+						//buses[j].addImpulse(-res.penetration * 1000.0f);
 					}
 					else
 					{
 						buses[i].addToPosition(0.0f, 0.0f, res.penetration.z);
 						buses[j].addToPosition(0.0f, 0.0f, -res.penetration.z);
 
-						buses[i].addImpulse(-res.penetration * 1000.0f);
+						//buses[i].addImpulse(-res.penetration * 1000.0f);
 					}
 				}
 			}			

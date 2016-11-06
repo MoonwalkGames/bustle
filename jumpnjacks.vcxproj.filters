@@ -104,5 +104,8 @@
     <ClInclude Include="include\State_Gameplay.h">
       <Filter>game states</Filter>
     </ClInclude>
+    <ClInclude Include="SteeringBehaviors.h">
+      <Filter>headers</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
