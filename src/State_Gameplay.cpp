@@ -28,12 +28,6 @@ void State_Gameplay::load()
 	busTargets[2] = buses[2].getPosition();
 	busTargets[3] = buses[3].getPosition();
 
-	for (unsigned int i = 0; i < 4; i++)
-	{
-		glm::vec3 busVelocity = buses[i].getForwardVector() * 5.0f;
-		buses[i].setVelocity(busVelocity);
-	}
-
 	//Init the controllers
 	for (int i = 0; i < 4; i++)
 		controllers[i] = MController(i);
@@ -47,8 +41,8 @@ void State_Gameplay::load()
 	}
 
 	//Init the bus movement speed and the bus turn speed
- 	busMovementSpeed = 0.5f;
-	busTurnSpeed = 0.5f;
+ 	busMovementSpeed = 35.0f;
+	busTurnSpeed = 0.75f;
 
 	//Delete later but allows us to control the camera position
 	cameraPos = glm::vec3(34.0f, 35.0f, -34.0f);
@@ -69,62 +63,117 @@ void State_Gameplay::update()
 	gluLookAt(cameraPos.x, cameraPos.y, cameraPos.z, 0, 0, 0, 0, 1, 0);
 
 	glm::vec3 targetDirection;
-	//Moves the bus targets based on the controller inputs
+
 	for (int i = 0; i < 4; i++)
 	{
+		//Update the controller values
 		controllers[i].getInputs();
 
-		//Need to rotate this by the rotation of the world VS the camera since up is actually up right(ish) (angle is 45)
-		glm::vec3 worldRotatedController = glm::rotate(glm::vec3(-controllers[i].lX, 0.0f, controllers[i].lY) * busMovementSpeed, DH::degToRad(-45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		buses[i].addToPosition(worldRotatedController);
-		
-		if (worldRotatedController.x != 0.0f && worldRotatedController.z != 0.0f)
-			buses[i].setRotationY(DH::radToDeg(atan2(-worldRotatedController.z, worldRotatedController.x)));
-			
-		if (controllers[i].isConnected())
-		{
+		//Getting the controller input and rotating it to fit our world rotation
+		glm::vec3 worldRotatedController = glm::rotate(glm::vec3(-controllers[i].lX, 0.0f, controllers[i].lY), DH::degToRad(-45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
-			busTargets[i] += worldRotatedController;
-			//targetDirection = SteeringBehaviour::seek(buses[i].getPosition(), busTargets[i], 10.0f);
-			targetDirection = busTargets[i] - buses[i].getPosition();
-			glm::vec3 direction = glm::normalize(MathHelper::LERP(buses[i].getForwardVector(), targetDirection, DH::deltaTime * busTurnSpeed));
-			buses[i].setVelocity(busMovementSpeed * direction);
+		//Calculates the vector between the bus and the target
+		glm::vec3 desired = busTargets[i] - buses[i].getPosition();
 
-			glPointSize(10.0f);
-			glBegin(GL_POINTS);
-			glVertex3f(busTargets[i].x, 1.0f, busTargets[i].z);
-			glEnd();
-		}
+		//Move target based on controller input if the target is within a certain distance from the controller
+		if ((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z) < 90.0f)
+			busTargets[i] += (worldRotatedController / 1.5f);
 
-		if (worldRotatedController.x != 0.0f && worldRotatedController.z != 0.0f)
-		{
-			glm::vec3 busPos(buses[i].getPosition().x, buses[i].getPosition().y, buses[i].getPosition().z);
-			//calculate the new forward vector
-			glm::vec3 desired = (busTargets[i] - buses[i].getPosition());
-			//glEnd();
-			printf("%f, %f, %f\n", desired.x, desired.y, desired.z);
-			glm::vec3 lastFrame = buses[i].getForwardVector();
+		//Set forward vector to face the target
+		glm::vec3 currentForwardVector = buses[i].getForwardVector();
+		desired = busTargets[i] - buses[i].getPosition(); //Calculates the new desired vector since we moved the target
 
-			glm::vec3 current = MathHelper::LERP(lastFrame, desired, DH::deltaTime * busTurnSpeed);
+		if (!(controllers[i].lX == 0 && controllers[i].lY == 0))
+			currentForwardVector = MathHelper::LERP(currentForwardVector, desired, DH::deltaTime * busTurnSpeed);
 
-			//printf("%f, %f, %f\n", current.x, current.y, current.z);
-			//buses[i].setForwardVector(current);
+		if (desired.x != 0.0f || desired.y != 0.0f || desired.z != 0.0f)
+			buses[i].setForwardVector(currentForwardVector);
 
-			glm::vec3 forwardVec(buses[i].getForwardVector().x, buses[i].getForwardVector().y + 5, buses[i].getForwardVector().z);
-			forwardVec *= 3.0f;
-			//glBegin(GL_LINES);
-			//{
-			//	glVertex3f(busPos.x, busPos.y + 5, busPos.z);
-			//	glVertex3f(busPos.x + forwardVec.x, busPos.y + forwardVec.y, busPos.z + forwardVec.z);
-			//}
-			//glEnd();
-		}
+		// --- Move the bus --- //
+		//Check if the bus has reached the target. If so, zero out velocity. Only does this if no input on controller
+		if (((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z) < 90.0f) && (controllers[i].lX == 0 && controllers[i].lY == 0))
+			buses[i].setVelocity(0.0f, 0.0f, 0.0f);
+		else//Otherwise, move forward
+			buses[i].setVelocity(glm::normalize(buses[i].getForwardVector()) * busMovementSpeed);
 
+		//Draw the bus target
+		if (i == 0)
+			glColor3f(1.0f, 0.0f, 0.0f);
+		else if (i == 1)
+			glColor3f(0.0f, 0.0f, 1.0f);
+		else if (i == 2)
+			glColor3f(0.0f, 1.0f, 0.0f);
+		else if (i == 3)
+			glColor3f(1.0f, 1.0f, 0.0f);
 
-		//Spawn passenger
-		if (controllers[i].checkButton(BUTTON_A) && controllers[i].isConnected())
-			launchPassengers(i, 1);
+		glPointSize(10.0f);
+		glBegin(GL_POINTS);
+		glVertex3f(busTargets[i].x, 1.0f, busTargets[i].z);
+		glEnd();
+
+		glColor3f(1.0f, 1.0f, 1.0f);
+
+		//Launch passengers when 'A' is pressed
+		if (controllers[i].checkButton(BUTTON_A))
+			launchPassengers(2, 1);
 	}
+
+	//Moves the bus targets based on the controller inputs
+	//for (int i = 0; i < 4; i++)
+	//{
+	//	controllers[i].getInputs();
+
+	//	//Need to rotate this by the rotation of the world VS the camera since up is actually up right(ish) (angle is 45)
+	//	glm::vec3 worldRotatedController = glm::rotate(glm::vec3(-controllers[i].lX, 0.0f, controllers[i].lY) * busMovementSpeed, DH::degToRad(-45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	//	//buses[i].addToPosition(worldRotatedController);
+	//	
+	//	if (worldRotatedController.x != 0.0f && worldRotatedController.z != 0.0f)
+	//		buses[i].setRotationY(DH::radToDeg(atan2(-worldRotatedController.z, worldRotatedController.x)));
+	//		
+	//	if (controllers[i].isConnected())
+	//	{
+
+	//		busTargets[i] += worldRotatedController;
+	//		//targetDirection = SteeringBehaviour::seek(buses[i].getPosition(), busTargets[i], 10.0f);
+	//		targetDirection = busTargets[i] - buses[i].getPosition();
+	//		glm::vec3 direction = glm::normalize(MathHelper::LERP(buses[i].getForwardVector(), targetDirection, DH::deltaTime * busTurnSpeed));
+	//		//buses[i].setVelocity(busMovementSpeed * direction);
+
+	//		glPointSize(10.0f);
+	//		glBegin(GL_POINTS);
+	//		glVertex3f(busTargets[i].x, 1.0f, busTargets[i].z);
+	//		glEnd();
+	//	}
+
+	//	if (worldRotatedController.x != 0.0f && worldRotatedController.z != 0.0f)
+	//	{
+	//		glm::vec3 busPos(buses[i].getPosition().x, buses[i].getPosition().y, buses[i].getPosition().z);
+	//		//calculate the new forward vector
+	//		glm::vec3 desired = (busTargets[i] - buses[i].getPosition());
+	//		//glEnd();
+	//		printf("%f, %f, %f\n", desired.x, desired.y, desired.z);
+	//		glm::vec3 lastFrame = buses[i].getForwardVector();
+
+	//		glm::vec3 current = MathHelper::LERP(lastFrame, desired, DH::deltaTime * busTurnSpeed);
+
+	//		//printf("%f, %f, %f\n", current.x, current.y, current.z);
+	//		//buses[i].setForwardVector(current);
+
+	//		glm::vec3 forwardVec(buses[i].getForwardVector().x, buses[i].getForwardVector().y + 5, buses[i].getForwardVector().z);
+	//		forwardVec *= 3.0f;
+	//		//glBegin(GL_LINES);
+	//		//{
+	//		//	glVertex3f(busPos.x, busPos.y + 5, busPos.z);
+	//		//	glVertex3f(busPos.x + forwardVec.x, busPos.y + forwardVec.y, busPos.z + forwardVec.z);
+	//		//}
+	//		//glEnd();
+	//	}
+
+
+	//	//Spawn passenger
+	//	if (controllers[i].checkButton(BUTTON_A) && controllers[i].isConnected())
+	//		launchPassengers(i, 1);
+	//}
 	
 	//Move the camera around
 	if (DH::getKey('w'))
@@ -155,7 +204,7 @@ void State_Gameplay::update()
 		//flee behaviour
 		//passengers[i].addImpulse(SteeringBehaviour::flee(passengers[i], buses[0].getPosition(), 10.0f));
 		//wander behaviour
-		passengers[i].addImpulse(SteeringBehaviour::wander(passengers[i], 50.0f, 100.0f));
+		//passengers[i].addImpulse(SteeringBehaviour::wander(passengers[i], 50.0f, 100.0f));
 
 		passengers[i].update(DH::getDeltaTime());
 
@@ -191,6 +240,7 @@ void State_Gameplay::update()
 				{
 					//launchPassengers(i, 1);
 					//launchPassengers(j, 1);
+
 					if (abs(res.penetration.x) > abs(res.penetration.z))
 					{
 						buses[i].addToPosition(res.penetration.x * 0.5, 0.0f, 0.0f);
@@ -210,8 +260,8 @@ void State_Gameplay::update()
 		}
 
 		//Adding drag
-		if (buses[i].getVelocity().x != 0.0f && buses[i].getVelocity().y != 0.0f && buses[i].getVelocity().z != 0.0f)
-			buses[i].addImpulse(-(glm::normalize(buses[i].getVelocity()) * 500.0f));
+		//if (buses[i].getVelocity().x != 0.0f && buses[i].getVelocity().y != 0.0f && buses[i].getVelocity().z != 0.0f)
+			//buses[i].addImpulse(-(glm::normalize(buses[i].getVelocity()) * 500.0f));
 	}
 	//player vs passenger collisions
 	int passengerVectorSize = passengers.size();

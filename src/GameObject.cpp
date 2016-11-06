@@ -382,6 +382,32 @@ void GameObject::recalculateForwardVector()
 	forwardVector = glm::normalize(forwardVector) * 5.0f;
 }
 
+void GameObject::setForwardVector(glm::vec3 newForwardDirection)
+{
+	// ---- Set the forward vector ---- //
+	forwardVector = glm::normalize(newForwardDirection);
+
+	// ---- Rotate the object to face the forward vector ---- //
+	rotation.y = DH::radToDeg(atan2(-forwardVector.z, forwardVector.x));
+	//Calculate the rest someday (today is not that day)
+
+	// ----- Draw the forward vector (DEBUG) ----- //
+	glDisable(GL_TEXTURE_2D);
+	glColor3f(1.0f, 1.0f, 1.0f);
+
+	//Move the forward vector to the object
+	//glm::vec3 forwardVectorExtended = forwardVector * 5.0f;
+
+	//glBegin(GL_LINES);
+	//{
+	//	glVertex3f(0, 0, 0); //0 because the origin is now localized
+	//	glVertex3f(forwardVectorExtended.x, forwardVectorExtended.y, forwardVectorExtended.z);
+	//}
+	//glEnd();
+
+	glEnable(GL_TEXTURE_2D);
+}
+
 void GameObject::drawLocalAxes()
 {
 	glm::vec3 localX = glm::vec3(1.0f, 0.0f, 0.0f);
