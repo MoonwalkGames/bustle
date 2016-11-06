@@ -224,6 +224,28 @@ void Kinematic::update(float dt)
 	//Resets the acceleration to the constants so impulse can be added back the next frame again
 	acceleration = constantAcceleration;
 
+	glDisable(GL_TEXTURE_2D);
+	//Draw velocity
+	glColor3f(1.0f, 1.0f, 0.0f);
+	glBegin(GL_LINES);
+	{
+		glVertex3f(position.x, position.y, position.z);
+		glVertex3f(position.x + velocity.x, position.y + velocity.y, position.z + velocity.z);
+	}
+	glEnd();
+	glColor3f(1.0f, 1.0f, 1.0f);
+
+	//Draw acceleration
+	glColor3f(1.0f, 0.0f, 1.0f);
+	glBegin(GL_LINES);
+	{
+		glVertex3f(position.x, position.y, position.z);
+		glVertex3f(position.x + acceleration.x, position.y + acceleration.y, position.z + acceleration.z);
+	}
+	glEnd();
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glEnable(GL_TEXTURE_2D);
+
 	//Calls the parent update function which positions the object properly in the scene and then renders it
 	GameObject::update(dt);
 }

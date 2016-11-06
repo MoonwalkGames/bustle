@@ -127,21 +127,29 @@ void State_Gameplay::update()
 				res = CollisionHandler::PLAYERvPLAYER(buses[i], buses[j]);
 				if (res)
 				{
-					launchPassengers(i, 1);
-					launchPassengers(j, 1);
+					//launchPassengers(i, 1);
+					//launchPassengers(j, 1);
 					if (abs(res.penetration.x) > abs(res.penetration.z))
 					{
 						buses[i].addToPosition(res.penetration.x * 0.5, 0.0f, 0.0f);
 						buses[j].addToPosition(-res.penetration.x * 0.5, 0.0f, 0.0f);
+
+						buses[j].addImpulse(-res.penetration * 1000.0f);
 					}
 					else
 					{
 						buses[i].addToPosition(0.0f, 0.0f, res.penetration.z);
 						buses[j].addToPosition(0.0f, 0.0f, -res.penetration.z);
+
+						buses[i].addImpulse(-res.penetration * 1000.0f);
 					}
 				}
 			}			
 		}
+
+		//Adding drag
+		if (buses[i].getVelocity().x != 0.0f && buses[i].getVelocity().y != 0.0f && buses[i].getVelocity().z != 0.0f)
+			buses[i].addImpulse(-(glm::normalize(buses[i].getVelocity()) * 500.0f));
 	}
 	//player vs passenger collisions
 	int passengerVectorSize = passengers.size();

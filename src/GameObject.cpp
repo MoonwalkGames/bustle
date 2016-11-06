@@ -333,6 +333,8 @@ void GameObject::update(float dt)
 	else
 		glEnable(GL_TEXTURE_2D);*/
 
+	drawLocalAxes();
+
 	//Loads identity for cleanliness
 	glLoadIdentity();
 }
@@ -363,7 +365,9 @@ std::ostream& operator << (std::ostream& os, const GameObject& object)
 void GameObject::recalculateForwardVector()
 {
 	//Starts with a clean base vector for first rotation, then rotates that vector for other rotations
-	glm::vec3 baseForwardVector(0.0f, 0.0f, 1.0f);
+	glm::vec3 baseForwardVector(1.0f, 0.0f, 0.0f);
+
+	forwardVector = baseForwardVector;
 
 	//Pitch rotation - around the x axis//
 	forwardVector = glm::rotate(baseForwardVector, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
@@ -375,5 +379,58 @@ void GameObject::recalculateForwardVector()
 	forwardVector = glm::rotate(forwardVector, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
 
 	//Normalize forward vector
-	forwardVector = glm::normalize(forwardVector);
+	forwardVector = glm::normalize(forwardVector) * 5.0f;
+}
+
+void GameObject::drawLocalAxes()
+{
+	glm::vec3 localX = glm::vec3(1.0f, 0.0f, 0.0f);
+	glm::vec3 localY = glm::vec3(0.0f, 1.0f, 0.0f);
+	glm::vec3 localZ = glm::vec3(0.0f, 0.0f, 1.0f);
+
+	// ----- Draw axes ----- //
+	glLoadIdentity();
+	glDisable(GL_TEXTURE_2D);
+	
+	glTranslatef(position.x, position.y, position.z);
+	glRotatef(rotation.x, 1.0f, 0.0f, 0.0f);
+	glRotatef(rotation.y, 0.0f, 1.0f, 0.0f);
+	glRotatef(rotation.z, 0.0f, 0.0f, 1.0f);
+
+	//Draw x
+	glLineWidth(5.0f);
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glm::vec3 localXScaled = localX * 10.0f;
+	glBegin(GL_LINES);
+	{
+		glVertex3f(0, 0, 0);
+		glVertex3f(localXScaled.x, localXScaled.y, localXScaled.z);
+	}
+	glEnd();
+	glColor3f(1.0f, 1.0f, 1.0f);
+
+	//Draw y
+	glLineWidth(5.0f);
+	glColor3f(0.0f, 1.0f, 0.0f);
+	glm::vec3 localYScaled = localY * 10.0f;
+	glBegin(GL_LINES);
+	{
+		glVertex3f(0, 0, 0);
+		glVertex3f(localYScaled.x, localYScaled.y, localYScaled.z);
+	}
+	glEnd();
+	glColor3f(1.0f, 1.0f, 1.0f);
+
+	//Draw z
+	glLineWidth(5.0f);
+	glColor3f(0.0f, 0.0f, 1.0f);
+	glm::vec3 localZScaled = localZ * 10.0f;
+	glBegin(GL_LINES);
+	{
+		glVertex3f(0, 0, 0);
+		glVertex3f(localZScaled.x, localZScaled.y, localZScaled.z);
+	}
+	glEnd();
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glEnable(GL_TEXTURE_2D);
 }

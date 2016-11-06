@@ -66,6 +66,7 @@ public:
 	void addToScale(glm::vec3 addition); //Can alter the scale easily
 	void addToScale(float additionX, float additionY, float additionZ);
 	void recalculateForwardVector(); //Private utility function to recalculate the forward vector after the object rotates. Called anywhere the object's rotatation is changed
+	void drawLocalAxes();
 
 	void seek(glm::vec3 target, float movementSpeed, float turnSpeed); //Uses the basic seek algorithm to make this object seek the point passed
 	void flee(glm::vec3 taget, float movementSpeed, float turnSpeed); //Uses the basic flee algorithm to make this object flee from the point passed
