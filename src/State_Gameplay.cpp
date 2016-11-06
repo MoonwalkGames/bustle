@@ -41,7 +41,7 @@ void State_Gameplay::load()
 	}
 
 	//Init the bus movement speed and the bus turn speed
- 	busMovementSpeed = 35.0f;
+	busMovementSpeed = 35.0f;
 	busTurnSpeed = 0.75f;
 
 	//Delete later but allows us to control the camera position
@@ -174,7 +174,7 @@ void State_Gameplay::update()
 	//	if (controllers[i].checkButton(BUTTON_A) && controllers[i].isConnected())
 	//		launchPassengers(i, 1);
 	//}
-	
+
 	//Move the camera around
 	if (DH::getKey('w'))
 		cameraPos.z -= 0.5f;
@@ -204,9 +204,15 @@ void State_Gameplay::update()
 		//flee behaviour
 		//passengers[i].addImpulse(SteeringBehaviour::flee(passengers[i], buses[0].getPosition(), 10.0f));
 		//wander behaviour
-		//passengers[i].addImpulse(SteeringBehaviour::wander(passengers[i], 50.0f, 100.0f));
+		if (passengers[i].getState() == GROUNDED) {
 
+			std::cout << "TEST" << std::endl;
+			passengers[i].setVelocity(glm::normalize(passengers[i].getVelocity())*5.0f);
+
+			passengers[i].addImpulse(SteeringBehaviour::wander(passengers[i], 50.0f, 500.0f));
+		}
 		passengers[i].update(DH::getDeltaTime());
+
 
 	}
 
@@ -256,7 +262,7 @@ void State_Gameplay::update()
 						//buses[i].addImpulse(-res.penetration * 1000.0f);
 					}
 				}
-			}			
+			}
 		}
 
 		//Adding drag
@@ -278,7 +284,7 @@ void State_Gameplay::update()
 		}
 	}
 	//Detect collision HERE^
-	
+
 	//Reset the scene if 'r' is pressed or start is pressed on a button
 	if (DH::getKey('r') || controllers[0].checkButton(BUTTON_START) || controllers[1].checkButton(BUTTON_START) || controllers[2].checkButton(BUTTON_START) || controllers[3].checkButton(BUTTON_START))
 	{
@@ -298,7 +304,7 @@ void State_Gameplay::launchPassengers(int busNumber, int amount)
 
 	float launchSpeed = 25.0f;
 	glm::vec3 launchVel;
-	
+
 	for (int i = 0; i < amount; i++)
 	{
 		startRotation = MathHelper::randomVec3(0.0f, 360.0f);

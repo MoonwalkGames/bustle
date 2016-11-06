@@ -92,7 +92,7 @@
     <ClCompile Include="src\Passenger.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\State_Gameplay.cpp" />
-    <ClCompile Include="src\Steeringbehaviors.cpp" />
+    <ClCompile Include="src\Steeringbehaviors.h" />
     <ClCompile Include="src\Texture2D.cpp" />
   </ItemGroup>
   <ItemGroup>

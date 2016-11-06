@@ -49,7 +49,7 @@ void Passenger::update(float deltaTime)
 		
 		rotation = MathHelper::LERP(rotation, glm::vec3(0.0f, rotation.y, 0.0f), t);
 
-		if (t == 1.0f)
+		if (position.y < 2.0f)
 			currentState = PASSENGER_STATE::GROUNDED;
 	}
 	else if (currentState == PASSENGER_STATE::GROUNDED)

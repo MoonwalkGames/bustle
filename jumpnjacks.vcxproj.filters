@@ -57,7 +57,7 @@
     <ClCompile Include="src\CollisionBoxes.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="src\Steeringbehaviors.cpp">
+    <ClCompile Include="src\Steeringbehaviors.h">
       <Filter>headers</Filter>
     </ClCompile>
   </ItemGroup>
