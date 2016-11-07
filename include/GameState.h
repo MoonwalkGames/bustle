@@ -14,6 +14,7 @@ using namespace std::chrono;
 enum STATE : int
 {
 	STATE_GAMEPLAY,
+	STATE_ENDROUND,
 
 	NUM_STATES
 };

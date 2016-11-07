@@ -55,12 +55,12 @@ void State_Gameplay::load()
 
 	// ----- Set up the UI ------ ///
 	//set up the timer
-	timeLeft = 120.0f;
+	timeLeft = 5.0f;
 	timer = Sprite::createTextVector(TEX_FONT, -5.0f, -10.0f, 5.0f, 5.0f, "0:00");
 
 	//Set up the billboards
 	billboards[0] = Sprite(TEX_BUS_RED, 1, 1);
-	billboards[0].setPosition(30.0f, 18.0f, 51.5f);
+	billboards[0].setPosition(29.0f, 18.0f, 51.5f);
 	billboards[0].setRotation(0.0f, 180.0f, 0.0f);
 	billboards[0].setScale(20.0f, 10.0f, 1.0f);
 
@@ -82,10 +82,16 @@ void State_Gameplay::load()
 
 void State_Gameplay::update()
 {
+	if (DH::getKey('h'))
+		GM::game()->setActiveState(STATE_GAMEPLAY);
+
 	if (timeLeft > 0.0f)
 		timeLeft -= DH::deltaTime;
-	else
-		timeLeft = 0.0f;
+	/*else
+	{
+		DBG::debug()->outputAnalytics();
+		GM::game()->setActiveState(STATE_ENDROUND);
+	}*/
 
 	timeSinceLastDataPush += DH::deltaTime;
 
@@ -192,22 +198,39 @@ void State_Gameplay::update()
 	levelMesh.update(DH::getDeltaTime());
 
 	//Update and draw the passengers
+
 	AM::assets()->bindTexture(TEX_PASSENGER);
-	for (unsigned int i = 0; i < passengers.size(); i++)
+
+	for (int i = 0; i < passengers.size(); i++)
+
 	{
+
+		//so passengers dont fly
+		if (passengers[i].getState() == GROUNDED)
+		{
+			passengers[i].setVelocity(glm::normalize(passengers[i].getVelocity())*5.0f);
+			passengers[i].setPositionY(0.0f);
+		}
+
+		//wander behaviour
+		passengers[i].addImpulse(SteeringBehaviour::wander(passengers[i], 50.0f, 500.0f));
+
 		//seek behaviour
 		//passengers[i].addImpulse(SteeringBehaviour::seek(passengers[i], buses[0].getPosition(), 3.0f));
+
 		//flee behaviour
 		//passengers[i].addImpulse(SteeringBehaviour::flee(passengers[i], buses[0].getPosition(), 10.0f));
-		//wander behaviour
-		if (passengers[i].getState() == GROUNDED) {
 
-			passengers[i].setVelocity(glm::normalize(passengers[i].getVelocity())*5.0f);
+		//pursuit behaviour
+		//passengers[i].addImpulse(SteeringBehaviour::pursuit(passengers[i], buses[0], 50.0f));
 
-			passengers[i].addImpulse(SteeringBehaviour::wander(passengers[i], 50.0f, 500.0f));
-		}
+		//evade behaviour
+		//passengers[i].addImpulse(SteeringBehaviour::evade(passengers[i], buses[0], 10.0f));
+
+		//avoidence behaviour
+		//passengers[i].addImpulse(SteeringBehaviour::avoidence(passengers, i, 3.0f, 3.0f));
+
 		passengers[i].update(DH::getDeltaTime());
-
 
 	}
 
@@ -301,14 +324,6 @@ void State_Gameplay::update()
 		passengers.clear();
 		load();
 	}
-
-	//Output the debug data to file
-	if (DH::getKey('.'))
-		DBG::debug()->outputAnalytics();
-
-	//Reset the debug data
-	if (DH::getKey(','))
-		DBG::debug()->clearAnalytics();
 
 	//Turn on visual debug mode
 	if (DH::getKey('['))

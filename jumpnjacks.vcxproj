@@ -93,6 +93,7 @@
     <ClCompile Include="src\Passenger.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
+    <ClCompile Include="src\State_EndRound.cpp" />
     <ClCompile Include="src\State_Gameplay.cpp" />
     <ClCompile Include="src\Texture2D.cpp" />
   </ItemGroup>
@@ -112,6 +113,7 @@
     <ClInclude Include="include\Passenger.h" />
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\Sprite.h" />
+    <ClInclude Include="include\State_EndRound.h" />
     <ClInclude Include="include\State_Gameplay.h" />
     <ClInclude Include="include\SteeringBehaviors.h" />
     <ClInclude Include="include\Texture2D.h" />

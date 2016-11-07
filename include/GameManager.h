@@ -4,7 +4,7 @@
 #include <vector>
 #include <iostream>
 #include "State_Gameplay.h"
-
+#include "State_EndRound.h"
 
 /*
 	GameManager class
