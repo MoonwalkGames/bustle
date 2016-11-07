@@ -10,7 +10,6 @@ Passenger::Passenger(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, bool gravityAf
 	startRotationSpeed = MathHelper::randomVec3(-5.0f, 5.0f);
 	fallingRotationSpeed = startRotationSpeed;
 	currentState = PASSENGER_STATE::FLYING_UP;
-	collisionSphere.radius = 1.0f;
 	ableToBePickedUp = false;
 }
 

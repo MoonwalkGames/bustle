@@ -4,13 +4,13 @@
 #include "GameObject.h"
 
 /*
-	Kinematic class
-	- Child of GameObject class
-	- Big difference is that this class is controlled by physics
-	- Polymorphic update function uses physics to update the position of the object and then calls parent update to handle drawing
+Kinematic class
+- Child of GameObject class
+- Big difference is that this class is controlled by physics
+- Polymorphic update function uses physics to update the position of the object and then calls parent update to handle drawing
 
-	Note:
-	When passing the accel into a setter or constructor, pass in the acceleration EXCLUDING gravity and then choose whether or not to add gravity in after the fact by setting the affectedByGravity bool to true or false
+Note:
+When passing the accel into a setter or constructor, pass in the acceleration EXCLUDING gravity and then choose whether or not to add gravity in after the fact by setting the affectedByGravity bool to true or false
 */
 class Kinematic : public GameObject
 {

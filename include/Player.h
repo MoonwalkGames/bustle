@@ -27,18 +27,18 @@ public:
 	Player(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, bool gravityAffected, glm::vec3 accel, glm::vec3 vel, float startMass, MESH_NAME meshName, TEXTURE_NAME texName) : Kinematic(pos, rot, scl, gravityAffected, accel, vel, startMass, meshName, texName) {}; //Constructor with all the properties
 	~Player() {}
 
-	void addPoints(int points); // Gives the player points
-	void takePoints(int points);//Takes points away from the player
+	void setPoints(int number);
+	void addPoints(int amount);
 	int getPoints(); //Gets number of points
 	int getStage() const { return stage; }
-
-	void transferPointsTo(Player target, int amount); //Transfers some points to the target player
-	void takePointsFrom(Player target, int amount);   //Takes points from the target player
 	virtual void update(float deltaTime);
+	bool isLeading() const;
+	void setLeading(bool);
 
 private:
-	int points = 0;
+	int points = 25;
 	int stage = thirdStage;
+	bool inTheLead = false;
 };
 
 #endif

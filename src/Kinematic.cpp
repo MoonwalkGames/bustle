@@ -5,11 +5,11 @@ float Kinematic::dragConstant = 0.0f;
 glm::vec3 Kinematic::gravity = glm::vec3(0.0f, -9.81f, 0.0f);
 
 /*
-	Constructors and Destructors
+Constructors and Destructors
 */
 
 Kinematic::Kinematic()
-: GameObject()
+	: GameObject()
 {
 	affectedByGravity = true;
 	acceleration = gravity;
@@ -18,7 +18,7 @@ Kinematic::Kinematic()
 }
 
 Kinematic::Kinematic(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl)
-: GameObject(pos, rot, scl)
+	: GameObject(pos, rot, scl)
 {
 	affectedByGravity = true;
 	acceleration = gravity;
@@ -27,7 +27,7 @@ Kinematic::Kinematic(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl)
 }
 
 Kinematic::Kinematic(bool gravityAffected, glm::vec3 accel, glm::vec3 vel, float startMass)
-: GameObject()
+	: GameObject()
 {
 	affectedByGravity = gravityAffected;
 
@@ -41,7 +41,7 @@ Kinematic::Kinematic(bool gravityAffected, glm::vec3 accel, glm::vec3 vel, float
 }
 
 Kinematic::Kinematic(MESH_NAME meshName, TEXTURE_NAME texName)
-: GameObject(meshName, texName)
+	: GameObject(meshName, texName)
 {
 	acceleration = gravity;
 	velocity = glm::vec3(0.0f);
@@ -49,7 +49,7 @@ Kinematic::Kinematic(MESH_NAME meshName, TEXTURE_NAME texName)
 }
 
 Kinematic::Kinematic(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, bool gravityAffected, glm::vec3 accel, glm::vec3 vel, float startMass)
-: GameObject(pos, rot, scl)
+	: GameObject(pos, rot, scl)
 {
 	affectedByGravity = gravityAffected;
 
@@ -63,7 +63,7 @@ Kinematic::Kinematic(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, bool gravityAf
 }
 
 Kinematic::Kinematic(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, bool gravityAffected, glm::vec3 accel, glm::vec3 vel, float startMass, MESH_NAME meshName, TEXTURE_NAME texName)
-: GameObject(pos, rot, scl, meshName, texName)
+	: GameObject(pos, rot, scl, meshName, texName)
 {
 	affectedByGravity = gravityAffected;
 
@@ -81,9 +81,9 @@ Kinematic::~Kinematic()
 }
 
 /*
-	Acceleration Setters
+Acceleration Setters
 */
-void Kinematic::setAccel(glm::vec3 newAccel) 
+void Kinematic::setAccel(glm::vec3 newAccel)
 {
 	if (affectedByGravity)
 		acceleration = newAccel + gravity;
@@ -108,7 +108,7 @@ void Kinematic::addAccel(float amountX, float amountY, float amountZ) {
 }
 
 /*
-	Velocity Setters
+Velocity Setters
 */
 void Kinematic::setVelocity(glm::vec3 newVel) {
 	velocity = newVel;
@@ -127,7 +127,7 @@ void Kinematic::addVelocity(float amountX, float amountY, float amountZ) {
 }
 
 /*
-	Impulse Setters
+Impulse Setters
 */
 void Kinematic::setImpulse(glm::vec3 newVel) {
 	impulse = newVel;
@@ -146,7 +146,7 @@ void Kinematic::addImpulse(float amountX, float amountY, float amountZ) {
 }
 
 /*
-	Mass setters
+Mass setters
 */
 void Kinematic::setMass(float newMass) {
 	mass = newMass;
@@ -157,7 +157,7 @@ void Kinematic::addMass(float amount) {
 }
 
 /*
-	Getters
+Getters
 */
 glm::vec3 Kinematic::getAccel() const {
 	return acceleration;
@@ -172,7 +172,7 @@ float Kinematic::getMass() const {
 }
 
 //Gravity setter and getter
-void Kinematic::setAffectedByGravity(bool affected) 
+void Kinematic::setAffectedByGravity(bool affected)
 {
 	if (affectedByGravity)
 		acceleration -= gravity;
@@ -187,7 +187,7 @@ bool Kinematic::getAffectedByGravity() const {
 }
 
 /*
-	Polymorphic update function
+Polymorphic update function
 */
 void Kinematic::update(float dt)
 {
@@ -216,7 +216,7 @@ void Kinematic::update(float dt)
 	if (position.z > 30.0f)
 		position.z = 30.0f;
 	else if (position.z < -40.0f)
-		position.z = -40.0f;	
+		position.z = -40.0f;
 
 	//Zeroes out the impulse since it only lasts for one frame
 	impulse = glm::vec3(0.0f);
@@ -251,7 +251,7 @@ void Kinematic::update(float dt)
 }
 
 /*
-	Overloaded operators
+Overloaded operators
 */
 std::ostream& operator << (std::ostream& os, const Kinematic& kinematic)
 {

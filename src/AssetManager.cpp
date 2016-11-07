@@ -33,6 +33,7 @@ void AssetManager::loadAssets()
 	loadedTextures.push_back(Texture2D("./res/img/tex_Bus_Yellow.png"));	
 	loadedTextures.push_back(Texture2D("./res/img/tex_Level.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Passenger.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Font.png"));
 }
 
 void AssetManager::bindTexture(TEXTURE_NAME textureName)

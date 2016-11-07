@@ -54,13 +54,11 @@ public:
 
 		// random from 0 to 2pie
 		//float wanderAngle = ((rand() % 628318) * 0.0001f);
-		float wanderAngle = MathHelper::randomFloat(0.0f, 6.283f);
+		float wanderAngle = 0.0;
+		wanderAngle += MathHelper::randomFloat(0, 360.0f);
 
 		displacement = glm::rotate(displacement, wanderAngle, glm::vec3(0.0f, 1.0f, 0.0f));
 
-		/*displacement.x = cos(wanderAngle * 180.0f / 3.1415f)*displacement.length();
-		displacement.z = sin(wanderAngle * 180.0f / 3.1415f)*displacement.length();*/
-		//cout << displacement.x << endl;
 
 		return glm::normalize((displacement + circleCenter))*speed;
 

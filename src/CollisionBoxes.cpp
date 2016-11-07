@@ -3,7 +3,7 @@
 #include "Player.h"
 #include "MathHelper.h"
 //#include "Player.h"
-#define BUS_WIDTH 3.6f
+
 #define NUM_SLICES 10
 Col_Traffic_Light::Col_Traffic_Light(int stage, glm::vec3 pos, glm::vec3 rot, glm::vec3 ext)
 {

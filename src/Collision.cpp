@@ -2,7 +2,8 @@
 #include "glm\gtx\string_cast.hpp"
 #include "Player.h"
 #include "Passenger.h"
-bool debugDrawing = false;
+#include "MathHelper.h"
+bool debugDrawing = true;
 #define PASSENGER_PICKUP_RADIUS 0.25f
 
 glm::vec3 busStageExtents[5] =
@@ -167,8 +168,8 @@ Collision CollisionHandler::PLAYERvPLAYER(const Player& a, const Player& b)
 //overload/change to take previously generated traffic lights
 Collision CollisionHandler::TRAFFIC_LIGHTvTRAFFIC_LIGHT(const Player& a, const Player& b, int aStage, int bStage)
 {
-	glm::vec3 totalPenetration;
 	Collision result(false, glm::vec3(0.0f, 0.0f, 0.0f));
+	Collision bubbleResult(false, glm::vec3(0.0f));
 
 	Col_Traffic_Light aTrafficLight = Col_Traffic_Light(aStage, a.getPosition(), a.getRotation(), busStageExtents[aStage]);
 	Col_Traffic_Light bTrafficLight = Col_Traffic_Light(bStage, b.getPosition(), b.getRotation(), busStageExtents[bStage]);
@@ -177,14 +178,14 @@ Collision CollisionHandler::TRAFFIC_LIGHTvTRAFFIC_LIGHT(const Player& a, const P
 	//if the rough sphere check passes, move on to more granular checks
 	if (debugDrawing)
 	{
-		glPushMatrix();
+		/*glPushMatrix();
 		glTranslatef(a.getPosition().x, a.getPosition().y, a.getPosition().z);
 		glutWireSphere(aExtentSphere.radius, 10, 10);
 		glPopMatrix();
 		glPushMatrix();
 		glTranslatef(b.getPosition().x, b.getPosition().y, b.getPosition().z);
 		glutWireSphere(bExtentSphere.radius, 10, 10);
-		glPopMatrix();
+		glPopMatrix();*/
 	}
 	if (CollisionHandler::SPHEREvSPHERE(aExtentSphere, bExtentSphere).status)
 	{
@@ -193,20 +194,131 @@ Collision CollisionHandler::TRAFFIC_LIGHTvTRAFFIC_LIGHT(const Player& a, const P
 		{
 			for (int j = 1; j <= bStage + 1; j++)
 			{
-				result = CollisionHandler::SPHEREvSPHERE(aTrafficLight.bubbles[i], bTrafficLight.bubbles[j]);
-				if (result.status)
+				bubbleResult = CollisionHandler::SPHEREvSPHERE(aTrafficLight.bubbles[i], bTrafficLight.bubbles[j]);
+				if (bubbleResult.status)
 				{
+					result.status = true;
 					//printf("Granular check passed! %d vs %d! \n", i, j);
-					//raycast and collide
-					//set outcome accordingly (outcome is for the first player provided)
-					//if rays are colliding, 
-					totalPenetration += result.penetration;
-					totalPenetration *= glm::vec3(0.5f);
-					return Collision(true, totalPenetration);
+				
+					result.penetration += bubbleResult.penetration;
+					result.penetration *= glm::vec3(0.5f);
 				}
 			}
 		}
-		
+		if (result.penetration != glm::vec3(0))
+		{
+
+			//raycast and collide
+			//set outcome accordingly (outcome is for the first player provided)
+			//if rays are colliding, 
+			//a external line segment (out the front of the bus
+			glm::vec3 aExternalStart = a.getPosition();
+			glm::vec3 aExternalEnd;
+			glm::vec3 aForwardNormal = glm::normalize(aTrafficLight.bubbles[1].position - a.getPosition());
+			glm::vec3 bForwardNormal = glm::normalize(bTrafficLight.bubbles[1].position - b.getPosition());
+			switch (a.getStage())
+			{
+			case firstStage:
+				aExternalStart += (BUS_WIDTH * 0.5f) * aForwardNormal;
+				
+				break;
+
+			case secondStage:
+				aExternalStart += (BUS_WIDTH ) * aForwardNormal;
+				
+				break;
+
+			case thirdStage:
+			case fourthStage:
+				aExternalStart += (BUS_WIDTH * 1.5f) * aForwardNormal;
+				
+				break;
+
+			case fifthStage:
+				aExternalStart += (BUS_WIDTH * 3.0f) * aForwardNormal;
+				
+				break;
+			}
+			aExternalEnd = aExternalStart + aForwardNormal * BUS_WIDTH;
+			//b internal line segment
+			glm::vec3 bInternalStart = b.getPosition();
+			glm::vec3 bInternalEnd = b.getPosition();
+
+			switch (b.getStage())
+			{
+			case firstStage:
+				bInternalStart += (BUS_WIDTH * 0.5f) * bForwardNormal;
+				bInternalEnd -= (BUS_WIDTH * 0.5f) * bForwardNormal;
+				break;
+
+			case secondStage:
+				bInternalStart += (BUS_WIDTH) * bForwardNormal;
+				bInternalEnd -= (BUS_WIDTH) * bForwardNormal;
+				break;
+
+			case thirdStage:
+			case fourthStage:
+				bInternalStart += (BUS_WIDTH * 1.5f) * bForwardNormal;
+				bInternalEnd -= (BUS_WIDTH * 1.5f) * bForwardNormal;
+				break;
+
+			case fifthStage:
+				bInternalStart += (BUS_WIDTH * 3.0f) * bForwardNormal;
+				bInternalEnd -= (BUS_WIDTH * 3.0f) * bForwardNormal;
+				break;
+			}
+
+			//b external line segment
+			glm::vec3 bExternalStart = bInternalEnd;
+			glm::vec3 bExternalEnd = bExternalStart;
+			bExternalEnd += BUS_WIDTH * bForwardNormal;
+
+			if (debugDrawing)
+			{
+				
+				glBegin(GL_LINES);
+				{
+					glVertex3f(aExternalStart.x, aExternalStart.y, aExternalStart.z);
+					glVertex3f(aExternalEnd.x, aExternalEnd.y, aExternalEnd.z);
+				}
+				glEnd();
+				
+				glBegin(GL_LINES);
+				{
+					glVertex3f(bInternalStart.x, bInternalStart.y + 5, bInternalStart.z);
+					glVertex3f(bInternalEnd.x, bInternalEnd.y + 5, bInternalEnd.z);
+				}
+				glEnd();
+
+				glBegin(GL_LINES);
+				{
+					glVertex3f(bExternalStart.x, bExternalStart.y, bExternalStart.z);
+					glVertex3f(bInternalEnd.x, bInternalEnd.y, bInternalEnd.z);
+				}
+				glEnd();
+			}
+
+			//if a's external line segment intersects with b's internal line segment, A wins. 
+			if (MathHelper::checkLineSegmentIntersection(aExternalStart, aExternalEnd, bInternalStart, bInternalEnd))
+				result.outcome = win;
+
+			//else, if a's external line segment intersects with b's external line segment, partial win
+			else if (MathHelper::checkLineSegmentIntersection(aExternalStart, aExternalEnd, bExternalStart, bExternalEnd))
+				result.outcome = partial_loss;
+
+			//else, A either lost, or it rear ended B
+			else
+			{
+				//if a rear ended b, it's a win, as long as B is above stage 0
+				if (CollisionHandler::SPHEREvSPHERE(aTrafficLight.bubbles[0], bTrafficLight.bubbles[bTrafficLight.bubbles.size() - 1]) && b.getStage() > 0)
+					result.outcome = win;
+
+				//else it's a loss
+				else
+					result.outcome = full_loss;
+			}
+			return result;
+		}
 	}
 	return Collision(false, glm::vec3(0.0f, 0.0f, 0.0f));
 }

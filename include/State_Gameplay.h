@@ -5,7 +5,7 @@
 #include "m_controller.h"
 #include "Passenger.h"
 #include "Player.h"
-
+#include "Sprite.h"
 class State_Gameplay : public GameState
 {
 public:
@@ -14,6 +14,9 @@ public:
 	void toggleDebugDrawing();
 	void load();
 	void update();
+	void launchPassengers(int busNumber, int amount);
+	void updateCrownedPlayer();
+	void drawCrown();
 
 private:
 	GameObject levelMesh;
@@ -26,6 +29,7 @@ private:
 	float busMovementSpeed;
 	bool debugDrawing;
 
-	void launchPassengers(int busNumber, int amount);
+	
+	std::vector<Sprite> text;
 };
 #endif

@@ -81,15 +81,3 @@ namespace MathHelper
 
 }
 #endif
-;
-;
-;
-;
-;
-;;;
-
-;;
-;
-;
-;;
-;

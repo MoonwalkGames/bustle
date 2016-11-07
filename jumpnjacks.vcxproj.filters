@@ -57,8 +57,8 @@
     <ClCompile Include="src\CollisionBoxes.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="src\Steeringbehaviors.h">
-      <Filter>headers</Filter>
+    <ClCompile Include="src\Sprite.cpp">
+      <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -106,6 +106,12 @@
     </ClInclude>
     <ClInclude Include="include\State_Gameplay.h">
       <Filter>game states</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Sprite.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SteeringBehaviors.h">
+      <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

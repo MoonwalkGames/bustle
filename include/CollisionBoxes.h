@@ -2,7 +2,7 @@
 #include "glm\glm.hpp"
 #include "GLUT\glut.h"
 #include <vector>
-
+#define BUS_WIDTH 3.6f
 enum trafficLightAccessors
 {
 	roughSphere,
