@@ -197,7 +197,7 @@ std::vector<Sprite> Sprite::changeTextVector(TEXTURE_NAME fontSheet, std::vector
 	if (text.size() != newText.length())
 	{
 		cout << "Error! New text size does not match original size! Aborting!" << endl;
-		abort();
+//		abort();
 	}
 	else
 	{

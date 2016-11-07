@@ -10,10 +10,10 @@ void State_EndRound::load()
 	levelMesh = GameObject(glm::vec3(1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 45.0f, 0.0f), glm::vec3(2.75f, 2.75f, 2.75f), MESH_LEVEL, TEX_LEVEL);
 
 	//Init the buses
-	buses[0] = GameObject(glm::vec3(7.5f, 1.25f, 0.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS, TEX_BUS_RED);
-	buses[1] = GameObject(glm::vec3(2.5f, 1.25f, 0.0f), glm::vec3(0.0f, 85.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS, TEX_BUS_RED);
-	buses[2] = GameObject(glm::vec3(-2.5f, 1.25f, 0.0f), glm::vec3(0.0f, 80.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS, TEX_BUS_RED);
-	buses[3] = GameObject(glm::vec3(-7.5f, 1.25f, 0.0f), glm::vec3(0.0f, 75.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS, TEX_BUS_RED);
+	buses[0] = GameObject(glm::vec3(7.5f, 1.25f, 0.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS2, TEX_BUS_RED);
+	buses[1] = GameObject(glm::vec3(2.5f, 1.25f, 0.0f), glm::vec3(0.0f, 85.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS2, TEX_BUS_RED);
+	buses[2] = GameObject(glm::vec3(-2.5f, 1.25f, 0.0f), glm::vec3(0.0f, 80.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS2, TEX_BUS_RED);
+	buses[3] = GameObject(glm::vec3(-7.5f, 1.25f, 0.0f), glm::vec3(0.0f, 75.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS2, TEX_BUS_RED);
 
 	//Load the previous round score into the allGraphData vectors
 	//loadRoundScores();

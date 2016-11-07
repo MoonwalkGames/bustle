@@ -38,3 +38,8 @@ void Player::setLeading(bool status)
 {
 	inTheLead = status;
 }
+
+void Player::setStage(int _stage)
+{
+	stage = _stage;
+}

@@ -20,10 +20,10 @@ void State_Gameplay::load()
 	levelMesh = GameObject(glm::vec3(1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(2.75f, 2.75f, 2.75f), MESH_LEVEL, TEX_LEVEL);
 
 	//Init the buses
-	buses[0] = Player(glm::vec3(-25.0f, 1.25f, -25.0f), glm::vec3(0.0f, -45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS, TEX_BUS_RED);
-	buses[1] = Player(glm::vec3(-25.0f, 1.25f, 25.0f), glm::vec3(0.0f, 45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS, TEX_BUS_BLUE);
-	buses[2] = Player(glm::vec3(30.0f, 1.25f, 25.0f), glm::vec3(0.0f, 135.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS, TEX_BUS_GREEN);
-	buses[3] = Player(glm::vec3(30.0f, 1.25f, -25.0f), glm::vec3(0.0f, 225.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS, TEX_BUS_YELLOW);
+	buses[0] = Player(glm::vec3(-25.0f, 1.25f, -25.0f), glm::vec3(0.0f, -45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS_RED);
+	buses[1] = Player(glm::vec3(-25.0f, 1.25f, 25.0f), glm::vec3(0.0f, 45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS_BLUE);
+	buses[2] = Player(glm::vec3(30.0f, 1.25f, 25.0f), glm::vec3(0.0f, 135.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS_GREEN);
+	buses[3] = Player(glm::vec3(30.0f, 1.25f, -25.0f), glm::vec3(0.0f, 225.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS_YELLOW);
 
 	busTargets[0] = buses[0].getPosition();
 	busTargets[1] = buses[1].getPosition();
@@ -55,7 +55,7 @@ void State_Gameplay::load()
 
 	// ----- Set up the UI ------ ///
 	//set up the timer
-	timeLeft = 5.0f;
+	timeLeft = 120.0f;
 	timer = Sprite::createTextVector(TEX_FONT, -5.0f, -10.0f, 5.0f, 5.0f, "0:00");
 
 	//Set up the billboards
@@ -151,7 +151,6 @@ void State_Gameplay::update()
 			buses[i].setVelocity(0.0f, 0.0f, 0.0f);
 		else//Otherwise, move forward
 			buses[i].setVelocity(glm::normalize(buses[i].getForwardVector()) * busMovementSpeed);
-
 		//Draw the bus target
 		if (DBG::debug()->getVisualDebugEnabled())
 		{
@@ -309,12 +308,14 @@ void State_Gameplay::update()
 				passengers.erase(passengers.begin() + j);
 				passengerVectorSize--;
 				buses[i].addPoints(1);
+				buses[i].addMass(1.0f);
 			}
 		}
 	}
 	//Detect collision HERE^
 	
 	//If there's a leader, draw the crown
+	updateStages();
 	updateCrownedPlayer();
 	drawCrown();
 
@@ -404,6 +405,40 @@ void State_Gameplay::updateCrownedPlayer()
 	else if (score4 > score1 && score4 > score2 && score4 > score3)
 	{
 		buses[3].setLeading(true);
+	}
+}
+
+void State_Gameplay::updateStages()
+{
+	int points;
+	for (int i = 0; i < 4; i++)
+	{
+		points = buses[i].getPoints();
+		if (points < 10)
+		{
+			buses[i].setStage(firstStage);
+			buses[i].setMesh(MESH_BUS0);
+		}
+		else if (points < 25)
+		{
+			buses[i].setStage(secondStage);
+			buses[i].setMesh(MESH_BUS1);
+		}
+		else if (points < 35)
+		{
+			buses[i].setStage(thirdStage);
+			buses[i].setMesh(MESH_BUS2);
+		}
+		else if (points < 50)
+		{
+			buses[i].setStage(fourthStage);
+			buses[i].setMesh(MESH_BUS3);
+		}
+		else if (points >= 50)
+		{
+			buses[i].setStage(fifthStage);
+			buses[i].setMesh(MESH_BUS4);
+		}
 	}
 }
 

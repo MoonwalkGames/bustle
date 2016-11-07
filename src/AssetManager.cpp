@@ -22,7 +22,11 @@ AssetManager::~AssetManager()
 void AssetManager::loadAssets()
 {
 	/* ========== MESHES (Naming: mesh_XXXXXX.obj) ========== */
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Bus0.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Bus1.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Bus2.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Bus3.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Bus4.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Level.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Passenger.obj"));
 	

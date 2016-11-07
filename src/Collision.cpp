@@ -9,11 +9,11 @@
 
 glm::vec3 busStageExtents[5] =
 {
-	glm::vec3(0.5f, 0.5f, 0.5f),
-	glm::vec3(0.5f, 0.5f, 1.0f),
+	glm::vec3(2.0f, 2.0f, 2.0f),
+	glm::vec3(4.0f, 2.0f, 2.0f),
 	glm::vec3(6.0f, 2.0f, 2.0f),
 	glm::vec3(6.0f, 2.0f, 2.0f),
-	glm::vec3(0.5f, 0.5f, 3.0f)
+	glm::vec3(12.0f, 2.0f, 2.0f)
 };
 /*
 	Collision test functions
@@ -196,9 +196,29 @@ Collision CollisionHandler::TRAFFIC_LIGHTvTRAFFIC_LIGHT(const Player& a, const P
 	if (CollisionHandler::SPHEREvSPHERE(aExtentSphere, bExtentSphere).status)
 	{
 				//printf("\n\n\nRough check passed!\t");
-		for (int i = 1; i <= aStage + 1; i++)
+		int aNumBubbles;
+		int bNumBubbles;
+		if (a.getStage() == firstStage)
+			aNumBubbles = 1;
+		else if (a.getStage() == secondStage)
+			aNumBubbles = 2;
+		else if (a.getStage() == thirdStage || a.getStage() == fourthStage)
+			aNumBubbles = 3;
+		else if (a.getStage() == fifthStage)
+			aNumBubbles = 6;
+
+		if (b.getStage() == firstStage)
+			bNumBubbles = 1;
+		else if (b.getStage() == secondStage)
+			bNumBubbles = 2;
+		else if (b.getStage() == thirdStage || b.getStage() == fourthStage)
+			bNumBubbles = 3;
+		else if (b.getStage() == fifthStage)
+			bNumBubbles = 6;
+
+		for (int i = 0; i < aNumBubbles; i++)
 		{
-			for (int j = 1; j <= bStage + 1; j++)
+			for (int j = 0; j < bNumBubbles; j++)
 			{
 				bubbleResult = CollisionHandler::SPHEREvSPHERE(aTrafficLight.bubbles[i], bTrafficLight.bubbles[j]);
 				if (bubbleResult.status)

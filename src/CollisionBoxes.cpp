@@ -26,18 +26,25 @@ Col_Traffic_Light::Col_Traffic_Light(int stage, glm::vec3 pos, glm::vec3 rot, gl
 	glm::vec3 sixthPoint;
 	glm::vec3 up(0.0f, 1.0f, 0.0f);
 	glm::vec3 rotatedFirstPoint;
+	glm::vec3 rotatedSecondPoint;
 	glm::vec3 rotatedThirdPoint;
+	glm::vec3 rotatedFourthPoint;
+	glm::vec3 rotatedFifthPoint;
+	glm::vec3 rotatedSixthPoint;
 	switch (stage)
 	{
 	case firstStage:
-		bubbles[firstSphere] = Col_Sphere(pos, halfBusWidth);
+		bubbles.push_back(Col_Sphere(pos, halfBusWidth));
 		break;
 
 	case secondStage:
 		firstPoint = glm::vec3(pos.x, pos.y, pos.z + halfBusWidth);
-		bubbles[firstSphere] = Col_Sphere(glm::rotate(firstPoint, rot.y, up), halfBusWidth);
+		rotatedFirstPoint = MathHelper::rotatePointAroundOther(firstPoint, pos, rot.y);
+		bubbles.push_back(Col_Sphere(rotatedFirstPoint, halfBusWidth));
+
 		secondPoint = glm::vec3(pos.x, pos.y, pos.z - halfBusWidth);
-		bubbles[secondSphere] = Col_Sphere(glm::rotate(secondPoint, rot.y, up), halfBusWidth);
+		rotatedSecondPoint = MathHelper::rotatePointAroundOther(secondPoint, pos, rot.y);
+		bubbles.push_back(Col_Sphere(rotatedSecondPoint, halfBusWidth));
 		break;
 
 	case thirdStage:
@@ -62,7 +69,7 @@ Col_Traffic_Light::Col_Traffic_Light(int stage, glm::vec3 pos, glm::vec3 rot, gl
 		rotatedThirdPoint = MathHelper::rotatePointAroundOther(thirdPoint, pos, rot.y);
 		bubbles.push_back(Col_Sphere(rotatedThirdPoint, halfBusWidth));
 
-		glPushMatrix();
+		glPushMatrix();	
 		glTranslatef(rotatedThirdPoint.x, rotatedThirdPoint.y, rotatedThirdPoint.z);
 		//glutWireSphere(halfBusWidth, NUM_SLICES, NUM_SLICES);
 		glPopMatrix();
@@ -71,17 +78,28 @@ Col_Traffic_Light::Col_Traffic_Light(int stage, glm::vec3 pos, glm::vec3 rot, gl
 
 	case fifthStage:
 		firstPoint = glm::vec3(pos.x, pos.y, pos.z + (2 * BUS_WIDTH) + halfBusWidth);
-		bubbles[firstSphere] = Col_Sphere(glm::rotate(firstPoint, rot.y, up), halfBusWidth);
+		rotatedFirstPoint = MathHelper::rotatePointAroundOther(firstPoint, pos, rot.y);
+		bubbles.push_back(Col_Sphere(rotatedFirstPoint, halfBusWidth));
+
 		secondPoint = glm::vec3(pos.x, pos.y, pos.z + BUS_WIDTH + halfBusWidth);
-		bubbles[secondSphere] = Col_Sphere(glm::rotate(secondPoint, rot.y, up), halfBusWidth);
+		rotatedSecondPoint = MathHelper::rotatePointAroundOther(secondPoint, pos, rot.y);
+		bubbles.push_back(Col_Sphere(rotatedSecondPoint, halfBusWidth));
+
 		thirdPoint = glm::vec3(pos.x, pos.y, pos.z + halfBusWidth);
-		bubbles[thirdSphere] = Col_Sphere(glm::rotate(thirdPoint, rot.y, up), halfBusWidth);
+		rotatedThirdPoint = MathHelper::rotatePointAroundOther(thirdPoint, pos, rot.y);
+		bubbles.push_back(Col_Sphere(rotatedThirdPoint, halfBusWidth));
+
 		fourthPoint = glm::vec3(pos.x, pos.y, pos.z - halfBusWidth);
-		bubbles[fourthSphere] = Col_Sphere(glm::rotate(fourthPoint, rot.y, up), halfBusWidth);
+		rotatedFourthPoint = MathHelper::rotatePointAroundOther(fourthPoint, pos, rot.y);
+		bubbles.push_back(Col_Sphere(rotatedFourthPoint, halfBusWidth));
+
 		fifthPoint = glm::vec3(pos.x, pos.y, pos.z - BUS_WIDTH - halfBusWidth);
-		bubbles[fifthSphere] = Col_Sphere(glm::rotate(fifthPoint, rot.y, up), halfBusWidth);
+		rotatedFifthPoint = MathHelper::rotatePointAroundOther(fifthPoint, pos, rot.y);
+		bubbles.push_back(Col_Sphere(rotatedFifthPoint, halfBusWidth));;
+
 		sixthPoint = glm::vec3(pos.x, pos.y, pos.z - (2 * BUS_WIDTH) - halfBusWidth);
-		bubbles[sixthSphere] = Col_Sphere(glm::rotate(sixthPoint, rot.y, up), halfBusWidth);
+		rotatedSixthPoint = MathHelper::rotatePointAroundOther(sixthPoint, pos, rot.y);
+		bubbles.push_back(Col_Sphere(rotatedSixthPoint, halfBusWidth));
 		break;
 	}
 }

@@ -35,6 +35,7 @@ public:
 	virtual void debugDraw(float deltaTime);
 	bool isLeading() const;
 	void setLeading(bool);
+	void setStage(int stage);
 
 private:
 	int points = 25;

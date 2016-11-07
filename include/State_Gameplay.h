@@ -16,6 +16,7 @@ public:
 	void update();
 	void launchPassengers(int busNumber, int amount);
 	void updateCrownedPlayer();
+	void updateStages();
 	void drawCrown();
 	void drawUI();
 
