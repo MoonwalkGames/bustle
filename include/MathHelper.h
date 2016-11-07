@@ -12,6 +12,11 @@ namespace MathHelper
 		return ((1 - t) * P1) + (t * P2);
 	}
 
+	static float LERP(float p1, float p2, float t)
+	{
+		return ((1 - t) * p1) + (t * p2);
+	}
+
 	template <typename T>
 	static float inverseLERP(T& p1, T& p2, T& currentPoint)
 	{

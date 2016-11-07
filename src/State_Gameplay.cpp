@@ -35,7 +35,9 @@ void State_Gameplay::load()
 		controllers[i] = MController(i);
 
 	//Delete later but allows us to control the camera position
-	cameraPos = glm::vec3(34.0f, 35.0f, -34.0f);
+	cameraPos = glm::vec3(10.0f, 1000.0f, -10.0f);
+	gameplayCameraPos = glm::vec3(68.0f, 70.0f, -68.0f);
+	introLerpTarget = glm::vec3(30.0f, 30.0f, -30.0f);
 
 	//Set up the camera
 	DH::aspectRatio = 16.0f / 9.0f;
@@ -78,6 +80,7 @@ void State_Gameplay::load()
 
 void State_Gameplay::update()
 {
+	static float FOV = 75.0f;
 	if (DH::getKey('h'))
 		GM::game()->setActiveState(STATE_GAMEPLAY);
 
@@ -102,8 +105,27 @@ void State_Gameplay::update()
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	//glOrtho(-60.0f, 60.0f, -60.0f, 60.0f, 0.1f, 1000.0f);
-	glOrtho(-60.0f * DH::getOrthoStretch(), 60.0f * DH::getOrthoStretch(), -60.0f, 60.0f, -5.0f, 1000.0f);
-	gluLookAt(cameraPos.x, cameraPos.y, cameraPos.z, 0, 0, 0, 0, 1, 0);
+	//if (!inIntro)
+	{
+		glOrtho(-60.0f * DH::getOrthoStretch(), 60.0f * DH::getOrthoStretch(), -60.0f, 60.0f, -5.0f, 1000.0f);
+		gluLookAt(gameplayCameraPos.x, gameplayCameraPos.y, gameplayCameraPos.z, 0, 0, 0, 0, 1, 0);
+	}
+	//else
+	//{
+		//if (cameraPos.y > 20.0f)
+		//{
+			//introLerpTarget = MathHelper::rotatePointAroundOther(introLerpTarget, glm::vec3(0.0f, 1.0f, 0.0f), 0.1f);
+		//}
+		//gluPerspective(FOV, DH::getAspectRatio(), 0.1f, 10000.0f);
+		//FOV = MathHelper::LERP(FOV, 5.0f, DH::deltaTime);
+		//cameraPos = MathHelper::LERP(cameraPos, introLerpTarget, DH::deltaTime * 2.0f);
+		//gluLookAt(cameraPos.x, cameraPos.y, cameraPos.z, 0, 1, 0, 0, 1, 0);
+		//introLerpTarget = MathHelper::LERP(introLerpTarget, glm::vec3(600.0f, 600.0f, -600.0f), DH::deltaTime * 2.0f);
+		//if (abs(cameraPos.x - introLerpTarget.x) < 5.0f)
+		//	if (abs(cameraPos.y - introLerpTarget.y) < 5.0f)
+		//		if (abs(cameraPos.z - introLerpTarget.z) < 5.0f)
+		//			inIntro = false;
+	//}
 
 	glm::vec3 targetDirection;
 
