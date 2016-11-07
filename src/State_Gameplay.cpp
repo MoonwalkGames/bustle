@@ -62,22 +62,22 @@ void State_Gameplay::load()
 	billboards[0] = Sprite(TEX_BUS_RED, 1, 1);
 	billboards[0].setPosition(30.0f, 18.0f, 51.5f);
 	billboards[0].setRotation(0.0f, 180.0f, 0.0f);
-	billboards[0].setScale(80.0f, 80.0f, 5.0f);
+	billboards[0].setScale(20.0f, 10.0f, 1.0f);
 
-	/*billboards[1] = Sprite(TEX_BUS_BLUE, 1, 1);
-	billboards[1].setPosition(-40.0f, 10.0f, -40.0f);
+	billboards[1] = Sprite(TEX_BUS_BLUE, 1, 1);
+	billboards[1].setPosition(-15.0f, 18.0f, 51.5f);
 	billboards[1].setRotation(0.0f, 180.0f, 0.0f);
-	billboards[0].setScale(5.0f, 5.0f, 1.0f);
+	billboards[1].setScale(20.0f, 10.0f, 1.0f);
 
 	billboards[2] = Sprite(TEX_BUS_GREEN, 1, 1);
-	billboards[2].setPosition(-40.0f, 10.0f, -40.0f);
+	billboards[2].setPosition(-51.0f, 18.0f, 17.0f);
 	billboards[2].setRotation(0.0f, 90.0f, 0.0f);
-	billboards[0].setScale(5.0f, 5.0f, 1.0f);
+	billboards[2].setScale(20.0f, 10.0f, 1.0f);
 
 	billboards[3] = Sprite(TEX_BUS_YELLOW, 1, 1);
-	billboards[3].setPosition(-40.0f, 10.0f, -40.0f);
+	billboards[3].setPosition(-51.0f, 18.0f, -28.0f);
 	billboards[3].setRotation(0.0f, 90.0f, 0.0f);
-	billboards[0].setScale(5.0f, 5.0f, 1.0f);*/
+	billboards[3].setScale(20.0f, 10.0f, 1.0f);
 }
 
 void State_Gameplay::update()
