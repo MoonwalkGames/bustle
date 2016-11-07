@@ -1,5 +1,6 @@
 #include "Kinematic.h"
 #include "glm\gtx\string_cast.hpp"
+#include "DebugManager.h"
 
 float Kinematic::dragConstant = 0.0f;
 glm::vec3 Kinematic::gravity = glm::vec3(0.0f, -9.81f, 0.0f);
@@ -224,8 +225,20 @@ void Kinematic::update(float dt)
 	//Resets the acceleration to the constants so impulse can be added back the next frame again
 	acceleration = constantAcceleration;
 
+	//Calls the parent update function which positions the object properly in the scene and then renders it
+	if (DBG::debug()->getVisualDebugEnabled())
+		drawDebug(dt);
+
+	GameObject::update(dt);
+}
+
+void Kinematic::drawDebug(float dt)
+{
+	glLoadIdentity();
 	glDisable(GL_TEXTURE_2D);
-	//Draw velocity
+
+	//Draw velocity in yellow
+	glLineWidth(1.0f);
 	glColor3f(1.0f, 1.0f, 0.0f);
 	glBegin(GL_LINES);
 	{
@@ -235,7 +248,7 @@ void Kinematic::update(float dt)
 	glEnd();
 	glColor3f(1.0f, 1.0f, 1.0f);
 
-	//Draw acceleration
+	//Draw acceleration in purple
 	glColor3f(1.0f, 0.0f, 1.0f);
 	glBegin(GL_LINES);
 	{
@@ -246,8 +259,7 @@ void Kinematic::update(float dt)
 	glColor3f(1.0f, 1.0f, 1.0f);
 	glEnable(GL_TEXTURE_2D);
 
-	//Calls the parent update function which positions the object properly in the scene and then renders it
-	GameObject::update(dt);
+	GameObject::drawDebug(dt);
 }
 
 /*

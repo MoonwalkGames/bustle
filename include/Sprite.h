@@ -20,12 +20,14 @@ public:
 	~Sprite();
 
 	virtual void update(float dt);
+	virtual void debugDraw(float dt);
 	void nextFrame();
 	void setActiveFrame(int frameNumber);
 	void setCameraPos(glm::vec3 cameraPos, glm::vec3 cameraLookAtPos);
 
 	static std::vector<Sprite> Sprite::createTextVector(TEXTURE_NAME fontSheet, float posX, float posY, float scaleX, float scaleY, std::string text); //for non billboards
 	static std::vector<Sprite> Sprite::createTextVector(TEXTURE_NAME fontSheet, float posX, float posY, float scaleX, float scaleY, std::string text, glm::vec3 cameraPos, glm::vec3 cameraLookAtPos); //for billboards
+	static std::vector<Sprite> Sprite::changeTextVector(TEXTURE_NAME fontSheet, std::vector<Sprite> text, string newText);
 	static void Sprite::drawTextVector(std::vector<Sprite> textSprites, float dt);
 
 private:

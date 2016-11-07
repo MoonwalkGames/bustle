@@ -1,5 +1,6 @@
 #pragma once
 #include "Sprite.h"
+#include "DebugManager.h"
 
 Sprite::Sprite()
 	: Kinematic()
@@ -117,9 +118,15 @@ void Sprite::update(float dt)
 	}
 	glEnd();
 
-	drawLocalAxes();
+	if (DBG::debug()->getVisualDebugEnabled())
+		debugDraw(dt);
 
 	glLoadIdentity();
+}
+
+void Sprite::debugDraw(float dt)
+{
+	Kinematic::drawDebug(dt);
 }
 
 void Sprite::nextFrame()
@@ -157,11 +164,11 @@ std::vector<Sprite> Sprite::createTextVector(TEXTURE_NAME fontSheet, float posX,
 {
 	std::vector<Sprite> textVector;
 
-	for (int i = 0; i < text.length(); i++)
+	for (unsigned int i = 0; i < text.length(); i++)
 	{
 		Sprite spr = Sprite(fontSheet, 16, 8);
 		spr.setActiveFrame(text.at(i));
-		spr.setPosition(glm::vec3(posX + (2 * spr.getScale().x * i), posY, 0.0f));
+		spr.setPosition(glm::vec3(posX + (4 * spr.getScale().x * i), posY, 1.0f));
 		spr.setScale(scaleX, scaleY, 1.0f);
 		textVector.push_back(spr);
 	}
@@ -173,7 +180,7 @@ std::vector<Sprite> Sprite::createTextVector(TEXTURE_NAME fontSheet, float posX,
 {
 	std::vector<Sprite> textVector;
 
-	for (int i = 0; i < text.length(); i++)
+	for (unsigned int i = 0; i < text.length(); i++)
 	{
 		Sprite spr = Sprite(fontSheet, 16, 8, cameraPos, cameraLookAtPos);
 		spr.setActiveFrame(text.at(i));
@@ -183,6 +190,22 @@ std::vector<Sprite> Sprite::createTextVector(TEXTURE_NAME fontSheet, float posX,
 	}
 
 	return textVector;
+}
+
+std::vector<Sprite> Sprite::changeTextVector(TEXTURE_NAME fontSheet, std::vector<Sprite> text, string newText)
+{
+	if (text.size() != newText.length())
+	{
+		cout << "Error! New text size does not match original size! Aborting!" << endl;
+		abort();
+	}
+	else
+	{
+		for (unsigned int i = 0; i < text.size(); i++)
+			text[i].setActiveFrame(newText[i]);
+	}
+
+	return text;
 }
 
 void Sprite::drawTextVector(std::vector<Sprite> textSprites, float dt)

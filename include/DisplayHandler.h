@@ -33,6 +33,7 @@ struct DisplayHandler
 	static float getMouseX(); //Returns the mouse cursor's X position
 	static float getMouseY(); //Returns the mouse cursor's Y position
 	static float getDeltaTime(); //Returns dt
+	static float getCalculatedDeltaTime(); //Retuns the dt that is calculated, not fixed
 	static float degToRad(float angle); //Converts an angle from degrees to radians and returns it
 	static float radToDeg(float angle); //Converts an angle from radians to degrees and returns it
 

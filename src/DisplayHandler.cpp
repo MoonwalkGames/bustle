@@ -147,8 +147,11 @@ float DisplayHandler::getMouseY() {
 
 float DisplayHandler::getDeltaTime()
 {
-	//return deltaTime;
 	return (1.0f / float(FRAMES_PER_SECOND));
+}
+
+float DisplayHandler::getCalculatedDeltaTime() {
+	return deltaTime;
 }
 
 float DisplayHandler::degToRad(float angle) {

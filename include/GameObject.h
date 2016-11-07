@@ -65,12 +65,12 @@ public:
 	void addToScale(float additionX, float additionY, float additionZ);
 	void recalculateForwardVector(); //Private utility function to recalculate the forward vector after the object rotates. Called anywhere the object's rotatation is changed
 	void setForwardVector(glm::vec3 newForwardDirection); //Set the forward vector and compute the rotation accordingly
-	void drawLocalAxes(); //Draws the local axes for visual representation
 
 	void seek(glm::vec3 target, float movementSpeed, float turnSpeed); //Uses the basic seek algorithm to make this object seek the point passed
 	void flee(glm::vec3 taget, float movementSpeed, float turnSpeed); //Uses the basic flee algorithm to make this object flee from the point passed
 
 	virtual void update(float dt); //Polymorphic update function, handles the movement and drawing of the gameobject every frame
+	virtual void drawDebug(float dt); //Polymorphic debug draw function, draws things like local axes, velocity, collision boxes, etc
 
 protected:
 	glm::vec3 position; //The position stored as an x,y,z

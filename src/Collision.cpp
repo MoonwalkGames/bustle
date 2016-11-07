@@ -3,7 +3,8 @@
 #include "Player.h"
 #include "Passenger.h"
 #include "MathHelper.h"
-bool debugDrawing = true;
+#include "DebugManager.h"
+
 #define PASSENGER_PICKUP_RADIUS 0.25f
 
 glm::vec3 busStageExtents[5] =
@@ -176,16 +177,21 @@ Collision CollisionHandler::TRAFFIC_LIGHTvTRAFFIC_LIGHT(const Player& a, const P
 	Col_Sphere aExtentSphere(a.getPosition(), busStageExtents[aStage].x);
 	Col_Sphere bExtentSphere(b.getPosition(), busStageExtents[bStage].x);
 	//if the rough sphere check passes, move on to more granular checks
-	if (debugDrawing)
+	
+	if (DBG::debug()->getVisualDebugEnabled())
 	{
-		/*glPushMatrix();
+		glDisable(GL_TEXTURE_2D);
+		glColor3f(0.25f, 0.8f, 0.25f);
+		glPushMatrix();
 		glTranslatef(a.getPosition().x, a.getPosition().y, a.getPosition().z);
 		glutWireSphere(aExtentSphere.radius, 10, 10);
 		glPopMatrix();
 		glPushMatrix();
 		glTranslatef(b.getPosition().x, b.getPosition().y, b.getPosition().z);
 		glutWireSphere(bExtentSphere.radius, 10, 10);
-		glPopMatrix();*/
+		glPopMatrix();
+		glColor3f(1.0f, 1.0f, 1.0f);
+		glEnable(GL_TEXTURE_2D);
 	}
 	if (CollisionHandler::SPHEREvSPHERE(aExtentSphere, bExtentSphere).status)
 	{
@@ -273,7 +279,7 @@ Collision CollisionHandler::TRAFFIC_LIGHTvTRAFFIC_LIGHT(const Player& a, const P
 			glm::vec3 bExternalEnd = bExternalStart;
 			bExternalEnd += BUS_WIDTH * bForwardNormal;
 
-			if (debugDrawing)
+			if (DBG::debug()->getVisualDebugEnabled())
 			{
 				
 				glBegin(GL_LINES);

@@ -3,6 +3,7 @@
 #include "glm\gtx\rotate_vector.hpp"
 #include "DisplayHandler.h"
 #include "MathHelper.h"
+#include "DebugManager.h"
 
 /*
 	Constructors and destructor
@@ -318,8 +319,65 @@ void GameObject::update(float dt)
 		texture->unbind();
 	else
 		glEnable(GL_TEXTURE_2D);*/
-	drawLocalAxes();
+
+	if (DBG::debug()->getVisualDebugEnabled())
+		drawDebug(dt);
+
 	//Loads identity for cleanliness
+	glLoadIdentity();
+}
+
+void GameObject::drawDebug(float dt)
+{
+	glm::vec3 localX = glm::vec3(1.0f, 0.0f, 0.0f);
+	glm::vec3 localY = glm::vec3(0.0f, 1.0f, 0.0f);
+	glm::vec3 localZ = glm::vec3(0.0f, 0.0f, 1.0f);
+
+	// ----- Draw axes ----- //
+	glLoadIdentity();
+	glDisable(GL_TEXTURE_2D);
+
+	glTranslatef(position.x, position.y, position.z);
+	glRotatef(rotation.x, 1.0f, 0.0f, 0.0f);
+	glRotatef(rotation.y, 0.0f, 1.0f, 0.0f);
+	glRotatef(rotation.z, 0.0f, 0.0f, 1.0f);
+
+	//Draw x
+	glLineWidth(2.5f);
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glm::vec3 localXScaled = localX * 10.0f;
+	glBegin(GL_LINES);
+	{
+		glVertex3f(0, 0, 0);
+		glVertex3f(localXScaled.x, localXScaled.y, localXScaled.z);
+	}
+	glEnd();
+	glColor3f(1.0f, 1.0f, 1.0f);
+
+	//Draw y
+	glColor3f(0.0f, 1.0f, 0.0f);
+	glm::vec3 localYScaled = localY * 10.0f;
+	glBegin(GL_LINES);
+	{
+		glVertex3f(0, 0, 0);
+		glVertex3f(localYScaled.x, localYScaled.y, localYScaled.z);
+	}
+	glEnd();
+	glColor3f(1.0f, 1.0f, 1.0f);
+
+	//Draw z
+	glColor3f(0.0f, 0.0f, 1.0f);
+	glm::vec3 localZScaled = localZ * 10.0f;
+	glBegin(GL_LINES);
+	{
+		glVertex3f(0, 0, 0);
+		glVertex3f(localZScaled.x, localZScaled.y, localZScaled.z);
+	}
+	glEnd();
+	glLineWidth(1.0f);
+	glColor3f(1.0f, 1.0f, 1.0f);
+	glEnable(GL_TEXTURE_2D);
+
 	glLoadIdentity();
 }
 
@@ -389,59 +447,5 @@ void GameObject::setForwardVector(glm::vec3 newForwardDirection)
 	//}
 	//glEnd();
 
-	glEnable(GL_TEXTURE_2D);
-}
-
-void GameObject::drawLocalAxes()
-{
-	glm::vec3 localX = glm::vec3(1.0f, 0.0f, 0.0f);
-	glm::vec3 localY = glm::vec3(0.0f, 1.0f, 0.0f);
-	glm::vec3 localZ = glm::vec3(0.0f, 0.0f, 1.0f);
-
-	// ----- Draw axes ----- //
-	glLoadIdentity();
-	glDisable(GL_TEXTURE_2D);
-
-	glTranslatef(position.x, position.y, position.z);
-	glRotatef(rotation.x, 1.0f, 0.0f, 0.0f);
-	glRotatef(rotation.y, 0.0f, 1.0f, 0.0f);
-	glRotatef(rotation.z, 0.0f, 0.0f, 1.0f);
-
-	//Draw x
-	glLineWidth(5.0f);
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glm::vec3 localXScaled = localX * 10.0f;
-	glBegin(GL_LINES);
-	{
-		glVertex3f(0, 0, 0);
-		glVertex3f(localXScaled.x, localXScaled.y, localXScaled.z);
-	}
-	glEnd();
-	glColor3f(1.0f, 1.0f, 1.0f);
-
-	//Draw y
-	glLineWidth(5.0f);
-	glColor3f(0.0f, 1.0f, 0.0f);
-	glm::vec3 localYScaled = localY * 10.0f;
-	glBegin(GL_LINES);
-	{
-		glVertex3f(0, 0, 0);
-		glVertex3f(localYScaled.x, localYScaled.y, localYScaled.z);
-	}
-	glEnd();
-	glColor3f(1.0f, 1.0f, 1.0f);
-
-	//Draw z
-	glLineWidth(5.0f);
-	glColor3f(0.0f, 0.0f, 1.0f);
-	glm::vec3 localZScaled = localZ * 10.0f;
-	glBegin(GL_LINES);
-	{
-		glVertex3f(0, 0, 0);
-		glVertex3f(localZScaled.x, localZScaled.y, localZScaled.z);
-	}
-	glEnd();
-	glLineWidth(1.0f);
-	glColor3f(1.0f, 1.0f, 1.0f);
 	glEnable(GL_TEXTURE_2D);
 }

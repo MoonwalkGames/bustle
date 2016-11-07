@@ -32,6 +32,7 @@ public:
 	int getPoints(); //Gets number of points
 	int getStage() const { return stage; }
 	virtual void update(float deltaTime);
+	virtual void debugDraw(float deltaTime);
 	bool isLeading() const;
 	void setLeading(bool);
 

@@ -17,6 +17,7 @@ public:
 	void launchPassengers(int busNumber, int amount);
 	void updateCrownedPlayer();
 	void drawCrown();
+	void drawUI();
 
 private:
 	GameObject levelMesh;
@@ -28,8 +29,11 @@ private:
 	float busTurnSpeed;
 	float busMovementSpeed;
 	bool debugDrawing;
+	float timeSinceLastDataPush;
 
-	
-	std::vector<Sprite> text;
+	//UI
+	float timeLeft;
+	std::vector<Sprite> timer;
+	Sprite billboards[4];
 };
 #endif

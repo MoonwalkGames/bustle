@@ -60,6 +60,9 @@
     <ClCompile Include="src\Sprite.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="src\DebugManager.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Mesh.h">
@@ -111,6 +114,9 @@
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="include\SteeringBehaviors.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DebugManager.h">
       <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>

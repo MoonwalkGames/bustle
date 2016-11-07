@@ -18,6 +18,7 @@ public:
 	int getState() const { return currentState; }
 	bool getAbleToBePickedUp() const;
 	virtual void update(float deltaTime);
+	virtual void drawDebug(float dt); //Polymorphic debug draw function, draws things like local axes, velocity, collision boxes, etc
 
 protected:
 	float launchVelY; //The initial velocity in the Y-direction when the passenger is launched (for LERP'ing on the way up)

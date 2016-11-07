@@ -4,6 +4,7 @@
 #include "MathHelper.h"
 #include "Collision.h"
 #include "SteeringBehaviors.h"
+#include "DebugManager.h"
 
 void State_Gameplay::toggleDebugDrawing()
 {
@@ -16,7 +17,7 @@ void State_Gameplay::load()
 	srand(time(0));
 
 	//Init the level mesh
-	levelMesh = GameObject(glm::vec3(1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(2.5f, 2.5f, 2.5f), MESH_LEVEL, TEX_LEVEL);
+	levelMesh = GameObject(glm::vec3(1.0f, -1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(2.75f, 2.75f, 2.75f), MESH_LEVEL, TEX_LEVEL);
 
 	//Init the buses
 	buses[0] = Player(glm::vec3(-25.0f, 1.25f, -25.0f), glm::vec3(0.0f, -45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS, TEX_BUS_RED);
@@ -47,17 +48,59 @@ void State_Gameplay::load()
 	glOrtho(-75.0f, 75.0f, -75.0f, 75.0f, 0.1f, 1000.0f);
 	gluLookAt(cameraPos.x, cameraPos.y, cameraPos.z, 0, 0, 0, 0, 1, 0);
 	
-	//Set up the test sprite
-	text = Sprite::createTextVector(TEX_FONT, 0, 10.0f, 15.0f, 15.0f, "TESTING", cameraPos, glm::vec3(0.0f));
+	//Enable visual debug mode
+	DBG::debug()->setDebugEnabled(true);
+	DBG::debug()->setVisualDebugEnabled(false);
+	timeSinceLastDataPush = 0;
+
+	// ----- Set up the UI ------ ///
+	//set up the timer
+	timeLeft = 120.0f;
+	timer = Sprite::createTextVector(TEX_FONT, -5.0f, -10.0f, 5.0f, 5.0f, "0:00");
+
+	//Set up the billboards
+	billboards[0] = Sprite(TEX_BUS_RED, 1, 1);
+	billboards[0].setPosition(30.0f, 18.0f, 51.5f);
+	billboards[0].setRotation(0.0f, 180.0f, 0.0f);
+	billboards[0].setScale(80.0f, 80.0f, 5.0f);
+
+	/*billboards[1] = Sprite(TEX_BUS_BLUE, 1, 1);
+	billboards[1].setPosition(-40.0f, 10.0f, -40.0f);
+	billboards[1].setRotation(0.0f, 180.0f, 0.0f);
+	billboards[0].setScale(5.0f, 5.0f, 1.0f);
+
+	billboards[2] = Sprite(TEX_BUS_GREEN, 1, 1);
+	billboards[2].setPosition(-40.0f, 10.0f, -40.0f);
+	billboards[2].setRotation(0.0f, 90.0f, 0.0f);
+	billboards[0].setScale(5.0f, 5.0f, 1.0f);
+
+	billboards[3] = Sprite(TEX_BUS_YELLOW, 1, 1);
+	billboards[3].setPosition(-40.0f, 10.0f, -40.0f);
+	billboards[3].setRotation(0.0f, 90.0f, 0.0f);
+	billboards[0].setScale(5.0f, 5.0f, 1.0f);*/
 }
 
 void State_Gameplay::update()
 {
+	if (timeLeft > 0.0f)
+		timeLeft -= DH::deltaTime;
+	else
+		timeLeft = 0.0f;
+
+	timeSinceLastDataPush += DH::deltaTime;
+
+	//Pass data to debug manager every 2 seconds
+	if (timeSinceLastDataPush >= 2.0f)
+	{
+		timeSinceLastDataPush = 0.0f;
+		DBG::debug()->addData(getTimeOnState(), buses);
+	}
+		
 	//Set up the camera
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	//glOrtho(-60.0f, 60.0f, -60.0f, 60.0f, 0.1f, 1000.0f);
-	glOrtho(-60.0f * DH::getOrthoStretch(), 60.0f * DH::getOrthoStretch(), -60.0f, 60.0f, 0.1f, 1000.0f);
+	glOrtho(-60.0f * DH::getOrthoStretch(), 60.0f * DH::getOrthoStretch(), -60.0f, 60.0f, -5.0f, 1000.0f);
 	gluLookAt(cameraPos.x, cameraPos.y, cameraPos.z, 0, 0, 0, 0, 1, 0);
 
 	glm::vec3 targetDirection;
@@ -104,22 +147,25 @@ void State_Gameplay::update()
 			buses[i].setVelocity(glm::normalize(buses[i].getForwardVector()) * busMovementSpeed);
 
 		//Draw the bus target
-		if (i == 0)
-			glColor3f(1.0f, 0.0f, 0.0f);
-		else if (i == 1)
-			glColor3f(0.0f, 0.0f, 1.0f);
-		else if (i == 2)
-			glColor3f(0.0f, 1.0f, 0.0f);
-		else if (i == 3)
-			glColor3f(1.0f, 1.0f, 0.0f);
+		if (DBG::debug()->getVisualDebugEnabled())
+		{
+			if (i == 0)
+				glColor3f(1.0f, 0.0f, 0.0f);
+			else if (i == 1)
+				glColor3f(0.0f, 0.0f, 1.0f);
+			else if (i == 2)
+				glColor3f(0.0f, 1.0f, 0.0f);
+			else if (i == 3)
+				glColor3f(1.0f, 1.0f, 0.0f);
 
-		glPointSize(10.0f);
-		glBegin(GL_POINTS);
-		glVertex3f(busTargets[i].x, 1.0f, busTargets[i].z);
-		glEnd();
+			glPointSize(10.0f);
+			glBegin(GL_POINTS);
+			glVertex3f(busTargets[i].x, 1.0f, busTargets[i].z);
+			glEnd();
 
-		glColor3f(1.0f, 1.0f, 1.0f);
-
+			glColor3f(1.0f, 1.0f, 1.0f);
+		}
+		
 		//Spawn passenger
 		if (controllers[i].checkButton(BUTTON_A) && controllers[i].isConnected())
 			launchPassengers(i, 1);
@@ -147,7 +193,7 @@ void State_Gameplay::update()
 
 	//Update and draw the passengers
 	AM::assets()->bindTexture(TEX_PASSENGER);
-	for (int i = 0; i < passengers.size(); i++)
+	for (unsigned int i = 0; i < passengers.size(); i++)
 	{
 		//seek behaviour
 		//passengers[i].addImpulse(SteeringBehaviour::seek(passengers[i], buses[0].getPosition(), 3.0f));
@@ -249,11 +295,6 @@ void State_Gameplay::update()
 	updateCrownedPlayer();
 	drawCrown();
 
-	//Draw the text sprites
-	for (int i = 0; i < text.size(); i++)
-		text[i].setCameraPos(cameraPos, glm::vec3(0.0f));
-	Sprite::drawTextVector(text, DH::deltaTime);
-
 	//Reset the scene if 'r' is pressed or start is pressed on a button
 	if (DH::getKey('r') || controllers[0].checkButton(BUTTON_START) || controllers[1].checkButton(BUTTON_START) || controllers[2].checkButton(BUTTON_START) || controllers[3].checkButton(BUTTON_START))
 	{
@@ -261,6 +302,27 @@ void State_Gameplay::update()
 		load();
 	}
 
+	//Output the debug data to file
+	if (DH::getKey('.'))
+		DBG::debug()->outputAnalytics();
+
+	//Reset the debug data
+	if (DH::getKey(','))
+		DBG::debug()->clearAnalytics();
+
+	//Turn on visual debug mode
+	if (DH::getKey('['))
+		DBG::debug()->setVisualDebugEnabled(true);
+
+	//Turn off visual debug mode
+	if (DH::getKey(']'))
+		DBG::debug()->setVisualDebugEnabled(false);
+
+	//Draw debug text
+	DBG::debug()->displayDebugText(buses, DH::deltaTime);
+
+	//Draw the ui
+	drawUI();
 
 	//Bind a NULL texture at the end of the frame for cleanliness
 	glBindTexture(GL_TEXTURE_2D, NULL);
@@ -348,4 +410,32 @@ void State_Gameplay::drawCrown()
 			glPopMatrix();
 		}
 	}
+}
+
+void State_Gameplay::drawUI()
+{
+	//Draw billboards in world spcae
+	for (int i = 0; i < 4; i++)
+		billboards[i].update(DH::deltaTime);
+
+	//Reset view for HUD in screen space
+	glViewport(0, 0, DH::windowWidth, DH::windowHeight);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluOrtho2D(-15.0f, 15.0f, -15.0f, 15.0f);
+	
+	//Draw timer
+	string timerString;
+
+	//Has to draw an extra 0 if under 10 seconds on the second half
+	if (int(timeLeft) % 60 < 10)
+		timerString = std::to_string(int(timeLeft) / 60) + ":0" + std::to_string(int(timeLeft) % 60);
+	else
+		timerString = std::to_string(int(timeLeft) / 60) + ":" + std::to_string(int(timeLeft) % 60);
+
+	timer = Sprite::changeTextVector(TEX_FONT, timer, timerString);
+	Sprite::drawTextVector(timer, DH::deltaTime);
 }

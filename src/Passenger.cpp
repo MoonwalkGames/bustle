@@ -1,6 +1,6 @@
 #include "Passenger.h"
 #include "MathHelper.h"
-
+#include "DebugManager.h"
 
 Passenger::Passenger(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, bool gravityAffected, glm::vec3 accel, glm::vec3 launchVel, float mass, MESH_NAME mesh, TEXTURE_NAME texture)
 	: Kinematic(pos, rot, scl, gravityAffected, accel, launchVel, mass, mesh, texture)
@@ -55,8 +55,16 @@ void Passenger::update(float deltaTime)
 	{
 		//flee(something)
 	}
+	
+	if (DBG::debug()->getVisualDebugEnabled())
+		drawDebug(deltaTime);
 
 	Kinematic::update(deltaTime);
+}
+
+void Passenger::drawDebug(float dt)
+{
+	Kinematic::drawDebug(dt);
 }
 
 bool Passenger::getAbleToBePickedUp() const {
