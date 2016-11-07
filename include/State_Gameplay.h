@@ -27,8 +27,6 @@ private:
 	MController controllers[4];
 	std::vector<Passenger> passengers;
 	glm::vec3 cameraPos;
-	float busTurnSpeed;
-	float busMovementSpeed;
 	bool debugDrawing;
 	float timeSinceLastDataPush;
 

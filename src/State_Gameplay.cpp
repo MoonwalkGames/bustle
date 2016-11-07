@@ -34,10 +34,6 @@ void State_Gameplay::load()
 	for (int i = 0; i < 4; i++)
 		controllers[i] = MController(i);
 
-	//Init the bus movement speed and the bus turn speed
- 	busMovementSpeed = 35.0f;
-	busTurnSpeed = 0.75f;
-
 	//Delete later but allows us to control the camera position
 	cameraPos = glm::vec3(34.0f, 35.0f, -34.0f);
 
@@ -140,7 +136,7 @@ void State_Gameplay::update()
 		desired = busTargets[i] - buses[i].getPosition(); //Calculates the new desired vector since we moved the target
 
 		if (!(controllers[i].lX == 0 && controllers[i].lY == 0))
-			currentForwardVector = MathHelper::LERP(currentForwardVector, desired, DH::deltaTime * busTurnSpeed);
+			currentForwardVector = MathHelper::LERP(currentForwardVector, desired, DH::deltaTime * buses[i].getTurningSpeed());
 
 		if (desired.x != 0.0f || desired.y != 0.0f || desired.z != 0.0f)
 			buses[i].setForwardVector(currentForwardVector);
@@ -150,7 +146,7 @@ void State_Gameplay::update()
 		if (((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z) < 90.0f) && (controllers[i].lX == 0 && controllers[i].lY == 0))
 			buses[i].setVelocity(0.0f, 0.0f, 0.0f);
 		else//Otherwise, move forward
-			buses[i].setVelocity(glm::normalize(buses[i].getForwardVector()) * busMovementSpeed);
+			buses[i].setVelocity(glm::normalize(buses[i].getForwardVector()) * buses[i].getMovementSpeed());
 		//Draw the bus target
 		if (DBG::debug()->getVisualDebugEnabled())
 		{
@@ -418,26 +414,36 @@ void State_Gameplay::updateStages()
 		{
 			buses[i].setStage(firstStage);
 			buses[i].setMesh(MESH_BUS0);
+			buses[i].setMovementSpeed(45.0f);
+			buses[i].setTurningSpeed(10.0f);
 		}
 		else if (points < 25)
 		{
 			buses[i].setStage(secondStage);
 			buses[i].setMesh(MESH_BUS1);
+			buses[i].setMovementSpeed(40.0f);
+			buses[i].setTurningSpeed(0.85f);
 		}
 		else if (points < 35)
 		{
 			buses[i].setStage(thirdStage);
 			buses[i].setMesh(MESH_BUS2);
+			buses[i].setMovementSpeed(35.0f);
+			buses[i].setTurningSpeed(0.75f);
 		}
 		else if (points < 50)
 		{
 			buses[i].setStage(fourthStage);
 			buses[i].setMesh(MESH_BUS3);
+			buses[i].setMovementSpeed(30.0f);
+			buses[i].setTurningSpeed(0.6f);
 		}
 		else if (points >= 50)
 		{
 			buses[i].setStage(fifthStage);
 			buses[i].setMesh(MESH_BUS4);
+			buses[i].setMovementSpeed(25.0f);
+			buses[i].setTurningSpeed(0.45f);
 		}
 	}
 }

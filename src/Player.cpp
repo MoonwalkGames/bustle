@@ -43,3 +43,25 @@ void Player::setStage(int _stage)
 {
 	stage = _stage;
 }
+
+void Player::setMovementSpeed(float _movementspeed)
+{
+	busMovementSpeed = _movementspeed;
+}
+
+float Player::getMovementSpeed() const
+{
+	return busMovementSpeed;
+}
+
+void Player::setTurningSpeed(float  _turningspeed)
+{
+	busTurnSpeed = _turningspeed;
+}
+
+float Player::getTurningSpeed() const
+{
+	return busTurnSpeed;
+}
+
+
