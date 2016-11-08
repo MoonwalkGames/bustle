@@ -93,7 +93,7 @@ void State_Gameplay::load()
 	cameraPos = glm::vec3(10.0f, 1000.0f, -10.0f);
 	gameplayCameraPos = glm::vec3(68.0f, 70.0f, -68.0f);
 	introLerpTarget = glm::vec3(30.0f, 30.0f, -30.0f);
-
+	
 	//Set up the camera
 	DH::aspectRatio = 16.0f / 9.0f;
 	glMatrixMode(GL_PROJECTION);
@@ -326,7 +326,7 @@ void State_Gameplay::update()
 		firstPerson = false;
 
 
-	//Draw the level mesh
+	//Draw the level mmesh
 	AM::assets()->bindTexture(TEX_LEVELPLAY);
 	levelPlay.update(DH::getDeltaTime());
 
