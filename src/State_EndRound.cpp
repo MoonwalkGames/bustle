@@ -64,10 +64,10 @@ void State_EndRound::load()
 	billboard4 = GameObject(glm::vec3(-60.0f, 18.5f, -25.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_BILLBOARD, TEX_BILLBOARD4);
 
 	//Init the buses
-	buses[0] = GameObject(glm::vec3(20.5f + 10.0f, 2.25f, -20.5f + 7.5f), glm::vec3(0.0f, 45.0f + 40.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS2, TEX_BUS_RED);
-	buses[1] = GameObject(glm::vec3(19.5f + 3.0f, 2.25f, -19.5f + 2.5f), glm::vec3(0.0f, 45.0f + 10.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS2, TEX_BUS_RED);
-	buses[2] = GameObject(glm::vec3(19.5f - 2.5f, 2.25f, -19.5f - 3.0f), glm::vec3(0.0f, 45.0f - 10.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS2, TEX_BUS_RED);
-	buses[3] = GameObject(glm::vec3(20.5f - 7.5f, 2.25f, -20.5f - 10.0f), glm::vec3(0.0f, 45.0f - 40.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS2, TEX_BUS_RED);
+	buses[0] = GameObject(glm::vec3(20.5f + 10.0f, 2.25f, -20.5f + 7.5f), glm::vec3(0.0f, 45.0f + 40.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS2, TEX_BUS2_RED);
+	buses[1] = GameObject(glm::vec3(19.5f + 3.0f, 2.25f, -19.5f + 2.5f), glm::vec3(0.0f, 45.0f + 10.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS2, TEX_BUS2_RED);
+	buses[2] = GameObject(glm::vec3(19.5f - 2.5f, 2.25f, -19.5f - 3.0f), glm::vec3(0.0f, 45.0f - 10.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS2, TEX_BUS2_RED);
+	buses[3] = GameObject(glm::vec3(20.5f - 7.5f, 2.25f, -20.5f - 10.0f), glm::vec3(0.0f, 45.0f - 40.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS2, TEX_BUS2_RED);
 
 	//Load the previous round score into the allGraphData vectors
 	loadRoundScores();
@@ -186,16 +186,16 @@ void State_EndRound::update()
 	billboard4.update(DH::getDeltaTime());
 
 	//Draw the buses
-	AM::assets()->bindTexture(TEX_BUS_RED); //Red bus
+	AM::assets()->bindTexture(TEX_BUS2_RED); //Red bus
 	buses[0].update(DH::deltaTime);
 
-	AM::assets()->bindTexture(TEX_BUS_BLUE); //Blue bus
+	AM::assets()->bindTexture(TEX_BUS2_BLUE); //Blue bus
 	buses[1].update(DH::deltaTime);
 
-	AM::assets()->bindTexture(TEX_BUS_GREEN); //Green bus
+	AM::assets()->bindTexture(TEX_BUS2_GREEN); //Green bus
 	buses[2].update(DH::deltaTime);
 
-	AM::assets()->bindTexture(TEX_BUS_YELLOW); //Yellow bus
+	AM::assets()->bindTexture(TEX_BUS2_YELLOW); //Yellow bus
 	buses[3].update(DH::deltaTime);
 
 	//Draw the passengers and remove the ones that hit the ground
@@ -226,7 +226,8 @@ void State_EndRound::update()
 	if (DH::getKey('r'))
 	{
 		renderedGraphData.clear();
-		load();
+		//load();
+		GM::game()->setActiveState(STATE_GAMEPLAY);
 	}
 }
 

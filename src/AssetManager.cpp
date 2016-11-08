@@ -37,10 +37,26 @@ void AssetManager::loadAssets()
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_LevelSidewalk.obj"));
 	
 	/* ========== TEXTURES (Naming: tex_XXXXXX.png) ========== */
-	loadedTextures.push_back(Texture2D("./res/img/tex_Bus_Red.png"));
-	loadedTextures.push_back(Texture2D("./res/img/tex_Bus_Blue.png"));
-	loadedTextures.push_back(Texture2D("./res/img/tex_Bus_Green.png"));
-	loadedTextures.push_back(Texture2D("./res/img/tex_Bus_Yellow.png"));	
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus2_Red.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus2_Blue.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus2_Green.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus2_Yellow.png"));	
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus2_Red.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus2_Blue.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus2_Green.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus2_Yellow.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus2_Red.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus2_Blue.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus2_Green.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus2_Yellow.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus3_Red.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus3_Blue.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus3_Green.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus3_Yellow.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus4_Red.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus4_Blue.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus4_Green.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus4_Yellow.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Passenger.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_LevelArea.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_LevelBackground.png"));

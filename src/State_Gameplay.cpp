@@ -14,6 +14,7 @@ void State_Gameplay::toggleDebugDrawing()
 void State_Gameplay::load()
 {
 	//Seed the random number generator
+	rotation = 0;
 	srand(time(0));
 	FOV = 60.0f;
 	//Init the level mesh
@@ -74,10 +75,10 @@ void State_Gameplay::load()
 	billboard4 = GameObject(glm::vec3(-60.0f, 18.5f, -25.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_BILLBOARD, TEX_BILLBOARD4);
 
 	//Init the buses
-	buses[0] = Player(glm::vec3(-25.0f, 1.25f, -25.0f), glm::vec3(0.0f, -45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS_RED);
-	buses[1] = Player(glm::vec3(-25.0f, 1.25f, 25.0f), glm::vec3(0.0f, 45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS_BLUE);
-	buses[2] = Player(glm::vec3(30.0f, 1.25f, 25.0f), glm::vec3(0.0f, 135.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS_GREEN);
-	buses[3] = Player(glm::vec3(30.0f, 1.25f, -25.0f), glm::vec3(0.0f, 225.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS_YELLOW);
+	buses[0] = Player(glm::vec3(-25.0f, 1.25f, -25.0f), glm::vec3(0.0f, -45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_RED);
+	buses[1] = Player(glm::vec3(-25.0f, 1.25f, 25.0f), glm::vec3(0.0f, 45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_BLUE);
+	buses[2] = Player(glm::vec3(30.0f, 1.25f, 25.0f), glm::vec3(0.0f, 135.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_GREEN);
+	buses[3] = Player(glm::vec3(30.0f, 1.25f, -25.0f), glm::vec3(0.0f, 225.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_YELLOW);
 
 	busTargets[0] = buses[0].getPosition();
 	busTargets[1] = buses[1].getPosition();
@@ -111,22 +112,22 @@ void State_Gameplay::load()
 	timer = Sprite::createTextVector(TEX_FONT, -5.0f, -10.0f, 5.0f, 5.0f, "0:00");
 
 	//Set up the billboards
-	billboards[0] = Sprite(TEX_BUS_RED, 1, 1);
+	billboards[0] = Sprite(TEX_BUS2_RED, 1, 1);
 	billboards[0].setPosition(29.0f, 18.0f, 51.5f);
 	billboards[0].setRotation(0.0f, 180.0f, 0.0f);
 	billboards[0].setScale(20.0f, 10.0f, 1.0f);
 
-	billboards[1] = Sprite(TEX_BUS_BLUE, 1, 1);
+	billboards[1] = Sprite(TEX_BUS2_BLUE, 1, 1);
 	billboards[1].setPosition(-15.0f, 18.0f, 51.5f);
 	billboards[1].setRotation(0.0f, 180.0f, 0.0f);
 	billboards[1].setScale(20.0f, 10.0f, 1.0f);
 
-	billboards[2] = Sprite(TEX_BUS_GREEN, 1, 1);
+	billboards[2] = Sprite(TEX_BUS2_GREEN, 1, 1);
 	billboards[2].setPosition(-51.0f, 18.0f, 17.0f);
 	billboards[2].setRotation(0.0f, 90.0f, 0.0f);
 	billboards[2].setScale(20.0f, 10.0f, 1.0f);
 
-	billboards[3] = Sprite(TEX_BUS_YELLOW, 1, 1);
+	billboards[3] = Sprite(TEX_BUS2_YELLOW, 1, 1);
 	billboards[3].setPosition(-51.0f, 18.0f, -28.0f);
 	billboards[3].setRotation(0.0f, 90.0f, 0.0f);
 	billboards[3].setScale(20.0f, 10.0f, 1.0f);
@@ -203,7 +204,7 @@ void State_Gameplay::update()
 		if (!firstPerson)
 		{
 			//Need to rotate this by the rotation of the world VS the camera since up is actually up right(ish) (angle is 45)
-			glm::vec3 worldRotatedController = glm::rotate(glm::vec3(-controllers[i].lX, 0.0f, controllers[i].lY), DH::degToRad(-45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			glm::vec3 worldRotatedController = glm::rotate(glm::vec3(-controllers[i].lX, 0.0f, controllers[i].lY), DH::degToRad(-45.0f + rotation), glm::vec3(0.0f, 1.0f, 0.0f));
 
 			//Calculates the vector between the bus and the target
 			glm::vec3 desired = busTargets[i] - buses[i].getPosition();
@@ -303,11 +304,21 @@ void State_Gameplay::update()
 		gameplayCameraPos.z += 0.5f;
 
 	if (DH::getKey('a'))
-		gameplayCameraPos = glm::rotate(gameplayCameraPos, -0.01f, glm::vec3(0, 1, 0));
+	{
+		gameplayCameraPos = glm::rotate(gameplayCameraPos, degToRad * -0.5f, glm::vec3(0, 1, 0));
+		rotation -= 0.5f;
+	}
+
 	else if (DH::getKey('d'))
-		gameplayCameraPos = glm::rotate(gameplayCameraPos, 0.01f, glm::vec3(0, 1, 0));
+	{
+		gameplayCameraPos = glm::rotate(gameplayCameraPos, degToRad * 0.5f, glm::vec3(0, 1, 0));
+		rotation += 0.5f;
+	}
 	if (DH::getKey('q'))
+	{
 		gameplayCameraPos = glm::vec3(68.0f, 70.0f, -68.0f);
+		rotation = 0;
+	}
 
 	if (DH::getKey('f'))
 		firstPerson = true;
@@ -445,19 +456,10 @@ void State_Gameplay::update()
 
 	//Output the number of passengers to the console
 	//std::cout << "NUM PASSENGERS = " << passengers.size() << std::endl;
-
+	
 	//Update and draw the buses
-	AM::assets()->bindTexture(TEX_BUS_RED); //Red bus (player 1)
-	buses[0].update(DH::getDeltaTime());
-
-	AM::assets()->bindTexture(TEX_BUS_BLUE); //Blue bus (player 2)
-	buses[1].update(DH::getDeltaTime());
-
-	AM::assets()->bindTexture(TEX_BUS_GREEN); //Green bus (player 3)
-	buses[2].update(DH::getDeltaTime());
-
-	AM::assets()->bindTexture(TEX_BUS_YELLOW); //Yellow bus (player 4)
-	buses[3].update(DH::getDeltaTime());
+	updateStages();
+	drawBuses();
 
 	//Detect collisions HERE
 	//Player vs Player Collisions
@@ -525,7 +527,7 @@ void State_Gameplay::update()
 	//Detect collision HERE^
 	
 	//If there's a leader, draw the crown
-	updateStages();
+
 	updateCrownedPlayer();
 	drawCrown();
 
@@ -709,4 +711,63 @@ void State_Gameplay::drawUI()
 
 	timer = Sprite::changeTextVector(TEX_FONT, timer, timerString);
 	Sprite::drawTextVector(timer, DH::getDeltaTime());
+}
+
+void State_Gameplay::drawBuses()
+{
+	//Bind correct texture for Player 1
+	if(buses[0].getStage() == firstStage)
+		AM::assets()->bindTexture(TEX_BUS2_RED); 
+	else if (buses[0].getStage() == secondStage)
+		AM::assets()->bindTexture(TEX_BUS2_RED); 
+	else if (buses[0].getStage() == thirdStage)
+		AM::assets()->bindTexture(TEX_BUS2_RED); 
+	if (buses[0].getStage() == fourthStage)
+		AM::assets()->bindTexture(TEX_BUS3_RED); 
+	if (buses[0].getStage() == fifthStage)
+		AM::assets()->bindTexture(TEX_BUS4_RED); 
+
+	buses[0].update(DH::getDeltaTime());
+
+	//Bind correct texture for Player 2
+	if (buses[1].getStage() == firstStage)
+		AM::assets()->bindTexture(TEX_BUS2_BLUE);
+	else if (buses[1].getStage() == secondStage)
+		AM::assets()->bindTexture(TEX_BUS2_BLUE);
+	else if (buses[1].getStage() == thirdStage)
+		AM::assets()->bindTexture(TEX_BUS2_BLUE);
+	if (buses[1].getStage() == fourthStage)
+		AM::assets()->bindTexture(TEX_BUS3_BLUE);
+	if (buses[1].getStage() == fifthStage)
+		AM::assets()->bindTexture(TEX_BUS4_BLUE);
+	
+	buses[1].update(DH::getDeltaTime());
+
+	//Bind correct texture for Player 3
+	if (buses[2].getStage() == firstStage)
+		AM::assets()->bindTexture(TEX_BUS2_YELLOW);
+	else if (buses[2].getStage() == secondStage)
+		AM::assets()->bindTexture(TEX_BUS2_YELLOW);
+	else if (buses[2].getStage() == thirdStage)
+		AM::assets()->bindTexture(TEX_BUS2_YELLOW);
+	if (buses[2].getStage() == fourthStage)
+		AM::assets()->bindTexture(TEX_BUS3_YELLOW);
+	if (buses[2].getStage() == fifthStage)
+		AM::assets()->bindTexture(TEX_BUS4_YELLOW);
+	
+	buses[2].update(DH::getDeltaTime());
+
+	//Bind correct texture for Player 4
+	if (buses[3].getStage() == firstStage)
+		AM::assets()->bindTexture(TEX_BUS2_GREEN);
+	else if (buses[3].getStage() == secondStage)
+		AM::assets()->bindTexture(TEX_BUS2_GREEN);
+	else if (buses[3].getStage() == thirdStage)
+		AM::assets()->bindTexture(TEX_BUS2_GREEN);
+	if (buses[3].getStage() == fourthStage)
+		AM::assets()->bindTexture(TEX_BUS3_GREEN);
+	if (buses[3].getStage() == fifthStage)
+		AM::assets()->bindTexture(TEX_BUS4_GREEN);
+
+	buses[3].update(DH::getDeltaTime());
 }

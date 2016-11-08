@@ -19,7 +19,7 @@ public:
 	void updateStages();
 	void drawCrown();
 	void drawUI();
-
+	void drawBuses();
 private:
 	GameObject levelPlay;
 	GameObject levelSidewalk1;
@@ -80,6 +80,7 @@ private:
 	bool inIntro = true;
 	bool firstPerson = false;
 	float FOV;
+	float rotation;
 	//UI
 	float timeLeft;
 	std::vector<Sprite> timer;
