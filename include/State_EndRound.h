@@ -3,11 +3,19 @@
 
 #include "GameState.h"
 #include "GameObject.h"
+#include "Passenger.h"
 
 struct GraphData
 {
 	float time;
 	float score[4];
+};
+
+enum END_STAGE
+{
+	GRAPH_STAGE,
+	FOUNTAIN_STAGE,
+	CROWN_STAGE
 };
 
 class State_EndRound : public GameState
@@ -18,8 +26,12 @@ public:
 
 	void load();
 	void update();
-	void drawEndGraph(float t);
+	void drawEndGraph();
 	void loadRoundScores();
+	void showWinners();
+	void decideWinners();
+	void fountainPassengers();
+	void launchPassenger(GameObject bus);
 
 private:
 	GameObject levelPlay;
@@ -68,11 +80,18 @@ private:
 	GameObject billboard2;
 	GameObject billboard3;
 	GameObject billboard4;
-
 	GameObject buses[4];
 
 	std::vector<GraphData> allGraphData;
 	std::vector<GraphData> renderedGraphData;
+
+	std::vector<bool> winners;
+	int finalScores[4];
+
+	std::vector<Passenger> activePassengers;
+	int remainingPassengers[4];
+
+	END_STAGE currentStage;
 };
 
 #endif

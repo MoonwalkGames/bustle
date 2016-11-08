@@ -56,6 +56,10 @@ public:
 	void outputAnalytics(); //Outputs all of the data to a .csv file that can be read in by excel
 	void clearAnalytics(); //Clears all of the table data
 
+	//Outputs the round scores (does this EVERY game, even if disabled...couldn't find a better place for this...maybe move to game manager later???)
+	void addScoreData(float time, Player players[4]);
+	void outputRoundScores();
+
 	static DebugManager* debug(); //Singleton pattern
 
 private:
@@ -69,6 +73,9 @@ private:
 	std::vector<ExcelTableRow5<float>> tbl_Scores; //One for each player (4 total)
 	std::vector<ExcelTableRow5<float>> tbl_Stages; //One for each player (4 total)
 	std::vector<ExcelTableRow2<float>> tbl_FreePassengers; //Only one total
+
+	//Score data to be outputted to text file for round end graph
+	std::vector<ExcelTableRow5<float>> tbl_RoundScores;
 };
 
 typedef DebugManager DBG;

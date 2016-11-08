@@ -36,6 +36,7 @@ struct DisplayHandler
 	static float getCalculatedDeltaTime(); //Retuns the dt that is calculated, not fixed
 	static float degToRad(float angle); //Converts an angle from degrees to radians and returns it
 	static float radToDeg(float angle); //Converts an angle from radians to degrees and returns it
+	static void drawText2D(string text, glm::vec4 colour, float posX, float posY); //Draw text in the world (in screen coordinates)
 
 	static const int FRAMES_PER_SECOND = 60; //Const representing how many FPS we want in the window
 	static const int FRAME_DELAY = 1000 / FRAMES_PER_SECOND; //The frame delay in milliseconds, passed to the timer function

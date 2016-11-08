@@ -199,6 +199,38 @@ void DebugManager::clearAnalytics()
 	tbl_FreePassengers.clear();
 }
 
+/* ====== Round Score Saving (for end graph) ====== */
+void DebugManager::addScoreData(float time, Player players[4])
+{
+	ExcelTableRow5<float> scoreRow;
+	scoreRow.A = time;
+	scoreRow.B = players[0].getPoints();
+	scoreRow.C = players[1].getPoints();
+	scoreRow.D = players[2].getPoints();
+	scoreRow.E = players[3].getPoints();
+	tbl_RoundScores.push_back(scoreRow);
+}
+
+void DebugManager::outputRoundScores()
+{
+	//Open file
+	std::ofstream outFile("./res/debug/lastRoundScore.txt");
+
+	//Error check
+	if (!outFile)
+	{
+		std::cout << "File at ('./res/debug/lastRoundScore.txt') failed to open! Aborting!" << std::endl;
+		abort();
+	}
+
+	//Output data
+	for (unsigned int i = 0; i < tbl_RoundScores.size(); i++)
+		outFile << tbl_RoundScores[i].A << "\t" << tbl_RoundScores[i].B << "\t" << tbl_RoundScores[i].C << "\t" << tbl_RoundScores[i].D << "\t" << tbl_RoundScores[i].E << endl;
+
+	//Close the file
+	outFile.close();
+}
+
 /* Singleton Pattern */
 DebugManager* DebugManager::debug()
 {

@@ -107,7 +107,7 @@ void State_Gameplay::load()
 
 	// ----- Set up the UI ------ ///
 	//set up the timer
-	timeLeft = 120.0f;
+	timeLeft = 20.0f;
 	timer = Sprite::createTextVector(TEX_FONT, -5.0f, -10.0f, 5.0f, 5.0f, "0:00");
 
 	//Set up the billboards
@@ -140,11 +140,12 @@ void State_Gameplay::update()
 
 	if (timeLeft > 0.0f)
 		timeLeft -= DH::deltaTime;
-	/*else
+	else
 	{
 		DBG::debug()->outputAnalytics();
+		DBG::debug()->outputRoundScores();
 		GM::game()->setActiveState(STATE_ENDROUND);
-	}*/
+	}
 
 	timeSinceLastDataPush += DH::deltaTime;
 
@@ -153,6 +154,7 @@ void State_Gameplay::update()
 	{
 		timeSinceLastDataPush = 0.0f;
 		DBG::debug()->addData(getTimeOnState(), buses);
+		DBG::debug()->addScoreData(getTimeOnState(), buses);
 	}
 		
 	//Set up the camera

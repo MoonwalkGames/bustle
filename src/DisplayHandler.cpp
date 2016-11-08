@@ -161,3 +161,28 @@ float DisplayHandler::degToRad(float angle) {
 float DisplayHandler::radToDeg(float angle) {
 	return angle * (180.0f / 3.1415f);
 }
+
+void DisplayHandler::drawText2D(string text, glm::vec4 colour, float posX, float posY)
+{
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	glOrtho(0, DH::windowWidth, 0, DH::windowHeight, 0, 1);
+
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadIdentity();
+
+	glDisable(GL_TEXTURE_2D);
+	glColor4f(colour.x, colour.y, colour.z, colour.w);
+
+	glRasterPos2f(posX, posY + 24);
+	for (unsigned int i = 0; i < text.length(); i++)
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, text[i]);
+
+	glEnable(GL_TEXTURE_2D);
+	glPopMatrix();
+
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+}
