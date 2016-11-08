@@ -78,7 +78,8 @@ private:
 	bool debugDrawing;
 	float timeSinceLastDataPush;
 	bool inIntro = true;
-
+	bool firstPerson = false;
+	float FOV;
 	//UI
 	float timeLeft;
 	std::vector<Sprite> timer;

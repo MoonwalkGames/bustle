@@ -209,15 +209,15 @@ void Kinematic::update(float dt)
 	position.z += (velocity.z * dt) + (0.5 * dt * dt * acceleration.z);
 
 	//DELETE LATER - Restricting the objects to the world bounds//
-	if (position.x > 40.0f)
-		position.x = 40.0f;
-	else if (position.x < -30.0f)
-		position.x = -30.0f;
+	if (position.x > 50.0f)
+		position.x = 50.0f;
+	else if (position.x < -50.0f)
+		position.x = -50.0f;
 
-	if (position.z > 30.0f)
-		position.z = 30.0f;
-	else if (position.z < -40.0f)
-		position.z = -40.0f;
+	if (position.z > 50.0f)
+		position.z = 50.0f;
+	else if (position.z < -50.0f)
+		position.z = -50.0f;
 
 	//Zeroes out the impulse since it only lasts for one frame
 	impulse = glm::vec3(0.0f);
