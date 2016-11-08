@@ -27,16 +27,39 @@ void AssetManager::loadAssets()
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Bus2.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Bus3.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Bus4.obj"));
-	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Level.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Passenger.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_LevelArea.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_LevelBackground.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_LevelUnderground.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_BaseBuilding.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_BoardBuilding.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Billboard.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_LevelSidewalk.obj"));
 	
 	/* ========== TEXTURES (Naming: tex_XXXXXX.png) ========== */
 	loadedTextures.push_back(Texture2D("./res/img/tex_Bus_Red.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Bus_Blue.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Bus_Green.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Bus_Yellow.png"));	
-	loadedTextures.push_back(Texture2D("./res/img/tex_Level.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Passenger.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_LevelArea.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_LevelBackground.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_LevelBackgroundM.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Underground.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_BaseBuilding1.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_BaseBuilding2.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_BaseBuilding3.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_BaseBuilding4.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_BoardBuilding1.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_BoardBuilding2.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_BoardBuilding3.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_BoardBuilding4.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Billboard1.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Billboard2.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Billboard3.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Billboard4.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_LevelSidewalk.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_LevelBackgroundSidewalk.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Font.png"));
 }
 
