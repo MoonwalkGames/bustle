@@ -27,7 +27,6 @@ void State_EndRound::load()
 	backgroundSidewalk7 = GameObject(glm::vec3(-126.5f, 0.0f, -25.5f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_SIDEWALK, TEX_BACKGROUNDSIDEWALK);
 	backgroundSidewalk8 = GameObject(glm::vec3(-75.5f, 0.0f, -25.5f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_SIDEWALK, TEX_BACKGROUNDSIDEWALK);
 
-
 	//Init the front buildings 
 	baseBuilding1 = GameObject(glm::vec3(40.0f, 8.95f, 60.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(2.0f), MESH_BASEBUILDING, TEX_BASEBUILDING1);
 	baseBuilding2 = GameObject(glm::vec3(10.0f, 8.95f, 60.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(2.0f), MESH_BASEBUILDING, TEX_BASEBUILDING1);
@@ -65,10 +64,10 @@ void State_EndRound::load()
 	billboard4 = GameObject(glm::vec3(-60.0f, 18.5f, -25.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_BILLBOARD, TEX_BILLBOARD4);
 
 	//Init the buses
-	buses[0] = GameObject(glm::vec3(25.5f, 2.25f, -25.5f), glm::vec3(0.0f, 45.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS2, TEX_BUS_RED);
-	buses[1] = GameObject(glm::vec3(2.5f + 25.5f, 2.25f, -25.5f), glm::vec3(0.0f, 45.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS2, TEX_BUS_RED);
-	buses[2] = GameObject(glm::vec3(-2.5f + 25.5f, 2.25f, -25.5f), glm::vec3(0.0f, 45.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS2, TEX_BUS_RED);
-	buses[3] = GameObject(glm::vec3(-7.5f + 25.5f, 2.25f, -25.5f), glm::vec3(0.0f, 45.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS2, TEX_BUS_RED);
+	buses[0] = GameObject(glm::vec3(20.5f + 10.0f, 2.25f, -20.5f + 7.5f), glm::vec3(0.0f, 45.0f + 40.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS2, TEX_BUS_RED);
+	buses[1] = GameObject(glm::vec3(19.5f + 3.0f, 2.25f, -19.5f + 2.5f), glm::vec3(0.0f, 45.0f + 10.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS2, TEX_BUS_RED);
+	buses[2] = GameObject(glm::vec3(19.5f - 2.5f, 2.25f, -19.5f - 3.0f), glm::vec3(0.0f, 45.0f - 10.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS2, TEX_BUS_RED);
+	buses[3] = GameObject(glm::vec3(20.5f - 7.5f, 2.25f, -20.5f - 10.0f), glm::vec3(0.0f, 45.0f - 40.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS2, TEX_BUS_RED);
 
 	//Load the previous round score into the allGraphData vectors
 	loadRoundScores();
@@ -92,8 +91,8 @@ void State_EndRound::update()
 	//Init the camera
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(90, DH::aspectRatio, 0.1f, 1000.0f);
-	gluLookAt(40.0f, 15.0f, -40.0f, 0.0f, 2.5f, 0.0f, 0, 1, 0);
+	gluPerspective(60.0f, DH::aspectRatio, 0.1f, 1000.0f);
+	gluLookAt(35.0f, 5.0f, -35.0f, 0.0f, 3.5f, 0.0f, 0, 1, 0);
 
 	//Draw the level mesh
 	AM::assets()->bindTexture(TEX_LEVELPLAY);
@@ -206,7 +205,7 @@ void State_EndRound::update()
 	{
 		activePassengers[i].update(DH::deltaTime);
 
-		if (activePassengers[i].getState() == PASSENGER_STATE::GROUNDED)
+		if (activePassengers[i].getPosition().x > 35.0f || activePassengers[i].getPosition().z > 35.0f)
 		{
 			activePassengers.erase(activePassengers.begin() + i);
 			i--;
@@ -216,13 +215,14 @@ void State_EndRound::update()
 	//Draw the other effects
 	if (currentStage == END_STAGE::FOUNTAIN_STAGE)
 		fountainPassengers();
-	
+
 	if (currentStage == END_STAGE::CROWN_STAGE)
 		showWinners();
 
 	//Draw the graph
-	drawEndGraph();
-		
+	if (currentStage != END_STAGE::CROWN_STAGE)
+		drawEndGraph();
+
 	if (DH::getKey('r'))
 	{
 		renderedGraphData.clear();
@@ -234,13 +234,13 @@ void State_EndRound::drawEndGraph()
 {
 	//Add the next data point for the graph
 	static int graphDataNumber = 1;
-	
+
 	if (graphDataNumber < allGraphData.size())
 	{
 		renderedGraphData.push_back(allGraphData[graphDataNumber]);
 		graphDataNumber++;
 	}
-	else
+	else if (getTimeOnState() >= 3.0f)
 		currentStage = END_STAGE::FOUNTAIN_STAGE;
 
 	//Reset the view to make drawing the graph easier
@@ -427,10 +427,10 @@ void State_EndRound::launchPassenger(GameObject bus)
 
 	startRotation = MathHelper::randomVec3(0.0f, 360.0f);
 	startScale = MathHelper::randomVec3(0.5f, 1.75f);
-	
+
 	launchVel.z = 1.0f;
 	launchVel.y = 3.0f;
-	launchVel.x = 0.0f;
+	launchVel.x = -1.0f;
 	launchVel = glm::normalize(launchVel);
 	launchVel *= launchSpeed;
 
