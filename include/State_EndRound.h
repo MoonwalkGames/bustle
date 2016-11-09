@@ -96,6 +96,8 @@ private:
 
 	std::vector<Passenger> activePassengers;
 	int remainingPassengers[4];
+	float viewPortTopCornerT;
+	int graphDataNumber;
 
 	END_STAGE currentStage;
 };

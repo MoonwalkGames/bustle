@@ -186,7 +186,7 @@ void State_MainMenu::update()
 		menuCameraPos = glm::vec3(68.0f, 70.0f, -68.0f);
 		rotation = 0;
 	}
-	if (DH::getKey('k'))
+	if (DH::getKey(32))
 	{
 		GameManager::game()->setActiveState(STATE_GAMEPLAY);
 	}

@@ -85,6 +85,8 @@ void State_EndRound::load()
 
 	//Start the graph
 	renderedGraphData.push_back(allGraphData[0]);
+	viewPortTopCornerT = 0.0f;
+	graphDataNumber = 1;
 
 	//Save the final scores
 	for (int i = 0; i < 4; i++)
@@ -257,7 +259,6 @@ void State_EndRound::update()
 void State_EndRound::drawEndGraph()
 {
 	//Add the next data point for the graph
-	static int graphDataNumber = 1;
 
 	if (currentStage == END_STAGE::GRAPH_STAGE && graphDataNumber < allGraphData.size())
 	{
@@ -272,8 +273,6 @@ void State_EndRound::drawEndGraph()
 	glLoadIdentity();
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-
-	static float viewPortTopCornerT = 0.0f;
 
 	if (currentStage == END_STAGE::GRAPH_LERP_STAGE)
 		viewPortTopCornerT += DH::deltaTime;

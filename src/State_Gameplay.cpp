@@ -137,6 +137,10 @@ void State_Gameplay::load()
 	skyBox = GameObject(MESH_SKYBOX, TEX_SKYBOX);
 	skyBox.setRotationY(90.0f);
 	skyBox.setScale(150.0f, 150.0f, 150.0f);
+
+	//Initialize the data & analytics
+	DBG::debug()->addData(getTimeOnState(), buses);
+	DBG::debug()->addScoreData(getTimeOnState(), buses);
 }
 
 void State_Gameplay::update()
