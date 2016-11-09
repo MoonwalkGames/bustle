@@ -69,9 +69,7 @@ public:
 	}
 
 	static glm::vec3 passengerWander(Passenger target, float speed, float aggro)
-
 	{
-
 		if (target.getState() == GROUNDED) {
 
 			//creat wander circle center in the front of the object
@@ -97,11 +95,8 @@ public:
 			displacement = glm::rotate(displacement, wanderAngle, glm::vec3(0.0f, 1.0f, 0.0f));
 
 			return glm::normalize((displacement + circleCenter))*speed;
-
 		}
-
 	}
-
 	static glm::vec3 pursuit(Kinematic from, Kinematic to, float speed) {
 
 		//get distance between current object and target

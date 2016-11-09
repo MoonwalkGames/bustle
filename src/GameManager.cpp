@@ -39,6 +39,8 @@ void GameManager::setActiveState(STATE newActiveState)
 		activeState = new State_Gameplay();
 	else if (newActiveState == STATE_ENDROUND)
 		activeState = new State_EndRound();
+	else if (newActiveState == STATE_MAINMENU)
+		activeState = new State_MainMenu();
 	else
 	{
 		std::cout << "ERROR: INVALID STATE NUMBER, DEFAULTING TO TEST STATE!!!" << std::endl;

@@ -1,22 +1,16 @@
-#include "State_Gameplay.h"
+#include "State_MainMenu.h"
 #include "DisplayHandler.h"
 #include "glm\gtx\rotate_vector.hpp"
 #include "MathHelper.h"
 #include "Collision.h"
 #include "SteeringBehaviors.h"
 #include "DebugManager.h"
-
-void State_Gameplay::toggleDebugDrawing()
-{
-	debugDrawing = !debugDrawing;
-}
-
-void State_Gameplay::load()
+void State_MainMenu::load()
 {
 	//Seed the random number generator
 	rotation = 0;
 	srand(time(0));
-	FOV = 60.0f;
+
 	//Init the level mesh
 	levelPlay = GameObject(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_LEVELPLAY, TEX_LEVELPLAY);
 	levelSidewalk1 = GameObject(glm::vec3(25.5f, 0.0f, 25.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_SIDEWALK, TEX_SIDEWALK);
@@ -85,33 +79,19 @@ void State_Gameplay::load()
 	busTargets[2] = buses[2].getPosition();
 	busTargets[3] = buses[3].getPosition();
 
-
-	//Init the controllers
-	for (int i = 0; i < 4; i++)
-		controllers[i] = MController(i);
-
 	//Delete later but allows us to control the camera position
-	cameraPos = glm::vec3(10.0f, 1000.0f, -10.0f);
-	gameplayCameraPos = glm::vec3(68.0f, 70.0f, -68.0f);
-	introLerpTarget = glm::vec3(30.0f, 30.0f, -30.0f);
-	
+	menuCameraPos = glm::vec3(38.0f, 25.0f, -38.0f);
+
 	//Set up the camera
 	DH::aspectRatio = 16.0f / 9.0f;
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(-75.0f, 75.0f, -75.0f, 75.0f, 0.1f, 1000.0f);
-	gluLookAt(cameraPos.x, cameraPos.y, cameraPos.z, 0, 0, 0, 0, 1, 0);
-	
+
 	//Enable visual debug mode
 	DBG::debug()->setDebugEnabled(true);
 	DBG::debug()->setVisualDebugEnabled(false);
-	timeSinceLastDataPush = 0;
 
 	// ----- Set up the UI ------ ///
-	//set up the timer
-	timeLeft = 120.0f;
-	timer = Sprite::createTextVector(TEX_FONT, -5.0f, -10.0f, 5.0f, 5.0f, "0:00");
-
 	//Set up the billboards
 	billboards[0] = Sprite(TEX_BUS2_RED, 1, 1);
 	billboards[0].setPosition(29.0f, 18.0f, 51.5f);
@@ -134,81 +114,27 @@ void State_Gameplay::load()
 	billboards[3].setScale(20.0f, 10.0f, 1.0f);
 }
 
-void State_Gameplay::update()
+void State_MainMenu::update()
 {
-//	static float FOV = 75.0f;
-	if (DH::getKey('h'))
-		GM::game()->setActiveState(STATE_GAMEPLAY);
-
-	if (timeLeft > 0.0f)
-		timeLeft -= DH::getDeltaTime();
-	else
-	{
-		DBG::debug()->outputAnalytics();
-		DBG::debug()->outputRoundScores();
-		GM::game()->setActiveState(STATE_ENDROUND);
-	}
-
-	timeSinceLastDataPush += DH::getDeltaTime();
-
-	//Pass data to debug manager every 2 seconds
-	if (timeSinceLastDataPush >= 2.0f)
-	{
-		timeSinceLastDataPush = 0.0f;
-		DBG::debug()->addData(getTimeOnState(), buses);
-		DBG::debug()->addScoreData(getTimeOnState(), buses);
-	}
-		
+	printf("%f, %f, %f\n", menuCameraPos.x, menuCameraPos.y, menuCameraPos.z);
 	//Set up the camera
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	//glOrtho(-60.0f, 60.0f, -60.0f, 60.0f, 0.1f, 1000.0f);
-	if (!inIntro)
-	{
-		if (firstPerson)
-		{
-			glm::vec3 cameraLocation = buses[0].getPosition() + buses[0].getForwardVector() * 3.0f;
-			glm::vec3 focus = buses[0].getPosition() + buses[0].getForwardVector() * 4.0f;
-			gluPerspective(110.0f, DH::getAspectRatio(), 0.1f, 1000.0f);
-			gluLookAt(cameraLocation.x, cameraLocation.y, cameraLocation.z, focus.x, focus.y, focus.z, 0, 1, 0);
-		}
-		else
-		{
-			glOrtho(-60.0f * DH::getOrthoStretch(), 60.0f * DH::getOrthoStretch(), -60.0f, 60.0f, -5.0f, 1000.0f);
-			gluLookAt(gameplayCameraPos.x, gameplayCameraPos.y, gameplayCameraPos.z, 0, 0, 0, 0, 1, 0);
-		}
-	}
-	else
-	{
-		FOV = MathHelper::LERP(FOV, 1.0f, DH::getDeltaTime());
-		printf("FOV: %f\n", FOV);
-		gluPerspective(FOV, DH::getAspectRatio(), 0.1f, 1000000.0f);
-		cameraPos = MathHelper::LERP(cameraPos, introLerpTarget, DH::getDeltaTime() * 2.0f);
-		gluLookAt(cameraPos.x, cameraPos.y, cameraPos.z, 0, 1, 0, 0, 1, 0);
-		introLerpTarget = MathHelper::LERP(introLerpTarget, glm::vec3(1000.0f, 1000.0f, -1000.0f), DH::deltaTime * 2.0f);
-		if (abs(cameraPos.x - introLerpTarget.x) < 5.0f)
-			if (abs(cameraPos.y - introLerpTarget.y) < 5.0f)
-				if (abs(cameraPos.z - introLerpTarget.z) < 5.0f)
-					inIntro = false;
-	}
+	
+	gluPerspective(75.0f, DH::getAspectRatio(), 0.1f, 1000.0f);
+	gluLookAt(menuCameraPos.x, menuCameraPos.y, menuCameraPos.z, 0, 1, 0, 0, 1, 0);
+	menuCameraPos = glm::rotate(menuCameraPos, degToRad * 0.025f, glm::vec3(0, 1, 0));
 
-	glm::vec3 targetDirection;
-
-	//Moves the bus targets based on the controller inputs
+	//Moves the bus targets based on steering behaviors
 	for (int i = 0; i < 4; i++)
 	{
-		controllers[i].getInputs();
-		if (!firstPerson)
-		{
 			//Need to rotate this by the rotation of the world VS the camera since up is actually up right(ish) (angle is 45)
-			glm::vec3 worldRotatedController = glm::rotate(glm::vec3(-controllers[i].lX, 0.0f, controllers[i].lY), DH::degToRad(-45.0f + rotation), glm::vec3(0.0f, 1.0f, 0.0f));
 
 			//Calculates the vector between the bus and the target
 			glm::vec3 desired = busTargets[i] - buses[i].getPosition();
 
 			//Move target based on controller input if the target is within a certain distance from the controller
-			//if ((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z) < 90.0f)
-			busTargets[i] += (worldRotatedController / 1.5f);
 
 			if (busTargets[i].x > 55.0f)
 				busTargets[i].x = 55.0f;
@@ -223,104 +149,44 @@ void State_Gameplay::update()
 			glm::vec3 currentForwardVector = buses[i].getForwardVector();
 			desired = busTargets[i] - buses[i].getPosition(); //Calculates the new desired vector since we moved the target
 
-			if (!(controllers[i].lX == 0 && controllers[i].lY == 0))
-				currentForwardVector = MathHelper::LERP(currentForwardVector, desired, DH::getDeltaTime() * buses[i].getTurningSpeed());
-
 			if (desired.x != 0.0f || desired.y != 0.0f || desired.z != 0.0f)
 				buses[i].setForwardVector(currentForwardVector);
 
 			// --- Move the bus --- //
 			//Check if the bus has reached the target. If so, zero out velocity. Only does this if no input on controller
 
-			if (((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z) < 90.0f) && (controllers[i].lX == 0 && controllers[i].lY == 0))
+			if (((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z) < 90.0f))
 				buses[i].setVelocity(0.0f, 0.0f, 0.0f);
 			else//Otherwise, move forward
-				buses[i].setVelocity(glm::normalize(buses[i].getForwardVector()) * buses[i].getMovementSpeed());
-			//Draw the bus target
-			if (DBG::debug()->getVisualDebugEnabled())
-			{
-				if (i == 0)
-					glColor3f(1.0f, 0.0f, 0.0f);
-				else if (i == 1)
-					glColor3f(0.0f, 0.0f, 1.0f);
-				else if (i == 2)
-					glColor3f(0.0f, 1.0f, 0.0f);
-				else if (i == 3)
-					glColor3f(1.0f, 1.0f, 0.0f);
-
-				glPointSize(10.0f);
-				glBegin(GL_POINTS);
-				glVertex3f(busTargets[i].x, 1.0f, busTargets[i].z);
-				glEnd();
-
-				glColor3f(1.0f, 1.0f, 1.0f);
-			}
-		}
-		else
-		{
-			if (controllers[i].rT > 0.0f)
-			{
-				//move forward
-				buses[i].setVelocity(glm::normalize(buses[i].getForwardVector()) *	buses[i].getMovementSpeed() * controllers[i].rT);
-			}
-			else if (controllers[i].lT > 0.0f)
-			{
-				//move backwards
-				buses[i].setVelocity(-glm::normalize(buses[i].getForwardVector()) * buses[i].getMovementSpeed() * controllers[i].lT);
-			}
-			else
-			{
-				buses[i].setVelocity(glm::vec3(0.0f));
-			}
-			if (buses[i].getVelocity() != glm::vec3(0.0f))
-			{
-				if (controllers[i].lX > 0)
-				{
-					//turn right
-					glm::vec3 forwardVector = buses[i].getForwardVector();
-					buses[i].setForwardVector(glm::rotate(glm::vec3(forwardVector.x, forwardVector.y, forwardVector.z), degToRad * -buses[i].getTurningSpeed() * 2.0f * controllers[i].lX * controllers[i].rT, glm::vec3(0, 1, 0)));
-				}
-				else if (controllers[i].lX < 0)
-				{
-					//turn left
-					glm::vec3 forwardVector = buses[i].getForwardVector();
-					buses[i].setForwardVector(glm::rotate(glm::vec3(forwardVector.x, forwardVector.y, forwardVector.z), degToRad * -buses[i].getTurningSpeed() * 2.0f * controllers[i].lX* controllers[i].rT, glm::vec3(0, 1, 0)));
-				}
-			}
-		}
-
-		//Spawn passenger
-		if (controllers[i].checkButton(BUTTON_A) && controllers[i].isConnected())
-			launchPassengers(i, 1);
+				buses[i].setVelocity(glm::normalize(buses[i].getForwardVector()) * buses[i].getMovementSpeed());	
 	}
 
 	//Move the camera around
 	if (DH::getKey('w'))
-		gameplayCameraPos.z -= 0.5f;
+		menuCameraPos.z -= 0.5f;
 	else if (DH::getKey('s'))
-		gameplayCameraPos.z += 0.5f;
+		menuCameraPos.z += 0.5f;
 
 	if (DH::getKey('a'))
 	{
-		gameplayCameraPos = glm::rotate(gameplayCameraPos, degToRad * -0.5f, glm::vec3(0, 1, 0));
+		menuCameraPos = glm::rotate(menuCameraPos, degToRad * -0.5f, glm::vec3(0, 1, 0));
 		rotation -= 0.5f;
 	}
 
 	else if (DH::getKey('d'))
 	{
-		gameplayCameraPos = glm::rotate(gameplayCameraPos, degToRad * 0.5f, glm::vec3(0, 1, 0));
+		menuCameraPos = glm::rotate(menuCameraPos, degToRad * 0.5f, glm::vec3(0, 1, 0));
 		rotation += 0.5f;
 	}
 	if (DH::getKey('q'))
 	{
-		gameplayCameraPos = glm::vec3(68.0f, 70.0f, -68.0f);
+		menuCameraPos = glm::vec3(68.0f, 70.0f, -68.0f);
 		rotation = 0;
 	}
-
-	if (DH::getKey('f'))
-		firstPerson = true;
-	else if (DH::getKey('t'))
-		firstPerson = false;
+	if (DH::getKey('k'))
+	{
+		GameManager::game()->setActiveState(STATE_GAMEPLAY);
+	}
 
 
 	//Draw the level mesh
@@ -448,12 +314,11 @@ void State_Gameplay::update()
 		//passengers[i].addImpulse(SteeringBehaviour::avoidence(passengers, i, 3.0f, 3.0f));
 
 		passengers[i].update(DH::getDeltaTime());
-
 	}
 
 	//Output the number of passengers to the console
 	//std::cout << "NUM PASSENGERS = " << passengers.size() << std::endl;
-	
+
 	//Update and draw the buses
 	updateStages();
 	drawBuses();
@@ -472,7 +337,7 @@ void State_Gameplay::update()
 				{
 					if (res.outcome == full_loss)
 					{
-						
+
 					}
 					else if (res.outcome == partial_loss)
 					{
@@ -500,7 +365,7 @@ void State_Gameplay::update()
 						//buses[i].addImpulse(-res.penetration * 1000.0f);
 					}
 				}
-			}			
+			}
 		}
 		//Adding drag
 		//if (buses[i].getVelocity().x != 0.0f && buses[i].getVelocity().y != 0.0f && buses[i].getVelocity().z != 0.0f)
@@ -522,31 +387,11 @@ void State_Gameplay::update()
 		}
 	}
 	//Detect collision HERE^
-	
+
 	//If there's a leader, draw the crown
 
 	updateCrownedPlayer();
 	drawCrown();
-
-	//Reset the scene if 'r' is pressed or start is pressed on a button
-	if (DH::getKey('r') || controllers[0].checkButton(BUTTON_START) || controllers[1].checkButton(BUTTON_START) || controllers[2].checkButton(BUTTON_START) || controllers[3].checkButton(BUTTON_START))
-	{
-		passengers.clear();
-		load();
-		inIntro = true;
-	}
-
-	//Turn on visual debug mode
-	if (DH::getKey('['))
-		DBG::debug()->setVisualDebugEnabled(true);
-
-	//Turn off visual debug mode
-	if (DH::getKey(']'))
-		DBG::debug()->setVisualDebugEnabled(false);
-
-	//Draw debug text
-	DBG::debug()->displayDebugText(buses, DH::getDeltaTime());
-
 	//Draw the ui
 	drawUI();
 
@@ -554,7 +399,7 @@ void State_Gameplay::update()
 	glBindTexture(GL_TEXTURE_2D, NULL);
 }
 
-void State_Gameplay::launchPassengers(int busNumber, int amount)
+void State_MainMenu::launchPassengers(int busNumber, int amount)
 {
 	glm::vec3 startPosition = buses[busNumber].getPosition();
 	glm::vec3 startRotation;
@@ -584,7 +429,7 @@ void State_Gameplay::launchPassengers(int busNumber, int amount)
 	}
 }
 
-void State_Gameplay::updateCrownedPlayer()
+void State_MainMenu::updateCrownedPlayer()
 {
 	int score1, score2, score3, score4;
 	score1 = buses[0].getPoints();
@@ -618,7 +463,7 @@ void State_Gameplay::updateCrownedPlayer()
 	}
 }
 
-void State_Gameplay::updateStages()
+void State_MainMenu::updateStages()
 {
 	int points;
 	for (int i = 0; i < 4; i++)
@@ -662,7 +507,7 @@ void State_Gameplay::updateStages()
 	}
 }
 
-void State_Gameplay::drawCrown()
+void State_MainMenu::drawCrown()
 {
 	for (int i = 0; i < 4; i++)
 	{
@@ -682,7 +527,7 @@ void State_Gameplay::drawCrown()
 	}
 }
 
-void State_Gameplay::drawUI()
+void State_MainMenu::drawUI()
 {
 	//Draw billboards in world spcae
 	for (int i = 0; i < 4; i++)
@@ -696,33 +541,21 @@ void State_Gameplay::drawUI()
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluOrtho2D(-15.0f, 15.0f, -15.0f, 15.0f);
-	
-	//Draw timer
-	string timerString;
-
-	//Has to draw an extra 0 if under 10 seconds on the second half
-	if (int(timeLeft) % 60 < 10)
-		timerString = std::to_string(int(timeLeft) / 60) + ":0" + std::to_string(int(timeLeft) % 60);
-	else
-		timerString = std::to_string(int(timeLeft) / 60) + ":" + std::to_string(int(timeLeft) % 60);
-
-	timer = Sprite::changeTextVector(TEX_FONT, timer, timerString);
-	Sprite::drawTextVector(timer, DH::getDeltaTime());
 }
 
-void State_Gameplay::drawBuses()
+void State_MainMenu::drawBuses()
 {
 	//Bind correct texture for Player 1
-	if(buses[0].getStage() == firstStage)
-		AM::assets()->bindTexture(TEX_BUS2_RED); 
+	if (buses[0].getStage() == firstStage)
+		AM::assets()->bindTexture(TEX_BUS2_RED);
 	else if (buses[0].getStage() == secondStage)
-		AM::assets()->bindTexture(TEX_BUS2_RED); 
+		AM::assets()->bindTexture(TEX_BUS2_RED);
 	else if (buses[0].getStage() == thirdStage)
-		AM::assets()->bindTexture(TEX_BUS2_RED); 
+		AM::assets()->bindTexture(TEX_BUS2_RED);
 	if (buses[0].getStage() == fourthStage)
-		AM::assets()->bindTexture(TEX_BUS3_RED); 
+		AM::assets()->bindTexture(TEX_BUS3_RED);
 	if (buses[0].getStage() == fifthStage)
-		AM::assets()->bindTexture(TEX_BUS4_RED); 
+		AM::assets()->bindTexture(TEX_BUS4_RED);
 
 	buses[0].update(DH::getDeltaTime());
 
@@ -737,7 +570,7 @@ void State_Gameplay::drawBuses()
 		AM::assets()->bindTexture(TEX_BUS3_BLUE);
 	if (buses[1].getStage() == fifthStage)
 		AM::assets()->bindTexture(TEX_BUS4_BLUE);
-	
+
 	buses[1].update(DH::getDeltaTime());
 
 	//Bind correct texture for Player 3
@@ -751,7 +584,7 @@ void State_Gameplay::drawBuses()
 		AM::assets()->bindTexture(TEX_BUS3_YELLOW);
 	if (buses[2].getStage() == fifthStage)
 		AM::assets()->bindTexture(TEX_BUS4_YELLOW);
-	
+
 	buses[2].update(DH::getDeltaTime());
 
 	//Bind correct texture for Player 4

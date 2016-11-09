@@ -66,6 +66,9 @@
     <ClCompile Include="src\State_EndRound.cpp">
       <Filter>game states</Filter>
     </ClCompile>
+    <ClCompile Include="src\State_MainMenu.cpp">
+      <Filter>game states</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Mesh.h">
@@ -123,6 +126,9 @@
       <Filter>headers</Filter>
     </ClInclude>
     <ClInclude Include="include\State_EndRound.h">
+      <Filter>game states</Filter>
+    </ClInclude>
+    <ClInclude Include="include\State_MainMenu.h">
       <Filter>game states</Filter>
     </ClInclude>
   </ItemGroup>
