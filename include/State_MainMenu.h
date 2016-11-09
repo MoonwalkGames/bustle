@@ -20,6 +20,7 @@ public:
 	void drawCrown();
 	void drawUI();
 	void drawBuses();
+	
 private:
 	GameObject levelPlay;
 	GameObject levelSidewalk1;
@@ -76,7 +77,15 @@ private:
 	glm::vec3 introLerpTarget;
 	
 	float rotation;
-	//UI
+
+	//Menu
 	Sprite billboards[4];
+	Sprite logo;
+	Sprite playButton;
+	Sprite exitButton;
+	Sprite buttonHighlight;
+	int currentSelection = 0;
+	MController controller;
+	float timeSinceLastInput;
 };
 #endif

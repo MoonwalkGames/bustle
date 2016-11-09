@@ -111,6 +111,30 @@ void State_MainMenu::load()
 	billboards[3].setRotation(0.0f, 90.0f, 0.0f);
 	billboards[3].setScale(20.0f, 10.0f, 1.0f);
 
+	//Set up the menu options
+	logo = Sprite(TEX_MENU, 1, 4);
+	logo.setActiveFrame(0);
+	logo.setScale(glm::vec3(16.0f, 12.0f, 1.0f));
+	logo.setPosition(glm::vec3(-7.0f, 10.0f, 0.0f));
+
+	playButton = Sprite(TEX_MENU, 1, 4);
+	playButton.setActiveFrame(1);
+	playButton.setScale(glm::vec3(8.0f, 6.0f, 1.0f));
+	playButton.setPosition(glm::vec3(-11.0f, -2.0f, 0.0f));
+
+	exitButton = Sprite(TEX_MENU, 1, 4);
+	exitButton.setActiveFrame(2);
+	exitButton.setScale(glm::vec3(8.0f, 6.0f, 1.0f));
+	exitButton.setPosition(glm::vec3(-11.0f, -8.0f, 0.0f));
+
+	buttonHighlight = Sprite(TEX_MENU, 1, 4);
+	buttonHighlight.setActiveFrame(3);
+	buttonHighlight.setScale(glm::vec3(8.0f, 6.0f, 1.0f));
+	buttonHighlight.setPosition(glm::vec3(-11.0f, -2.0f, 1.0f));
+
+	controller = MController(0);
+	timeSinceLastInput = 0.0f;
+
 	//Set up the skybox
 	skyBox = GameObject(MESH_SKYBOX, TEX_SKYBOX);
 	skyBox.setRotationY(90.0f);
@@ -119,6 +143,11 @@ void State_MainMenu::load()
 
 void State_MainMenu::update()
 {
+	timeSinceLastInput += DH::deltaTime;
+
+	if (DH::getKey('g'))
+		playButton.addToRotation(0.0f, 5.0f, 0.0f);
+
 	printf("%f, %f, %f\n", menuCameraPos.x, menuCameraPos.y, menuCameraPos.z);
 	//Set up the camera
 	glMatrixMode(GL_PROJECTION);
@@ -164,31 +193,15 @@ void State_MainMenu::update()
 				buses[i].setVelocity(glm::normalize(buses[i].getForwardVector()) * buses[i].getMovementSpeed());	
 	}
 
-	//Move the camera around
-	if (DH::getKey('w'))
-		menuCameraPos.z -= 0.5f;
-	else if (DH::getKey('s'))
-		menuCameraPos.z += 0.5f;
+	//Continues past the main menu if you press space
+	controller.getInputs();
 
-	if (DH::getKey('a'))
+	if (DH::getKey(32) || (controller.isConnected() && controller.checkButton(BUTTON_A)))
 	{
-		menuCameraPos = glm::rotate(menuCameraPos, degToRad * -0.5f, glm::vec3(0, 1, 0));
-		rotation -= 0.5f;
-	}
-
-	else if (DH::getKey('d'))
-	{
-		menuCameraPos = glm::rotate(menuCameraPos, degToRad * 0.5f, glm::vec3(0, 1, 0));
-		rotation += 0.5f;
-	}
-	if (DH::getKey('q'))
-	{
-		menuCameraPos = glm::vec3(68.0f, 70.0f, -68.0f);
-		rotation = 0;
-	}
-	if (DH::getKey(32))
-	{
-		GameManager::game()->setActiveState(STATE_GAMEPLAY);
+		if (currentSelection == 0)
+			GameManager::game()->setActiveState(STATE_GAMEPLAY);
+		else
+			exit(0);
 	}
 
 	//Draw the skybox
@@ -533,7 +546,25 @@ void State_MainMenu::drawCrown()
 
 void State_MainMenu::drawUI()
 {
-	//Draw billboards in world spcae
+	//Update the current selection based on inputs
+	if (((controller.isConnected() && controller.lY > 0.0f) || DH::getKey('w')) && timeSinceLastInput >= 0.2f)
+	{
+		timeSinceLastInput = 0.0f;
+		currentSelection--;
+	}
+	else if (((controller.isConnected() && controller.lY < 0.0f) || DH::getKey('s')) && timeSinceLastInput >= 0.2f)
+	{
+		timeSinceLastInput = 0.0f;
+		currentSelection++;
+	}
+
+	//Wraps the menu selection
+	if (currentSelection < 0)
+		currentSelection = 1;
+	else if (currentSelection > 1)
+		currentSelection = 0;
+
+	//Draw billboards in world space
 	for (int i = 0; i < 4; i++)
 		billboards[i].update(DH::getDeltaTime());
 
@@ -541,10 +572,23 @@ void State_MainMenu::drawUI()
 	glViewport(0, 0, DH::windowWidth, DH::windowHeight);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-
+	
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluOrtho2D(-15.0f, 15.0f, -15.0f, 15.0f);
+
+	//Draw the buttons and the button highlight
+	if (currentSelection == 0)
+		buttonHighlight.setPosition(playButton.getPosition());
+	else
+		buttonHighlight.setPosition(exitButton.getPosition());
+
+	buttonHighlight.setPositionZ(1.0f);
+
+	logo.update(DH::deltaTime);
+	playButton.update(DH::deltaTime);
+	exitButton.update(DH::deltaTime);
+	buttonHighlight.update(DH::deltaTime);
 }
 
 void State_MainMenu::drawBuses()

@@ -82,6 +82,7 @@ void AssetManager::loadAssets()
 	loadedTextures.push_back(Texture2D("./res/img/tex_Font.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Skybox.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Crown.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Menu.png"));
 }
 
 void AssetManager::bindTexture(TEXTURE_NAME textureName)

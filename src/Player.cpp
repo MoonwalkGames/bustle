@@ -19,6 +19,11 @@ int Player::getPoints()
 //Calls parent update
 void Player::update(float deltaTime) 
 {
+	if (stage < 3)
+		position.y = 1.75f;
+	else
+		position.y = 3.0f;
+
 	if (DBG::debug()->getVisualDebugEnabled())
 		debugDraw(deltaTime);
 
