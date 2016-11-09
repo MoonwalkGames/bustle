@@ -172,22 +172,7 @@ void State_Gameplay::update()
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	//glOrtho(-60.0f, 60.0f, -60.0f, 60.0f, 0.1f, 1000.0f);
-	if (!inIntro)
-	{
-		if (firstPerson)
-		{
-			glm::vec3 cameraLocation = buses[0].getPosition() + buses[0].getForwardVector() * 3.0f;
-			glm::vec3 focus = buses[0].getPosition() + buses[0].getForwardVector() * 4.0f;
-			gluPerspective(110.0f, DH::getAspectRatio(), 0.1f, 10000.0f);
-			gluLookAt(cameraLocation.x, cameraLocation.y, cameraLocation.z, focus.x, focus.y, focus.z, 0, 1, 0);
-		}
-		else
-		{
-			glOrtho(-60.0f * DH::getOrthoStretch(), 60.0f * DH::getOrthoStretch(), -60.0f, 60.0f, -5.0f, 10000.0f);
-			gluLookAt(gameplayCameraPos.x, gameplayCameraPos.y, gameplayCameraPos.z, 0, 0, 0, 0, 1, 0);
-		}
-	}
-	else
+	if (inIntro)
 	{
 		FOV = MathHelper::LERP(FOV, 1.0f, DH::getDeltaTime());
 		printf("FOV: %f\n", FOV);
@@ -199,6 +184,11 @@ void State_Gameplay::update()
 			if (abs(cameraPos.y - introLerpTarget.y) < 5.0f)
 				if (abs(cameraPos.z - introLerpTarget.z) < 5.0f)
 					inIntro = false;
+	}
+	else if(!firstPerson)
+	{
+		glOrtho(-60.0f * DH::getOrthoStretch(), 60.0f * DH::getOrthoStretch(), -60.0f, 60.0f, -5.0f, 10000.0f);
+		gluLookAt(gameplayCameraPos.x, gameplayCameraPos.y, gameplayCameraPos.z, 0, 0, 0, 0, 1, 0);
 	}
 
 	glm::vec3 targetDirection;
@@ -326,7 +316,7 @@ void State_Gameplay::update()
 		rotation = 0;
 	}
 
-	if (DH::getKey('f'))
+	if (DH::getKey('f') && inIntro == false)
 		firstPerson = true;
 	else if (DH::getKey('t'))
 		firstPerson = false;
@@ -339,18 +329,28 @@ void State_Gameplay::update()
 
 	for (int i = 0; i < numViewports; i++)
 	{
-		if (!firstPerson)
-			glViewport(0, 0, DH::windowWidth, DH::windowHeight);
-		else
+		if (firstPerson)
 		{
 			if (i == 0)
-				glViewport(0, 0, DH::windowWidth / 2, DH::windowHeight / 2);
-			else if (i == 1)
-				glViewport(DH::windowWidth / 2, 0, DH::windowWidth / 2, DH::windowHeight / 2);
-			else if (i == 2)
 				glViewport(0, DH::windowHeight / 2, DH::windowWidth / 2, DH::windowHeight / 2);
-			else if (i == 3)
+			else if (i == 1)
 				glViewport(DH::windowWidth / 2, DH::windowHeight / 2, DH::windowWidth / 2, DH::windowHeight / 2);
+			else if (i == 2)
+				glViewport(0, 0, DH::windowWidth / 2, DH::windowHeight / 2);
+			else if (i == 3)
+				glViewport(DH::windowWidth / 2, 0, DH::windowWidth / 2, DH::windowHeight / 2);
+			
+
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			glm::vec3 cameraLocation = buses[i].getPosition() + buses[i].getForwardVector() * 3.0f;
+			glm::vec3 focus = buses[i].getPosition() + buses[i].getForwardVector() * 4.0f;
+			gluPerspective(110.0f, DH::getAspectRatio(), 0.1f, 10000.0f);
+			gluLookAt(cameraLocation.x, cameraLocation.y, cameraLocation.z, focus.x, focus.y, focus.z, 0, 1, 0);
+		}
+		else
+		{
+			glViewport(0, 0, DH::windowWidth, DH::windowHeight);
 		}
 
 		//Draw the skybox
