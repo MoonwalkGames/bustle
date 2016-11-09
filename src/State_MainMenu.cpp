@@ -112,6 +112,11 @@ void State_MainMenu::load()
 	billboards[3].setPosition(-51.0f, 18.0f, -28.0f);
 	billboards[3].setRotation(0.0f, 90.0f, 0.0f);
 	billboards[3].setScale(20.0f, 10.0f, 1.0f);
+
+	//Set up the skybox
+	skyBox = GameObject(MESH_SKYBOX, TEX_SKYBOX);
+	skyBox.setRotationY(90.0f);
+	skyBox.setScale(150.0f, 150.0f, 150.0f);
 }
 
 void State_MainMenu::update()
@@ -122,7 +127,7 @@ void State_MainMenu::update()
 	glLoadIdentity();
 	//glOrtho(-60.0f, 60.0f, -60.0f, 60.0f, 0.1f, 1000.0f);
 	
-	gluPerspective(75.0f, DH::getAspectRatio(), 0.1f, 1000.0f);
+	gluPerspective(75.0f, DH::getAspectRatio(), 0.1f, 10000.0f);
 	gluLookAt(menuCameraPos.x, menuCameraPos.y, menuCameraPos.z, 0, 1, 0, 0, 1, 0);
 	menuCameraPos = glm::rotate(menuCameraPos, degToRad * 0.025f, glm::vec3(0, 1, 0));
 
@@ -188,6 +193,9 @@ void State_MainMenu::update()
 		GameManager::game()->setActiveState(STATE_GAMEPLAY);
 	}
 
+	//Draw the skybox
+	AM::assets()->bindTexture(TEX_SKYBOX);
+	skyBox.update(DH::getDeltaTime());
 
 	//Draw the level mesh
 	AM::assets()->bindTexture(TEX_LEVELPLAY);

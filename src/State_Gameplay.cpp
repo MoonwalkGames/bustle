@@ -85,6 +85,8 @@ void State_Gameplay::load()
 	busTargets[2] = buses[2].getPosition();
 	busTargets[3] = buses[3].getPosition();
 
+	//Init the crown
+	crown = &AM::assets()->getMesh(MESH_CROWN);
 
 	//Init the controllers
 	for (int i = 0; i < 4; i++)
@@ -99,7 +101,7 @@ void State_Gameplay::load()
 	DH::aspectRatio = 16.0f / 9.0f;
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(-75.0f, 75.0f, -75.0f, 75.0f, 0.1f, 1000.0f);
+	glOrtho(-75.0f, 75.0f, -75.0f, 75.0f, 0.1f, 10000.0f);
 	gluLookAt(cameraPos.x, cameraPos.y, cameraPos.z, 0, 0, 0, 0, 1, 0);
 	
 	//Enable visual debug mode
@@ -132,6 +134,11 @@ void State_Gameplay::load()
 	billboards[3].setPosition(-51.0f, 18.0f, -28.0f);
 	billboards[3].setRotation(0.0f, 90.0f, 0.0f);
 	billboards[3].setScale(20.0f, 10.0f, 1.0f);
+
+	//Set up the skybox
+	skyBox = GameObject(MESH_SKYBOX, TEX_SKYBOX);
+	skyBox.setRotationY(90.0f);
+	skyBox.setScale(150.0f, 150.0f, 150.0f);
 }
 
 void State_Gameplay::update()
@@ -169,12 +176,12 @@ void State_Gameplay::update()
 		{
 			glm::vec3 cameraLocation = buses[0].getPosition() + buses[0].getForwardVector() * 3.0f;
 			glm::vec3 focus = buses[0].getPosition() + buses[0].getForwardVector() * 4.0f;
-			gluPerspective(110.0f, DH::getAspectRatio(), 0.1f, 1000.0f);
+			gluPerspective(110.0f, DH::getAspectRatio(), 0.1f, 10000.0f);
 			gluLookAt(cameraLocation.x, cameraLocation.y, cameraLocation.z, focus.x, focus.y, focus.z, 0, 1, 0);
 		}
 		else
 		{
-			glOrtho(-60.0f * DH::getOrthoStretch(), 60.0f * DH::getOrthoStretch(), -60.0f, 60.0f, -5.0f, 1000.0f);
+			glOrtho(-60.0f * DH::getOrthoStretch(), 60.0f * DH::getOrthoStretch(), -60.0f, 60.0f, -5.0f, 10000.0f);
 			gluLookAt(gameplayCameraPos.x, gameplayCameraPos.y, gameplayCameraPos.z, 0, 0, 0, 0, 1, 0);
 		}
 	}
@@ -182,7 +189,7 @@ void State_Gameplay::update()
 	{
 		FOV = MathHelper::LERP(FOV, 1.0f, DH::getDeltaTime());
 		printf("FOV: %f\n", FOV);
-		gluPerspective(FOV, DH::getAspectRatio(), 0.1f, 1000000.0f);
+		gluPerspective(FOV, DH::getAspectRatio(), 0.1f, 10000.0f);
 		cameraPos = MathHelper::LERP(cameraPos, introLerpTarget, DH::getDeltaTime() * 2.0f);
 		gluLookAt(cameraPos.x, cameraPos.y, cameraPos.z, 0, 1, 0, 0, 1, 0);
 		introLerpTarget = MathHelper::LERP(introLerpTarget, glm::vec3(1000.0f, 1000.0f, -1000.0f), DH::deltaTime * 2.0f);
@@ -322,141 +329,167 @@ void State_Gameplay::update()
 	else if (DH::getKey('t'))
 		firstPerson = false;
 
+	int numViewports;
+	if (firstPerson)
+		numViewports = 4;
+	else
+		numViewports = 1;
 
-	//Draw the level mesh
-	AM::assets()->bindTexture(TEX_LEVELPLAY);
-	levelPlay.update(DH::getDeltaTime());
-
-	//Draw the level sidewalk
-	AM::assets()->bindTexture(TEX_SIDEWALK);
-	levelSidewalk1.update(DH::getDeltaTime());
-	levelSidewalk2.update(DH::getDeltaTime());
-	levelSidewalk3.update(DH::getDeltaTime());
-	levelSidewalk4.update(DH::getDeltaTime());
-
-	//Draw the level background
-	AM::assets()->bindTexture(TEX_LEVELBACKGROUND);
-	levelBackgroundL.update(DH::getDeltaTime());
-	levelBackgroundR.update(DH::getDeltaTime());
-
-	//Draw the level background middle
-	AM::assets()->bindTexture(TEX_LEVELBACKGROUNDM);
-	levelBackgroundM.update(DH::getDeltaTime());
-
-	//Draw the level underground
-	AM::assets()->bindTexture(TEX_LEVELUNDERGROUND);
-	levelUndergroundL.update(DH::getDeltaTime());
-	levelUndergroundR.update(DH::getDeltaTime());
-
-	//Draw the level background sidewalk
-	AM::assets()->bindTexture(TEX_BACKGROUNDSIDEWALK);
-	backgroundSidewalk1.update(DH::getDeltaTime());
-	backgroundSidewalk2.update(DH::getDeltaTime());
-	backgroundSidewalk3.update(DH::getDeltaTime());
-	backgroundSidewalk4.update(DH::getDeltaTime());
-	backgroundSidewalk5.update(DH::getDeltaTime());
-	backgroundSidewalk6.update(DH::getDeltaTime());
-	backgroundSidewalk7.update(DH::getDeltaTime());
-	backgroundSidewalk8.update(DH::getDeltaTime());
-
-	//Draw the base buildings
-	AM::assets()->bindTexture(TEX_BASEBUILDING1);
-	baseBuilding1.update(DH::getDeltaTime());
-	baseBuilding2.update(DH::getDeltaTime());
-
-	AM::assets()->bindTexture(TEX_BASEBUILDING2);
-	baseBuilding3.update(DH::getDeltaTime());
-	baseBuilding4.update(DH::getDeltaTime());
-
-	AM::assets()->bindTexture(TEX_BASEBUILDING3);
-	baseBuilding5.update(DH::getDeltaTime());
-	baseBuilding6.update(DH::getDeltaTime());
-
-	AM::assets()->bindTexture(TEX_BASEBUILDING4);
-	baseBuilding7.update(DH::getDeltaTime());
-	baseBuilding8.update(DH::getDeltaTime());
-	baseBuilding9.update(DH::getDeltaTime());
-	baseBuilding10.update(DH::getDeltaTime());
-	baseBuilding11.update(DH::getDeltaTime());
-	baseBuilding12.update(DH::getDeltaTime());
-	baseBuilding13.update(DH::getDeltaTime());
-	baseBuilding14.update(DH::getDeltaTime());
-	baseBuilding15.update(DH::getDeltaTime());
-	baseBuilding16.update(DH::getDeltaTime());
-	baseBuilding17.update(DH::getDeltaTime());
-	baseBuilding18.update(DH::getDeltaTime());
-	baseBuilding19.update(DH::getDeltaTime());
-	baseBuilding20.update(DH::getDeltaTime());
-
-	//Draw the board buildings
-	AM::assets()->bindTexture(TEX_BOARDBUILDING1);
-	boardBuilding1.update(DH::getDeltaTime());
-
-	AM::assets()->bindTexture(TEX_BOARDBUILDING2);
-	boardBuilding2.update(DH::getDeltaTime());
-
-	AM::assets()->bindTexture(TEX_BOARDBUILDING3);
-	boardBuilding3.update(DH::getDeltaTime());
-
-	AM::assets()->bindTexture(TEX_BOARDBUILDING4);
-	boardBuilding4.update(DH::getDeltaTime());
-
-	//Draw the billboards
-	AM::assets()->bindTexture(TEX_BILLBOARD1);
-	billboard1.update(DH::getDeltaTime());
-
-	AM::assets()->bindTexture(TEX_BILLBOARD2);
-	billboard2.update(DH::getDeltaTime());
-
-	AM::assets()->bindTexture(TEX_BILLBOARD3);
-	billboard3.update(DH::getDeltaTime());
-
-	AM::assets()->bindTexture(TEX_BILLBOARD4);
-	billboard4.update(DH::getDeltaTime());
-
-	//Update and draw the passengers
-
-	AM::assets()->bindTexture(TEX_PASSENGER);
-
-	for (int i = 0; i < passengers.size(); i++)
-
+	for (int i = 0; i < numViewports; i++)
 	{
-
-		//so passengers dont fly
-		if (passengers[i].getState() == GROUNDED)
+		if (!firstPerson)
+			glViewport(0, 0, DH::windowWidth, DH::windowHeight);
+		else
 		{
-			passengers[i].setVelocity(glm::normalize(passengers[i].getVelocity())*5.0f);
-			passengers[i].setPositionY(0.0f);
+			if (i == 0)
+				glViewport(0, 0, DH::windowWidth / 2, DH::windowHeight / 2);
+			else if (i == 1)
+				glViewport(DH::windowWidth / 2, 0, DH::windowWidth / 2, DH::windowHeight / 2);
+			else if (i == 2)
+				glViewport(0, DH::windowHeight / 2, DH::windowWidth / 2, DH::windowHeight / 2);
+			else if (i == 3)
+				glViewport(DH::windowWidth / 2, DH::windowHeight / 2, DH::windowWidth / 2, DH::windowHeight / 2);
 		}
 
-		//wander behaviour
-		passengers[i].addImpulse(SteeringBehaviour::wander(passengers[i], 50.0f, 500.0f));
+		//Draw the skybox
+		AM::assets()->bindTexture(TEX_SKYBOX);
+		skyBox.update(DH::getDeltaTime());
 
-		//seek behaviour
-		//passengers[i].addImpulse(SteeringBehaviour::seek(passengers[i], buses[0].getPosition(), 3.0f));
+		//Draw the level mmesh
+		AM::assets()->bindTexture(TEX_LEVELPLAY);
+		levelPlay.update(DH::getDeltaTime());
 
-		//flee behaviour
-		//passengers[i].addImpulse(SteeringBehaviour::flee(passengers[i], buses[0].getPosition(), 10.0f));
+		//Draw the level sidewalk
+		AM::assets()->bindTexture(TEX_SIDEWALK);
+		levelSidewalk1.update(DH::getDeltaTime());
+		levelSidewalk2.update(DH::getDeltaTime());
+		levelSidewalk3.update(DH::getDeltaTime());
+		levelSidewalk4.update(DH::getDeltaTime());
 
-		//pursuit behaviour
-		//passengers[i].addImpulse(SteeringBehaviour::pursuit(passengers[i], buses[0], 50.0f));
+		//Draw the level background
+		AM::assets()->bindTexture(TEX_LEVELBACKGROUND);
+		levelBackgroundL.update(DH::getDeltaTime());
+		levelBackgroundR.update(DH::getDeltaTime());
 
-		//evade behaviour
-		//passengers[i].addImpulse(SteeringBehaviour::evade(passengers[i], buses[0], 10.0f));
+		//Draw the level background middle
+		AM::assets()->bindTexture(TEX_LEVELBACKGROUNDM);
+		levelBackgroundM.update(DH::getDeltaTime());
 
-		//avoidence behaviour
-		//passengers[i].addImpulse(SteeringBehaviour::avoidence(passengers, i, 3.0f, 3.0f));
+		//Draw the level underground
+		AM::assets()->bindTexture(TEX_LEVELUNDERGROUND);
+		levelUndergroundL.update(DH::getDeltaTime());
+		levelUndergroundR.update(DH::getDeltaTime());
 
-		passengers[i].update(DH::getDeltaTime());
+		//Draw the level background sidewalk
+		AM::assets()->bindTexture(TEX_BACKGROUNDSIDEWALK);
+		backgroundSidewalk1.update(DH::getDeltaTime());
+		backgroundSidewalk2.update(DH::getDeltaTime());
+		backgroundSidewalk3.update(DH::getDeltaTime());
+		backgroundSidewalk4.update(DH::getDeltaTime());
+		backgroundSidewalk5.update(DH::getDeltaTime());
+		backgroundSidewalk6.update(DH::getDeltaTime());
+		backgroundSidewalk7.update(DH::getDeltaTime());
+		backgroundSidewalk8.update(DH::getDeltaTime());
 
+		//Draw the base buildings
+		AM::assets()->bindTexture(TEX_BASEBUILDING1);
+		baseBuilding1.update(DH::getDeltaTime());
+		baseBuilding2.update(DH::getDeltaTime());
+
+		AM::assets()->bindTexture(TEX_BASEBUILDING2);
+		baseBuilding3.update(DH::getDeltaTime());
+		baseBuilding4.update(DH::getDeltaTime());
+
+		AM::assets()->bindTexture(TEX_BASEBUILDING3);
+		baseBuilding5.update(DH::getDeltaTime());
+		baseBuilding6.update(DH::getDeltaTime());
+
+		AM::assets()->bindTexture(TEX_BASEBUILDING4);
+		baseBuilding7.update(DH::getDeltaTime());
+		baseBuilding8.update(DH::getDeltaTime());
+		baseBuilding9.update(DH::getDeltaTime());
+		baseBuilding10.update(DH::getDeltaTime());
+		baseBuilding11.update(DH::getDeltaTime());
+		baseBuilding12.update(DH::getDeltaTime());
+		baseBuilding13.update(DH::getDeltaTime());
+		baseBuilding14.update(DH::getDeltaTime());
+		baseBuilding15.update(DH::getDeltaTime());
+		baseBuilding16.update(DH::getDeltaTime());
+		baseBuilding17.update(DH::getDeltaTime());
+		baseBuilding18.update(DH::getDeltaTime());
+		baseBuilding19.update(DH::getDeltaTime());
+		baseBuilding20.update(DH::getDeltaTime());
+
+		//Draw the board buildings
+		AM::assets()->bindTexture(TEX_BOARDBUILDING1);
+		boardBuilding1.update(DH::getDeltaTime());
+
+		AM::assets()->bindTexture(TEX_BOARDBUILDING2);
+		boardBuilding2.update(DH::getDeltaTime());
+
+		AM::assets()->bindTexture(TEX_BOARDBUILDING3);
+		boardBuilding3.update(DH::getDeltaTime());
+
+		AM::assets()->bindTexture(TEX_BOARDBUILDING4);
+		boardBuilding4.update(DH::getDeltaTime());
+
+		//Draw the billboards
+		AM::assets()->bindTexture(TEX_BILLBOARD1);
+		billboard1.update(DH::getDeltaTime());
+
+		AM::assets()->bindTexture(TEX_BILLBOARD2);
+		billboard2.update(DH::getDeltaTime());
+
+		AM::assets()->bindTexture(TEX_BILLBOARD3);
+		billboard3.update(DH::getDeltaTime());
+
+		AM::assets()->bindTexture(TEX_BILLBOARD4);
+		billboard4.update(DH::getDeltaTime());
+
+		//Update and draw the passengers
+
+		AM::assets()->bindTexture(TEX_PASSENGER);
+
+		for (int i = 0; i < passengers.size(); i++)
+
+		{
+
+			//so passengers dont fly
+			if (passengers[i].getState() == GROUNDED)
+			{
+				passengers[i].setVelocity(glm::normalize(passengers[i].getVelocity())*5.0f);
+				passengers[i].setPositionY(0.0f);
+			}
+
+			//wander behaviour
+			passengers[i].addImpulse(SteeringBehaviour::wander(passengers[i], 50.0f, 500.0f));
+
+			//seek behaviour
+			//passengers[i].addImpulse(SteeringBehaviour::seek(passengers[i], buses[0].getPosition(), 3.0f));
+
+			//flee behaviour
+			//passengers[i].addImpulse(SteeringBehaviour::flee(passengers[i], buses[0].getPosition(), 10.0f));
+
+			//pursuit behaviour
+			//passengers[i].addImpulse(SteeringBehaviour::pursuit(passengers[i], buses[0], 50.0f));
+
+			//evade behaviour
+			//passengers[i].addImpulse(SteeringBehaviour::evade(passengers[i], buses[0], 10.0f));
+
+			//avoidence behaviour
+			//passengers[i].addImpulse(SteeringBehaviour::avoidence(passengers, i, 3.0f, 3.0f));
+
+			passengers[i].update(DH::getDeltaTime());
+
+		}
+
+		//Output the number of passengers to the console
+		//std::cout << "NUM PASSENGERS = " << passengers.size() << std::endl;
+
+		//Update and draw the buses
+		updateStages();
+		drawBuses();
 	}
-
-	//Output the number of passengers to the console
-	//std::cout << "NUM PASSENGERS = " << passengers.size() << std::endl;
-	
-	//Update and draw the buses
-	updateStages();
-	drawBuses();
 
 	//Detect collisions HERE
 	//Player vs Player Collisions
@@ -669,14 +702,12 @@ void State_Gameplay::drawCrown()
 		if (buses[i].isLeading())
 		{
 			glPushMatrix();
-			glTranslatef(buses[i].getPosition().x, buses[i].getPosition().y + 10, buses[i].getPosition().z);
-			glRotatef(90, 1.0f, 0.0f, 0.0f);
-			glDisable(GL_TEXTURE_2D);
-			glColor3f(1.0f, 0.41, 0.71);
-			glutWireTorus(BUS_WIDTH * 0.5, BUS_WIDTH, 20, 20);
-			//glutSolidTeapot(10.0f);
-			glColor3f(1.0f, 1.0f, 1.0f);
-			glEnable(GL_TEXTURE_2D);
+			glTranslatef(buses[i].getPosition().x, buses[i].getPosition().y + 5, buses[i].getPosition().z);
+			glScalef(2.0f, 2.0f, 2.0f);
+
+			AM::assets()->bindTexture(TEX_CROWN);
+			crown->draw(true);
+
 			glPopMatrix();
 		}
 	}

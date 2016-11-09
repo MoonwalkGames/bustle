@@ -35,6 +35,8 @@ void AssetManager::loadAssets()
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_BoardBuilding.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Billboard.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_LevelSidewalk.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Skybox.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Crown.obj"));
 	
 	/* ========== TEXTURES (Naming: tex_XXXXXX.png) ========== */
 	loadedTextures.push_back(Texture2D("./res/img/tex_Bus2_Red.png"));
@@ -77,6 +79,8 @@ void AssetManager::loadAssets()
 	loadedTextures.push_back(Texture2D("./res/img/tex_LevelSidewalk.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_LevelBackgroundSidewalk.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Font.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Skybox.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Crown.png"));
 }
 
 void AssetManager::bindTexture(TEXTURE_NAME textureName)

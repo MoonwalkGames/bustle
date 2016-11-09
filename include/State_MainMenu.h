@@ -67,6 +67,7 @@ private:
 	GameObject billboard2;
 	GameObject billboard3;
 	GameObject billboard4;
+	GameObject skyBox;
 
 	Player buses[4];
 	glm::vec3 busTargets[4];

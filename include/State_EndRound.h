@@ -4,6 +4,7 @@
 #include "GameState.h"
 #include "GameObject.h"
 #include "Passenger.h"
+#include "m_controller.h"
 
 struct GraphData
 {
@@ -13,7 +14,9 @@ struct GraphData
 
 enum END_STAGE
 {
+	AXES_STAGE,
 	GRAPH_STAGE,
+	GRAPH_LERP_STAGE,
 	FOUNTAIN_STAGE,
 	CROWN_STAGE
 };
@@ -81,6 +84,10 @@ private:
 	GameObject billboard3;
 	GameObject billboard4;
 	GameObject buses[4];
+	GameObject skybox;
+	Mesh* crown;
+
+	MController controller;
 
 	std::vector<GraphData> allGraphData;
 	std::vector<GraphData> renderedGraphData;

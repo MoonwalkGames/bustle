@@ -4,6 +4,7 @@
 #include "DebugManager.h"
 #include <istream>
 #include "MathHelper.h"
+#include "glm\gtx\rotate_vector.hpp"
 
 void State_EndRound::load()
 {
@@ -69,6 +70,17 @@ void State_EndRound::load()
 	buses[2] = GameObject(glm::vec3(19.5f - 2.5f, 2.25f, -19.5f - 3.0f), glm::vec3(0.0f, 45.0f - 10.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS2, TEX_BUS2_RED);
 	buses[3] = GameObject(glm::vec3(20.5f - 7.5f, 2.25f, -20.5f - 10.0f), glm::vec3(0.0f, 45.0f - 40.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS2, TEX_BUS2_RED);
 
+	//Init the skybox
+	skybox = GameObject(MESH_SKYBOX, TEX_SKYBOX);
+	skybox.setRotationY(90.0f);
+	skybox.setScale(10.0f, 10.0f, 10.0f);
+
+	//Init the crown mesh
+	crown = &AM::assets()->getMesh(MESH_CROWN);
+
+	//Init the controllers
+	controller = MController(0);
+
 	//Load the previous round score into the allGraphData vectors
 	loadRoundScores();
 
@@ -92,7 +104,17 @@ void State_EndRound::update()
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(60.0f, DH::aspectRatio, 0.1f, 1000.0f);
-	gluLookAt(35.0f, 5.0f, -35.0f, 0.0f, 3.5f, 0.0f, 0, 1, 0);
+	gluLookAt(37.5f, 7.5f, -37.5f, 0.0f, 3.5f, 0.0f, 0, 1, 0);
+
+	//Update the controller
+	controller.getInputs();
+
+	//Draw the main viewport
+	glViewport(0, 0, DH::windowWidth, DH::windowHeight);
+
+	//Draw the skybox
+	AM::assets()->bindTexture(TEX_SKYBOX);
+	skybox.update(DH::getDeltaTime());
 
 	//Draw the level mesh
 	AM::assets()->bindTexture(TEX_LEVELPLAY);
@@ -205,7 +227,7 @@ void State_EndRound::update()
 	{
 		activePassengers[i].update(DH::deltaTime);
 
-		if (activePassengers[i].getPosition().x > 35.0f || activePassengers[i].getPosition().z > 35.0f)
+		if (activePassengers[i].getPosition().x < -45.0f || activePassengers[i].getPosition().z > 45.0f)
 		{
 			activePassengers.erase(activePassengers.begin() + i);
 			i--;
@@ -219,9 +241,12 @@ void State_EndRound::update()
 	if (currentStage == END_STAGE::CROWN_STAGE)
 		showWinners();
 
+	//Switch to the crown stage when all the passengers have despawned
+	if (currentStage == END_STAGE::FOUNTAIN_STAGE && activePassengers.size() == 0)
+		currentStage = END_STAGE::CROWN_STAGE;
+
 	//Draw the graph
-	if (currentStage != END_STAGE::CROWN_STAGE)
-		drawEndGraph();
+	drawEndGraph();
 
 	if (DH::getKey('r'))
 	{
@@ -236,13 +261,13 @@ void State_EndRound::drawEndGraph()
 	//Add the next data point for the graph
 	static int graphDataNumber = 1;
 
-	if (graphDataNumber < allGraphData.size())
+	if (currentStage == END_STAGE::GRAPH_STAGE && graphDataNumber < allGraphData.size())
 	{
 		renderedGraphData.push_back(allGraphData[graphDataNumber]);
 		graphDataNumber++;
 	}
-	else if (getTimeOnState() >= 3.0f)
-		currentStage = END_STAGE::FOUNTAIN_STAGE;
+	else if (currentStage == END_STAGE::GRAPH_STAGE && (controller.checkButton(BUTTON_A) || DH::getKey(32)))
+		currentStage = END_STAGE::GRAPH_LERP_STAGE;
 
 	//Reset the view to make drawing the graph easier
 	glMatrixMode(GL_PROJECTION);
@@ -250,7 +275,15 @@ void State_EndRound::drawEndGraph()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	glViewport(0, 0, DH::windowWidth, DH::windowHeight);
+	static float viewPortTopCornerT = 0.0f;
+
+	if (currentStage == END_STAGE::GRAPH_LERP_STAGE)
+		viewPortTopCornerT += DH::deltaTime;
+
+	float windowSizeX = MathHelper::LERP(float(DH::windowWidth), 320.0f, viewPortTopCornerT / 1.5f);
+	float windowSizeY = MathHelper::LERP(float(DH::windowHeight), 180.0f, viewPortTopCornerT / 1.5f);
+
+	glViewport(0, 0, windowSizeX, windowSizeY);
 
 	//Draw the graph background
 	glDisable(GL_TEXTURE_2D);
@@ -266,10 +299,16 @@ void State_EndRound::drawEndGraph()
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	glEnable(GL_TEXTURE_2D);
 
+	if (viewPortTopCornerT > 1.5f && currentStage == END_STAGE::GRAPH_LERP_STAGE)
+		currentStage = END_STAGE::FOUNTAIN_STAGE;
+
 	//Draw the graph axes labels
-	DH::drawText2D("END OF DAY REPORT", glm::vec4(1.0f), DH::windowWidth / 2 - 100, DH::windowHeight / 2 + 275);
-	DH::drawText2D("TIME", glm::vec4(1.0f), DH::windowWidth / 2 - 40, DH::windowHeight / 2 - 350);
-	DH::drawText2D("SCORE", glm::vec4(1.0f), DH::windowWidth / 2 - 575, DH::windowHeight / 2);
+	if (currentStage < END_STAGE::GRAPH_LERP_STAGE)
+	{
+		DH::drawText2D("END OF DAY REPORT", glm::vec4(1.0f), DH::windowWidth / 2 - 100, DH::windowHeight / 2 + 275);
+		DH::drawText2D("TIME", glm::vec4(1.0f), DH::windowWidth / 2 - 40, DH::windowHeight / 2 - 350);
+		DH::drawText2D("SCORE", glm::vec4(1.0f), DH::windowWidth / 2 - 575, DH::windowHeight / 2);
+	}
 
 	//Draw the graph axes
 	glDisable(GL_TEXTURE_2D);
@@ -286,38 +325,46 @@ void State_EndRound::drawEndGraph()
 	glEnd();
 	glEnable(GL_TEXTURE_2D);
 
-	//draw lines for each bus colour
-	for (unsigned int busNumber = 0; busNumber < 4; busNumber++)
+	if (currentStage == END_STAGE::AXES_STAGE)
 	{
-		for (unsigned int segmentNumber = 0; segmentNumber < renderedGraphData.size() - 1; segmentNumber++)
+		if (controller.checkButton(BUTTON_A) || DH::getKey(32))
+			currentStage = END_STAGE::GRAPH_STAGE;
+	}
+	else
+	{
+		//draw lines for each bus colour
+		for (unsigned int busNumber = 0; busNumber < 4; busNumber++)
 		{
-			float graphWorldPosX_A = -0.6f + (1.2f * (allGraphData[segmentNumber].time / allGraphData[allGraphData.size() - 1].time));
-			float graphWorldPosX_B = -0.6f + (1.2f * (allGraphData[segmentNumber + 1].time / allGraphData[allGraphData.size() - 1].time));
-
-			float graphWorldPosY_A = -0.6f + (1.2f * (allGraphData[segmentNumber].score[busNumber] / 100.0f));
-			float graphWorldPosY_B = -0.6f + (1.2f * (allGraphData[segmentNumber + 1].score[busNumber] / 100.0f));
-
-			if (busNumber == 0)
-				glColor4f(0.8f, 0.0f, 0.0f, 1.0f);
-			else if (busNumber == 1)
-				glColor4f(0.0f, 0.0f, 0.8f, 1.0f);
-			else if (busNumber == 2)
-				glColor4f(0.0f, 0.8f, 0.0f, 1.0f);
-			else
-				glColor4f(0.8f, 0.8f, 0.0f, 1.0f);
-
-			glDisable(GL_TEXTURE_2D);
-			glLineWidth(5.0f);
-
-			glBegin(GL_LINES);
+			for (unsigned int segmentNumber = 0; segmentNumber < renderedGraphData.size() - 1; segmentNumber++)
 			{
-				glVertex3f(graphWorldPosX_A, graphWorldPosY_A, -1.0f);
-				glVertex3f(graphWorldPosX_B, graphWorldPosY_B, -1.0f);
-			}
-			glEnd();
+				float graphWorldPosX_A = -0.6f + (1.2f * (allGraphData[segmentNumber].time / allGraphData[allGraphData.size() - 1].time));
+				float graphWorldPosX_B = -0.6f + (1.2f * (allGraphData[segmentNumber + 1].time / allGraphData[allGraphData.size() - 1].time));
 
-			glLineWidth(1.0f);
-			glEnable(GL_TEXTURE_2D);
+				float graphWorldPosY_A = -0.6f + (1.2f * (allGraphData[segmentNumber].score[busNumber] / 100.0f));
+				float graphWorldPosY_B = -0.6f + (1.2f * (allGraphData[segmentNumber + 1].score[busNumber] / 100.0f));
+
+				if (busNumber == 0)
+					glColor4f(0.8f, 0.0f, 0.0f, 1.0f);
+				else if (busNumber == 1)
+					glColor4f(0.0f, 0.0f, 0.8f, 1.0f);
+				else if (busNumber == 2)
+					glColor4f(0.0f, 0.8f, 0.0f, 1.0f);
+				else
+					glColor4f(0.8f, 0.8f, 0.0f, 1.0f);
+
+				glDisable(GL_TEXTURE_2D);
+				glLineWidth(5.0f);
+
+				glBegin(GL_LINES);
+				{
+					glVertex3f(graphWorldPosX_A, graphWorldPosY_A, -1.0f);
+					glVertex3f(graphWorldPosX_B, graphWorldPosY_B, -1.0f);
+				}
+				glEnd();
+
+				glLineWidth(1.0f);
+				glEnable(GL_TEXTURE_2D);
+			}
 		}
 	}
 
@@ -372,8 +419,6 @@ void State_EndRound::decideWinners()
 
 void State_EndRound::showWinners()
 {
-	glDisable(GL_TEXTURE_2D);
-
 	for (int i = 0; i < 4; i++)
 	{
 		if (winners[i])
@@ -381,23 +426,32 @@ void State_EndRound::showWinners()
 			glMatrixMode(GL_MODELVIEW);
 			glLoadIdentity();
 
-			if (i == 0)
-				glColor3f(1.0f, 0.0f, 0.0f);
-			else if (i == 1)
-				glColor3f(0.0f, 0.0f, 1.0f);
-			else if (i == 2)
-				glColor3f(0.0f, 1.0f, 0.0f);
-			else
-				glColor3f(1.0f, 1.0f, 0.0f);
+			static float crownRot = 0.0f;
+			static float crownHeightT = 0.0f;
+			static bool crownMovingUp = true;
 
-			glTranslatef(buses[i].getPosition().x, buses[i].getPosition().y + 5.0f, buses[i].getPosition().z);
-			glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-			glutWireTorus(0.5f, 1.25f, 20, 20);
+			crownRot += 0.25f;
+
+			if (crownHeightT > 5.0f)
+				crownMovingUp = false;
+			else if (crownHeightT < 0.0f)
+				crownMovingUp = true;
+
+			if (crownMovingUp)
+				crownHeightT += DH::deltaTime;
+			else
+				crownHeightT -= DH::deltaTime;
+
+			float crownHeight = MathHelper::LERP(5.0f, 6.0f, crownHeightT / 5.0f);
+
+			glColor3f(1.0f, 1.0f, 1.0f);
+			AM::assets()->bindTexture(TEX_CROWN);
+			glTranslatef(buses[i].getPosition().x, buses[i].getPosition().y + crownHeight, buses[i].getPosition().z);
+			glRotatef(crownRot, 0.0f, 1.0f, 0.0f);
+			glScalef(2.0f, 2.0f, 2.0f);
+			crown->draw(true);
 		}
 	}
-
-	glEnable(GL_TEXTURE_2D);
-	glColor3f(1.0f, 1.0f, 1.0f);
 }
 
 void State_EndRound::fountainPassengers()
@@ -410,9 +464,6 @@ void State_EndRound::fountainPassengers()
 			remainingPassengers[i]--;
 		}
 	}
-
-	if (remainingPassengers[0] == 0 && remainingPassengers[1] == 0 && remainingPassengers[2] == 0 && remainingPassengers[3] == 0)
-		currentStage = END_STAGE::CROWN_STAGE;
 }
 
 void State_EndRound::launchPassenger(GameObject bus)
@@ -429,9 +480,11 @@ void State_EndRound::launchPassenger(GameObject bus)
 	startRotation = MathHelper::randomVec3(0.0f, 360.0f);
 	startScale = MathHelper::randomVec3(0.5f, 1.75f);
 
-	launchVel.z = 1.0f;
-	launchVel.y = 3.0f;
 	launchVel.x = -1.0f;
+	launchVel.y = 3.0f;
+
+	launchVel = glm::rotate(launchVel, DH::degToRad(bus.getRotation().y), glm::vec3(0.0f, 1.0f, 0.0f));
+
 	launchVel = glm::normalize(launchVel);
 	launchVel *= launchSpeed;
 
