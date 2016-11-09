@@ -17,20 +17,18 @@ void State_MainMenu::load()
 	levelSidewalk2 = GameObject(glm::vec3(-25.25f, 0.0f, 25.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_SIDEWALK, TEX_SIDEWALK);
 	levelSidewalk3 = GameObject(glm::vec3(-25.25f, 0.0f, -25.5f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_SIDEWALK, TEX_SIDEWALK);
 	levelSidewalk4 = GameObject(glm::vec3(25.5f, 0.0f, -25.5f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_SIDEWALK, TEX_SIDEWALK);
-	levelBackgroundL = GameObject(glm::vec3(0.0f, 0.0f, 110.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_LEVELPLAY, TEX_LEVELBACKGROUND);
-	levelBackgroundR = GameObject(glm::vec3(-110.0f, 0.0f, 0.0f), glm::vec3(0.0f, 180.0f, 0.0f), glm::vec3(1.0f), MESH_LEVELPLAY, TEX_LEVELBACKGROUND);
-	levelBackgroundM = GameObject(glm::vec3(-110.0f, 0.0f, 110.0f), glm::vec3(0.0f, 180.0f, 0.0f), glm::vec3(1.0f), MESH_LEVELPLAY, TEX_LEVELBACKGROUNDM);
-	levelUndergroundL = GameObject(glm::vec3(55.0f, -20.0f, 55.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_LEVELUNDERGROUND, TEX_LEVELUNDERGROUND);
-	levelUndergroundR = GameObject(glm::vec3(-55.0f, -20.0f, -55.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(1.0f), MESH_LEVELUNDERGROUND, TEX_LEVELUNDERGROUND);
+	levelBackgroundL = GameObject(glm::vec3(0.0f, 0.0f, 82.5f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f), MESH_LEVELBACKGROUND, TEX_LEVELBACKGROUND);
+	levelBackgroundR = GameObject(glm::vec3(-82.5f, 0.0f, 0.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_LEVELBACKGROUND, TEX_LEVELBACKGROUND);
+	levelBackgroundM = GameObject(glm::vec3(-82.5f, 0.0f, 82.5f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f), MESH_LEVELBACKGROUNDM, TEX_LEVELBACKGROUNDM);
+	levelUnderground1 = GameObject(glm::vec3(55.0f, -20.0f, 27.5f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_LEVELUNDERGROUND, TEX_LEVELUNDERGROUND);
+	levelUnderground2 = GameObject(glm::vec3(-27.5f, -20.0f, -55.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(1.0f), MESH_LEVELUNDERGROUND, TEX_LEVELUNDERGROUND);
+	levelUnderground3 = GameObject(glm::vec3(-27.5f, -20.0f, 110.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_LEVELUNDERGROUND, TEX_LEVELUNDERGROUND);
+	levelUnderground4 = GameObject(glm::vec3(-110.0f, -20.0f, 27.5f), glm::vec3(0.0f, 180.0f, 0.0f), glm::vec3(1.0f), MESH_LEVELUNDERGROUND, TEX_LEVELUNDERGROUND);
 	backgroundSidewalk1 = GameObject(glm::vec3(25.5f, 0.0f, 75.5f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_SIDEWALK, TEX_BACKGROUNDSIDEWALK);
-	backgroundSidewalk2 = GameObject(glm::vec3(25.5f, 0.0f, 126.5f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_SIDEWALK, TEX_BACKGROUNDSIDEWALK);
-	backgroundSidewalk3 = GameObject(glm::vec3(-25.0f, 0.0f, 126.5f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_SIDEWALK, TEX_BACKGROUNDSIDEWALK);
-	backgroundSidewalk4 = GameObject(glm::vec3(-25.0f, 0.0f, 75.5f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_SIDEWALK, TEX_BACKGROUNDSIDEWALK);
-	backgroundSidewalk5 = GameObject(glm::vec3(-75.75f, 0.0f, 25.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_SIDEWALK, TEX_BACKGROUNDSIDEWALK);
-	backgroundSidewalk6 = GameObject(glm::vec3(-126.5f, 0.0f, 25.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_SIDEWALK, TEX_BACKGROUNDSIDEWALK);
-	backgroundSidewalk7 = GameObject(glm::vec3(-126.5f, 0.0f, -25.5f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_SIDEWALK, TEX_BACKGROUNDSIDEWALK);
-	backgroundSidewalk8 = GameObject(glm::vec3(-75.5f, 0.0f, -25.5f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_SIDEWALK, TEX_BACKGROUNDSIDEWALK);
-
+	backgroundSidewalk2 = GameObject(glm::vec3(-25.0f, 0.0f, 75.5f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_SIDEWALK, TEX_BACKGROUNDSIDEWALK);
+	backgroundSidewalk3 = GameObject(glm::vec3(-75.75f, 0.0f, 25.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_SIDEWALK, TEX_BACKGROUNDSIDEWALK);
+	backgroundSidewalk4 = GameObject(glm::vec3(-75.5f, 0.0f, -25.5f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_SIDEWALK, TEX_BACKGROUNDSIDEWALK);
+	backgroundSidewalk5 = GameObject(glm::vec3(-75.8f, 0.0f, 75.8f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_SIDEWALK, TEX_BACKGROUNDSIDEWALK);
 
 	//Init the front buildings 
 	baseBuilding1 = GameObject(glm::vec3(40.0f, 8.95f, 60.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(2.0f), MESH_BASEBUILDING, TEX_BASEBUILDING1);
@@ -63,10 +61,10 @@ void State_MainMenu::load()
 	boardBuilding4 = GameObject(glm::vec3(-60.0f, 5.5f, -25.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_BOARDBUILDING, TEX_BOARDBUILDING4);
 
 	//Init the billboards
-	billboard1 = GameObject(glm::vec3(25.0f, 18.5f, 60.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_BILLBOARD, TEX_BILLBOARD1);
-	billboard2 = GameObject(glm::vec3(-25.0f, 18.5f, 60.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_BILLBOARD, TEX_BILLBOARD2);
-	billboard3 = GameObject(glm::vec3(-60.0f, 18.5f, 25.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_BILLBOARD, TEX_BILLBOARD3);
-	billboard4 = GameObject(glm::vec3(-60.0f, 18.5f, -25.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_BILLBOARD, TEX_BILLBOARD4);
+	billboard1 = GameObject(glm::vec3(25.0f, 19.0f, 60.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_BILLBOARD, TEX_BILLBOARD1);
+	billboard2 = GameObject(glm::vec3(-25.0f, 19.0f, 60.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_BILLBOARD, TEX_BILLBOARD2);
+	billboard3 = GameObject(glm::vec3(-60.0f, 19.0f, 25.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_BILLBOARD, TEX_BILLBOARD3);
+	billboard4 = GameObject(glm::vec3(-60.0f, 19.0f, -25.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_BILLBOARD, TEX_BILLBOARD4);
 
 	//Init the buses
 	buses[0] = Player(glm::vec3(-25.0f, 1.75f, -25.0f), glm::vec3(0.0f, -45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_RED);
@@ -219,8 +217,10 @@ void State_MainMenu::update()
 
 	//Draw the level underground
 	AM::assets()->bindTexture(TEX_LEVELUNDERGROUND);
-	levelUndergroundL.update(DH::getDeltaTime());
-	levelUndergroundR.update(DH::getDeltaTime());
+	levelUnderground1.update(DH::getDeltaTime());
+	levelUnderground2.update(DH::getDeltaTime());
+	levelUnderground3.update(DH::getDeltaTime());
+	levelUnderground4.update(DH::getDeltaTime());
 
 	//Draw the level background sidewalk
 	AM::assets()->bindTexture(TEX_BACKGROUNDSIDEWALK);
@@ -229,9 +229,6 @@ void State_MainMenu::update()
 	backgroundSidewalk3.update(DH::getDeltaTime());
 	backgroundSidewalk4.update(DH::getDeltaTime());
 	backgroundSidewalk5.update(DH::getDeltaTime());
-	backgroundSidewalk6.update(DH::getDeltaTime());
-	backgroundSidewalk7.update(DH::getDeltaTime());
-	backgroundSidewalk8.update(DH::getDeltaTime());
 
 	//Draw the base buildings
 	AM::assets()->bindTexture(TEX_BASEBUILDING1);
@@ -287,7 +284,6 @@ void State_MainMenu::update()
 
 	AM::assets()->bindTexture(TEX_BILLBOARD4);
 	billboard4.update(DH::getDeltaTime());
-
 	//Update and draw the passengers
 
 	AM::assets()->bindTexture(TEX_PASSENGER);
@@ -555,9 +551,9 @@ void State_MainMenu::drawBuses()
 {
 	//Bind correct texture for Player 1
 	if (buses[0].getStage() == firstStage)
-		AM::assets()->bindTexture(TEX_BUS2_RED);
+		AM::assets()->bindTexture(TEX_BUS1_RED);
 	else if (buses[0].getStage() == secondStage)
-		AM::assets()->bindTexture(TEX_BUS2_RED);
+		AM::assets()->bindTexture(TEX_BUS1_RED);
 	else if (buses[0].getStage() == thirdStage)
 		AM::assets()->bindTexture(TEX_BUS2_RED);
 	if (buses[0].getStage() == fourthStage)
@@ -569,9 +565,9 @@ void State_MainMenu::drawBuses()
 
 	//Bind correct texture for Player 2
 	if (buses[1].getStage() == firstStage)
-		AM::assets()->bindTexture(TEX_BUS2_BLUE);
+		AM::assets()->bindTexture(TEX_BUS1_BLUE);
 	else if (buses[1].getStage() == secondStage)
-		AM::assets()->bindTexture(TEX_BUS2_BLUE);
+		AM::assets()->bindTexture(TEX_BUS1_BLUE);
 	else if (buses[1].getStage() == thirdStage)
 		AM::assets()->bindTexture(TEX_BUS2_BLUE);
 	if (buses[1].getStage() == fourthStage)
@@ -583,9 +579,9 @@ void State_MainMenu::drawBuses()
 
 	//Bind correct texture for Player 3
 	if (buses[2].getStage() == firstStage)
-		AM::assets()->bindTexture(TEX_BUS2_YELLOW);
+		AM::assets()->bindTexture(TEX_BUS1_YELLOW);
 	else if (buses[2].getStage() == secondStage)
-		AM::assets()->bindTexture(TEX_BUS2_YELLOW);
+		AM::assets()->bindTexture(TEX_BUS1_YELLOW);
 	else if (buses[2].getStage() == thirdStage)
 		AM::assets()->bindTexture(TEX_BUS2_YELLOW);
 	if (buses[2].getStage() == fourthStage)
@@ -597,9 +593,9 @@ void State_MainMenu::drawBuses()
 
 	//Bind correct texture for Player 4
 	if (buses[3].getStage() == firstStage)
-		AM::assets()->bindTexture(TEX_BUS2_GREEN);
+		AM::assets()->bindTexture(TEX_BUS1_GREEN);
 	else if (buses[3].getStage() == secondStage)
-		AM::assets()->bindTexture(TEX_BUS2_GREEN);
+		AM::assets()->bindTexture(TEX_BUS1_GREEN);
 	else if (buses[3].getStage() == thirdStage)
 		AM::assets()->bindTexture(TEX_BUS2_GREEN);
 	if (buses[3].getStage() == fourthStage)

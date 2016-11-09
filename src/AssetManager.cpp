@@ -30,6 +30,7 @@ void AssetManager::loadAssets()
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Passenger.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_LevelArea.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_LevelBackground.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_LevelBackgroundM.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_LevelUnderground.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_BaseBuilding.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_BoardBuilding.obj"));
@@ -39,14 +40,14 @@ void AssetManager::loadAssets()
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Crown.obj"));
 	
 	/* ========== TEXTURES (Naming: tex_XXXXXX.png) ========== */
-	loadedTextures.push_back(Texture2D("./res/img/tex_Bus2_Red.png"));
-	loadedTextures.push_back(Texture2D("./res/img/tex_Bus2_Blue.png"));
-	loadedTextures.push_back(Texture2D("./res/img/tex_Bus2_Green.png"));
-	loadedTextures.push_back(Texture2D("./res/img/tex_Bus2_Yellow.png"));	
-	loadedTextures.push_back(Texture2D("./res/img/tex_Bus2_Red.png"));
-	loadedTextures.push_back(Texture2D("./res/img/tex_Bus2_Blue.png"));
-	loadedTextures.push_back(Texture2D("./res/img/tex_Bus2_Green.png"));
-	loadedTextures.push_back(Texture2D("./res/img/tex_Bus2_Yellow.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus1_Red.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus1_Blue.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus1_Green.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus1_Yellow.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus1_Red.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus1_Blue.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus1_Green.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus1_Yellow.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Bus2_Red.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Bus2_Blue.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Bus2_Green.png"));
