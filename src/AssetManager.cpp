@@ -36,14 +36,15 @@ void AssetManager::loadAssets()
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_BoardBuilding.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Billboard.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_LevelSidewalk.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Roadblock.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Skybox.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Crown.obj"));
 	
 	/* ========== TEXTURES (Naming: tex_XXXXXX.png) ========== */
-	loadedTextures.push_back(Texture2D("./res/img/tex_Bus1_Red.png"));
-	loadedTextures.push_back(Texture2D("./res/img/tex_Bus1_Blue.png"));
-	loadedTextures.push_back(Texture2D("./res/img/tex_Bus1_Green.png"));
-	loadedTextures.push_back(Texture2D("./res/img/tex_Bus1_Yellow.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus0_Red.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus0_Blue.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus0_Green.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Bus0_Yellow.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Bus1_Red.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Bus1_Blue.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Bus1_Green.png"));
@@ -79,10 +80,14 @@ void AssetManager::loadAssets()
 	loadedTextures.push_back(Texture2D("./res/img/tex_Billboard4.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_LevelSidewalk.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_LevelBackgroundSidewalk.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Roadblock.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Font.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Skybox.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Crown.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Menu.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_FillBar.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Billboard.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_BillboardLights.png"));
 }
 
 void AssetManager::bindTexture(TEXTURE_NAME textureName)

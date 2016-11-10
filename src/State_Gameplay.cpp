@@ -72,6 +72,14 @@ void State_Gameplay::load()
 	billboard3 = GameObject(glm::vec3(-60.0f, 19.0f, 25.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_BILLBOARD, TEX_BILLBOARD3);
 	billboard4 = GameObject(glm::vec3(-60.0f, 19.0f, -25.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_BILLBOARD, TEX_BILLBOARD4);
 
+	//Init the roadblocks
+	roadblock1 = GameObject(glm::vec3(50.5f, 1.0f, 60.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_ROADBLOCK, TEX_ROADBLOCK);
+	roadblock2 = GameObject(glm::vec3(0.0f, 1.0f, 60.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_ROADBLOCK, TEX_ROADBLOCK);
+	roadblock3 = GameObject(glm::vec3(-50.5f, 1.0f, 60.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_ROADBLOCK, TEX_ROADBLOCK);
+	roadblock4 = GameObject(glm::vec3(-60.0f, 1.0f, 50.5f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_ROADBLOCK, TEX_ROADBLOCK);
+	roadblock5 = GameObject(glm::vec3(-60.0f, 1.0f, 0.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_ROADBLOCK, TEX_ROADBLOCK);
+	roadblock6 = GameObject(glm::vec3(-60.0f, 1.0f, -50.5f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_ROADBLOCK, TEX_ROADBLOCK);
+
 	//Init the buses
 	buses[0] = Player(glm::vec3(-25.0f, 1.75f, -25.0f), glm::vec3(0.0f, -45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_RED);
 	buses[1] = Player(glm::vec3(-25.0f, 1.75f, 25.0f), glm::vec3(0.0f, 45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_BLUE);
@@ -113,25 +121,122 @@ void State_Gameplay::load()
 	timer = Sprite::createTextVector(TEX_FONT, -5.0f, -10.0f, 5.0f, 5.0f, "0:00");
 
 	//Set up the billboards
-	billboards[0] = Sprite(TEX_BUS2_RED, 1, 1);
-	billboards[0].setPosition(29.0f, 18.0f, 51.5f);
+	//billboard one/////////////////////////////////////////////////////////////////////////////////////////
+	billboards[0] = Sprite(TEX_BILLBOARD, 1, 1);
+	billboards[0].setPosition(29.0f, 23.0f, 51.5f);
 	billboards[0].setRotation(0.0f, 180.0f, 0.0f);
-	billboards[0].setScale(20.0f, 10.0f, 1.0f);
+	billboards[0].setScale(30.0f, 15.0f, 1.0f);
 
-	billboards[1] = Sprite(TEX_BUS2_BLUE, 1, 1);
-	billboards[1].setPosition(-15.0f, 18.0f, 51.5f);
+	//fillbar background
+	fillbarbackground[0] = Sprite(TEX_FILLBAR, 1, 10);
+	fillbarbackground[0].setActiveFrame(1);
+	fillbarbackground[0].setPosition(29.0f, 19.7f, 51.49f);
+	fillbarbackground[0].setRotation(0.0f, 180.0f, 0.0f);
+	fillbarbackground[0].setScale(27.5f, 7.5f, 1.0f);
+
+	//fillbar progress
+	fillbar[0] = Sprite(TEX_FILLBAR, 1, 10);
+	fillbar[0].setActiveFrame(5);				//change the progress here 2 to 9, 9 is 80% - 100%
+	fillbar[0].setPosition(29.0f, 19.7f, 51.48f);
+	fillbar[0].setRotation(0.0f, 180.0f, 0.0f);
+	fillbar[0].setScale(27.5f, 7.5f, 1.0f);
+
+	//fillbar shading
+	fillbarshade[0] = Sprite(TEX_FILLBAR, 1, 10);
+	fillbarshade[0].setActiveFrame(0);
+	fillbarshade[0].setPosition(29.0f, 19.7f, 51.47f);
+	fillbarshade[0].setRotation(0.0f, 180.0f, 0.0f);
+	fillbarshade[0].setScale(27.5f, 7.5f, 1.0f);
+
+	//billboardlighting
+	billboardlight[0] = Sprite(TEX_BILLBOARDLIGHTS, 1, 2);
+	billboardlight[0].setActiveFrame(1);
+	billboardlight[0].setPosition(29.0f, 24.0f, 51.46f);
+	billboardlight[0].setRotation(0.0f, 180.0f, 0.0f);
+	billboardlight[0].setScale(42.0f, 24.0f, 1.0f);
+
+	//billboard two///////////////////////////////////////////////////////////////////////////////////
+	billboards[1] = Sprite(TEX_BILLBOARD, 1, 1);
+	billboards[1].setPosition(-21.0f, 23.0f, 51.5f);
 	billboards[1].setRotation(0.0f, 180.0f, 0.0f);
-	billboards[1].setScale(20.0f, 10.0f, 1.0f);
+	billboards[1].setScale(30.0f, 15.0f, 1.0f);
 
-	billboards[2] = Sprite(TEX_BUS2_GREEN, 1, 1);
-	billboards[2].setPosition(-51.0f, 18.0f, 17.0f);
+	//fillbar background
+	fillbarbackground[1] = Sprite(TEX_FILLBAR, 1, 10);
+	fillbarbackground[1].setActiveFrame(1);
+	fillbarbackground[1].setPosition(-21.0f, 19.7f, 51.49f);
+	fillbarbackground[1].setRotation(0.0f, 180.0f, 0.0f);
+	fillbarbackground[1].setScale(27.5f, 7.5f, 1.0f);
+
+	//fillbar progress
+	fillbar[1] = Sprite(TEX_FILLBAR, 1, 10);
+	fillbar[1].setActiveFrame(5);
+	fillbar[1].setPosition(-21.0f, 19.7f, 51.48f);
+	fillbar[1].setRotation(0.0f, 180.0f, 0.0f);
+	fillbar[1].setScale(27.5f, 7.5f, 1.0f);
+
+	//fillbar shade
+	fillbarshade[1] = Sprite(TEX_FILLBAR, 1, 10);
+	fillbarshade[1].setActiveFrame(0);
+	fillbarshade[1].setPosition(-21.0f, 19.7f, 51.47f);
+	fillbarshade[1].setRotation(0.0f, 180.0f, 0.0f);
+	fillbarshade[1].setScale(19.0f, 5.0f, 1.0f);
+
+
+	//billboard three///////////////////////////////////////////////////////////////
+	billboards[2] = Sprite(TEX_BILLBOARD, 1, 1);
+	billboards[2].setPosition(-51.0f, 23.0f, 20.5);
 	billboards[2].setRotation(0.0f, 90.0f, 0.0f);
-	billboards[2].setScale(20.0f, 10.0f, 1.0f);
+	billboards[2].setScale(30.0f, 15.0f, 1.0f);
 
-	billboards[3] = Sprite(TEX_BUS2_YELLOW, 1, 1);
-	billboards[3].setPosition(-51.0f, 18.0f, -28.0f);
+	//fillbar background
+	fillbarbackground[2] = Sprite(TEX_FILLBAR, 1, 10);
+	fillbarbackground[2].setActiveFrame(1);
+	fillbarbackground[2].setPosition(-50.99f, 19.7f, 20.5);
+	fillbarbackground[2].setRotation(0.0f, 90.0f, 0.0f);
+	fillbarbackground[2].setScale(27.5f, 7.5f, 1.0f);
+
+	//fillbar progress
+	fillbar[2] = Sprite(TEX_FILLBAR, 1, 10);
+	fillbar[2].setActiveFrame(5);
+	fillbar[2].setPosition(-50.98f, 19.7f, 20.5f);
+	fillbar[2].setRotation(0.0f, 90.0f, 0.0f);
+	fillbar[2].setScale(27.5f, 7.5f, 1.0f);
+
+	//fillbar shade
+	fillbarshade[2] = Sprite(TEX_FILLBAR, 1, 10);
+	fillbarshade[2].setActiveFrame(0);
+	fillbarshade[2].setPosition(-50.97f, 19.7f, 20.5f);
+	fillbarshade[2].setRotation(0.0f, 90.0f, 0.0f);
+	fillbarshade[2].setScale(19.0f, 5.0f, 1.0f);
+
+
+	//billboard four//////////////////////////////////////////////////////////
+	billboards[3] = Sprite(TEX_BILLBOARD, 1, 1);
+	billboards[3].setPosition(-52.6f, 23.0f, -29.5f);
 	billboards[3].setRotation(0.0f, 90.0f, 0.0f);
-	billboards[3].setScale(20.0f, 10.0f, 1.0f);
+	billboards[3].setScale(30.0f, 15.0f, 1.0f);
+
+	//fillbar background
+	fillbarbackground[3] = Sprite(TEX_FILLBAR, 1, 10);
+	fillbarbackground[3].setActiveFrame(1);
+	fillbarbackground[3].setPosition(-52.59f, 19.7f, -28.0f);
+	fillbarbackground[3].setRotation(0.0f, 90.0f, 0.0f);
+	fillbarbackground[3].setScale(27.5f, 7.5f, 1.0f);
+
+	//fillbar progress
+	fillbar[3] = Sprite(TEX_FILLBAR, 1, 10);
+	fillbar[3].setActiveFrame(5);
+	fillbar[3].setPosition(-52.58f, 19.7f, -28.0f);
+	fillbar[3].setRotation(0.0f, 90.0f, 0.0f);
+	fillbar[3].setScale(27.5f, 7.5f, 1.0f);
+
+	//fillbar shade
+	fillbarshade[3] = Sprite(TEX_FILLBAR, 1, 10);
+	fillbarshade[3].setActiveFrame(0);
+	fillbarshade[3].setPosition(-52.57f, 19.7f, -28.0f);
+	fillbarshade[3].setRotation(0.0f, 90.0f, 0.0f);
+	fillbarshade[3].setScale(27.5f, 7.5f, 1.0f);
 
 	//Set up the skybox
 	skyBox = GameObject(MESH_SKYBOX, TEX_SKYBOX);
@@ -179,7 +284,7 @@ void State_Gameplay::update()
 		gluPerspective(FOV, DH::getAspectRatio(), 0.1f, 10000.0f);
 		cameraPos = MathHelper::LERP(cameraPos, introLerpTarget, DH::getDeltaTime() * 2.0f);
 		gluLookAt(cameraPos.x, cameraPos.y, cameraPos.z, 0, 1, 0, 0, 1, 0);
-		introLerpTarget = MathHelper::LERP(introLerpTarget, glm::vec3(1000.0f, 1000.0f, -1000.0f), DH::deltaTime * 2.0f);
+		introLerpTarget = MathHelper::LERP(introLerpTarget, glm::vec3(500.0f, 500.0f, -500.0f), DH::deltaTime * 2.0f);
 		if (abs(cameraPos.x - introLerpTarget.x) < 5.0f)
 			if (abs(cameraPos.y - introLerpTarget.y) < 5.0f)
 				if (abs(cameraPos.z - introLerpTarget.z) < 5.0f)
@@ -187,7 +292,7 @@ void State_Gameplay::update()
 	}
 	else if(!firstPerson)
 	{
-		glOrtho(-60.0f * DH::getOrthoStretch(), 60.0f * DH::getOrthoStretch(), -60.0f, 60.0f, -5.0f, 10000.0f);
+		glOrtho(-60.0f * DH::getOrthoStretch(), 60.0f * DH::getOrthoStretch(), -60.0f, 60.0f, -5.0f, 7000.0f);
 		gluLookAt(gameplayCameraPos.x, gameplayCameraPos.y, gameplayCameraPos.z, 0, 0, 0, 0, 1, 0);
 	}
 
@@ -312,7 +417,7 @@ void State_Gameplay::update()
 	}
 	if (DH::getKey('q'))
 	{
-		gameplayCameraPos = glm::vec3(68.0f, 70.0f, -68.0f);
+		gameplayCameraPos = glm::vec3(54.0f, 25.0f, 60.0f);
 		rotation = 0;
 	}
 
@@ -345,7 +450,7 @@ void State_Gameplay::update()
 			glLoadIdentity();
 			glm::vec3 cameraLocation = buses[i].getPosition() + buses[i].getForwardVector() * 3.0f;
 			glm::vec3 focus = buses[i].getPosition() + buses[i].getForwardVector() * 4.0f;
-			gluPerspective(110.0f, DH::getAspectRatio(), 0.1f, 10000.0f);
+			gluPerspective(75.0f, DH::getAspectRatio(), 0.1f, 10000.0f);
 			gluLookAt(cameraLocation.x, cameraLocation.y, cameraLocation.z, focus.x, focus.y, focus.z, 0, 1, 0);
 		}
 		else
@@ -446,6 +551,15 @@ void State_Gameplay::update()
 
 		AM::assets()->bindTexture(TEX_BILLBOARD4);
 		billboard4.update(DH::getDeltaTime());
+
+		//Draw the roadblocks
+		AM::assets()->bindTexture(TEX_ROADBLOCK);
+		roadblock1.update(DH::getDeltaTime());
+		roadblock2.update(DH::getDeltaTime());
+		roadblock3.update(DH::getDeltaTime());
+		roadblock4.update(DH::getDeltaTime());
+		roadblock5.update(DH::getDeltaTime());
+		roadblock6.update(DH::getDeltaTime());
 
 		//Update and draw the passengers
 
@@ -664,6 +778,7 @@ void State_Gameplay::updateStages()
 			buses[i].setMesh(MESH_BUS0);
 			buses[i].setMovementSpeed(45.0f);
 			buses[i].setTurningSpeed(10.0f);
+			fillbar[i].setActiveFrame(2);
 		}
 		else if (points < 25)
 		{
@@ -671,6 +786,7 @@ void State_Gameplay::updateStages()
 			buses[i].setMesh(MESH_BUS1);
 			buses[i].setMovementSpeed(40.0f);
 			buses[i].setTurningSpeed(0.85f);
+			fillbar[i].setActiveFrame(4);
 		}
 		else if (points < 35)
 		{
@@ -678,6 +794,7 @@ void State_Gameplay::updateStages()
 			buses[i].setMesh(MESH_BUS2);
 			buses[i].setMovementSpeed(35.0f);
 			buses[i].setTurningSpeed(0.75f);
+			fillbar[i].setActiveFrame(6);
 		}
 		else if (points < 50)
 		{
@@ -685,6 +802,7 @@ void State_Gameplay::updateStages()
 			buses[i].setMesh(MESH_BUS3);
 			buses[i].setMovementSpeed(30.0f);
 			buses[i].setTurningSpeed(0.6f);
+			fillbar[i].setActiveFrame(8);
 		}
 		else if (points >= 50)
 		{
@@ -692,6 +810,7 @@ void State_Gameplay::updateStages()
 			buses[i].setMesh(MESH_BUS4);
 			buses[i].setMovementSpeed(25.0f);
 			buses[i].setTurningSpeed(0.45f);
+			fillbar[i].setActiveFrame(10);
 		}
 	}
 }
@@ -717,8 +836,45 @@ void State_Gameplay::drawCrown()
 void State_Gameplay::drawUI()
 {
 	//Draw billboards in world spcae
-	for (int i = 0; i < 4; i++)
-		billboards[i].update(DH::getDeltaTime());
+	for (int i = 0; i < 4; i++) {
+		billboards[i].update(DH::deltaTime);
+		fillbarbackground[i].update(DH::deltaTime);
+		switch (i) {
+		case 0:
+			//r
+			glColor3f(1.0f, 0.0f, 0.0f);
+			fillbar[0].update(DH::deltaTime);
+			glColor3f(1.0f, 1.0f, 1.0f);
+			break;
+		case 1:
+			//b
+			glColor3f(0.0f, 0.0f, 1.0f);
+			fillbar[1].update(DH::deltaTime);
+			glColor3f(1.0f, 1.0f, 1.0f);
+			break;
+		case 2:
+			//g
+			glColor3f(0.0f, 1.0f, 0.0f);
+			fillbar[2].update(DH::deltaTime);
+			glColor3f(1.0f, 1.0f, 1.0f);
+			break;
+		case 3:
+			//y
+			glColor3f(1.0f, 1.0f, 0.0f);
+			fillbar[3].update(DH::deltaTime);
+			glColor3f(1.0f, 1.0f, 1.0f);
+			break;
+		default:
+			break;
+		}
+
+
+
+
+		//+fillbarshade[i].update(DH::deltaTime);
+	}
+
+	billboardlight[0].update(DH::deltaTime);
 
 	//Reset view for HUD in screen space
 	glViewport(0, 0, DH::windowWidth, DH::windowHeight);
@@ -728,7 +884,7 @@ void State_Gameplay::drawUI()
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluOrtho2D(-15.0f, 15.0f, -15.0f, 15.0f);
-	
+
 	//Draw timer
 	string timerString;
 
@@ -746,7 +902,7 @@ void State_Gameplay::drawBuses()
 {
 	//Bind correct texture for Player 1
 	if(buses[0].getStage() == firstStage)
-		AM::assets()->bindTexture(TEX_BUS1_RED); 
+		AM::assets()->bindTexture(TEX_BUS0_RED); 
 	else if (buses[0].getStage() == secondStage)
 		AM::assets()->bindTexture(TEX_BUS1_RED); 
 	else if (buses[0].getStage() == thirdStage)
@@ -760,7 +916,7 @@ void State_Gameplay::drawBuses()
 
 	//Bind correct texture for Player 2
 	if (buses[1].getStage() == firstStage)
-		AM::assets()->bindTexture(TEX_BUS1_BLUE);
+		AM::assets()->bindTexture(TEX_BUS0_BLUE);
 	else if (buses[1].getStage() == secondStage)
 		AM::assets()->bindTexture(TEX_BUS1_BLUE);
 	else if (buses[1].getStage() == thirdStage)
@@ -774,7 +930,7 @@ void State_Gameplay::drawBuses()
 
 	//Bind correct texture for Player 3
 	if (buses[2].getStage() == firstStage)
-		AM::assets()->bindTexture(TEX_BUS1_YELLOW);
+		AM::assets()->bindTexture(TEX_BUS0_YELLOW);
 	else if (buses[2].getStage() == secondStage)
 		AM::assets()->bindTexture(TEX_BUS1_YELLOW);
 	else if (buses[2].getStage() == thirdStage)
@@ -788,7 +944,7 @@ void State_Gameplay::drawBuses()
 
 	//Bind correct texture for Player 4
 	if (buses[3].getStage() == firstStage)
-		AM::assets()->bindTexture(TEX_BUS1_GREEN);
+		AM::assets()->bindTexture(TEX_BUS0_GREEN);
 	else if (buses[3].getStage() == secondStage)
 		AM::assets()->bindTexture(TEX_BUS1_GREEN);
 	else if (buses[3].getStage() == thirdStage)

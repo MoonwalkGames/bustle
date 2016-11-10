@@ -106,7 +106,6 @@ void Sprite::update(float dt)
 	// ----- Draw the sprite ----- //
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, texture->getTextureID());
-	glColor3f(1.0f, 1.0f, 1.0f);
 
 	//Draw the sprite
 	glBegin(GL_QUADS);

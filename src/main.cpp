@@ -22,7 +22,7 @@ int main(int argc, char **argv)
 	glutInit(&argc, argv);
 	glutInitWindowSize(DisplayHandler::getWidth(), DisplayHandler::getHeight());
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
-	glutCreateWindow("bustle 2: the electric boogaloo");
+	glutCreateWindow("Bustle Alpha 2.0");
 
 	//Setup function call backs
 	glutDisplayFunc(DisplayHandler::update);

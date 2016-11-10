@@ -69,6 +69,14 @@ void State_EndRound::load()
 	buses[2] = GameObject(glm::vec3(19.5f - 2.5f, 2.25f, -19.5f - 3.0f), glm::vec3(0.0f, 45.0f - 10.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS2, TEX_BUS2_RED);
 	buses[3] = GameObject(glm::vec3(20.5f - 7.5f, 2.25f, -20.5f - 10.0f), glm::vec3(0.0f, 45.0f - 40.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS2, TEX_BUS2_RED);
 
+	//Init the roadblocks
+	roadblock1 = GameObject(glm::vec3(50.5f, 1.0f, 60.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_ROADBLOCK, TEX_ROADBLOCK);
+	roadblock2 = GameObject(glm::vec3(0.0f, 1.0f, 60.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_ROADBLOCK, TEX_ROADBLOCK);
+	roadblock3 = GameObject(glm::vec3(-50.5f, 1.0f, 60.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_ROADBLOCK, TEX_ROADBLOCK);
+	roadblock4 = GameObject(glm::vec3(-60.0f, 1.0f, 50.5f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_ROADBLOCK, TEX_ROADBLOCK);
+	roadblock5 = GameObject(glm::vec3(-60.0f, 1.0f, 0.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_ROADBLOCK, TEX_ROADBLOCK);
+	roadblock6 = GameObject(glm::vec3(-60.0f, 1.0f, -50.5f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_ROADBLOCK, TEX_ROADBLOCK);
+
 	//Init the skybox
 	skybox = GameObject(MESH_SKYBOX, TEX_SKYBOX);
 	skybox.setRotationY(90.0f);
@@ -219,6 +227,15 @@ void State_EndRound::update()
 
 	AM::assets()->bindTexture(TEX_BUS2_YELLOW); //Yellow bus
 	buses[3].update(DH::deltaTime);
+
+	//Draw the roadblocks
+	AM::assets()->bindTexture(TEX_ROADBLOCK);
+	roadblock1.update(DH::getDeltaTime());
+	roadblock2.update(DH::getDeltaTime());
+	roadblock3.update(DH::getDeltaTime());
+	roadblock4.update(DH::getDeltaTime());
+	roadblock5.update(DH::getDeltaTime());
+	roadblock6.update(DH::getDeltaTime());
 
 	//Draw the passengers and remove the ones that hit the ground
 	AM::assets()->bindTexture(TEX_PASSENGER);

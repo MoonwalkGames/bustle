@@ -82,6 +82,12 @@ private:
 	GameObject billboard2;
 	GameObject billboard3;
 	GameObject billboard4;
+	GameObject roadblock1;
+	GameObject roadblock2;
+	GameObject roadblock3;
+	GameObject roadblock4;
+	GameObject roadblock5;
+	GameObject roadblock6;
 	GameObject buses[4];
 	GameObject skybox;
 	Mesh* crown;
