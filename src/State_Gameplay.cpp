@@ -810,7 +810,7 @@ void State_Gameplay::updateStages()
 			buses[i].setMesh(MESH_BUS4);
 			buses[i].setMovementSpeed(25.0f);
 			buses[i].setTurningSpeed(0.45f);
-			fillbar[i].setActiveFrame(10);
+			fillbar[i].setActiveFrame(9);
 		}
 	}
 }
