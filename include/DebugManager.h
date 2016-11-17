@@ -71,7 +71,7 @@ private:
 	//Tables to be output to excel
 	std::vector<ExcelTableRow2<float>> tbl_PositionHeatmap[4]; //One for each player (4 total)
 	std::vector<ExcelTableRow5<float>> tbl_Scores; //One for each player (4 total)
-	std::vector<ExcelTableRow5<float>> tbl_Stages; //One for each player (4 total)
+	std::vector<ExcelTableRow5<int>> tbl_Stages; //One for each player (4 total)
 	std::vector<ExcelTableRow2<float>> tbl_FreePassengers; //Only one total
 
 	//Score data to be outputted to text file for round end graph

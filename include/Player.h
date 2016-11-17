@@ -19,7 +19,7 @@ class Player : public Kinematic
 {
 public:
 	//All constructors are inherited from Kinematic, exept they initialize points value to 0
-	Player() : Kinematic() {}
+	Player() : Kinematic() { stage = 3; }
 	Player(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl) : Kinematic(pos, rot, scl) {}; //Constructor with just the transform properties
 	Player(bool gravityAffected, glm::vec3 accel, glm::vec3 vel, float mass) : Kinematic(gravityAffected, accel, vel, mass) {}; //Constructor with just the physics properties
 	Player(MESH_NAME meshName, TEXTURE_NAME texName) : Kinematic(meshName, texName) {}; //Constructor with just the asset properties

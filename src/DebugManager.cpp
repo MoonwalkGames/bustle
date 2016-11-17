@@ -1,6 +1,9 @@
 #include "DebugManager.h"
 #include "DisplayHandler.h"
 
+//Sets the maximum number of excel files in the debug folder
+const int MAX_FILE_NUMBER = 100;
+
 DebugManager* DebugManager::inst = 0; //The singleton instance of this class
 
 DebugManager::DebugManager()
@@ -129,12 +132,12 @@ void DebugManager::addData(float time, Player players[4])
 	tbl_Scores.push_back(row_Scores);
 
 	//Stages (do this four times)
-	ExcelTableRow5<float> row_Stages;
+	ExcelTableRow5<int> row_Stages;
 	row_Stages.A = time;
 	row_Stages.B = players[0].getStage();
-	row_Scores.C = players[1].getStage();
-	row_Scores.D = players[2].getStage();
-	row_Scores.E = players[3].getStage();
+	row_Stages.C = players[1].getStage();
+	row_Stages.D = players[2].getStage();
+	row_Stages.E = players[3].getStage();
 	tbl_Stages.push_back(row_Stages);
 
 	//Free passengers (do this once)
@@ -146,12 +149,32 @@ void DebugManager::addData(float time, Player players[4])
 
 void DebugManager::outputAnalytics()
 {
-	//Open file
-	std::ofstream outFile("./res/debug/roundData.csv");
+	//The number in the file name
+	static int fileNumber = 0; //Static because it will improve efficiency when multiple rounds are played in a row. The value will stay so it starts at the newest file
+	bool ableToFindNewFile = false;
 
+	//Checks if a file with the fileNumber already exists. If it does, move on. If it doesn't, create it. This allows us to have MAX_FILE_NUMBER number of files saved at once
+	for (fileNumber; fileNumber < MAX_FILE_NUMBER && !ableToFindNewFile; fileNumber++)
+	{
+		//If the file can be opened, it means it exists and we should check the next number. If it doesn't we can continue to outputting to that file
+		if (!std::ifstream("./res/debug/roundData_" + std::to_string(fileNumber) + ".csv"))
+		{
+			ableToFindNewFile = true;
+			break;
+		}
+	}
+
+	//If we reached the max number of files, just overwrite the first one
+	if (!ableToFindNewFile)
+		fileNumber = 0;
+
+	//Open the file for output
+	std::ofstream outFile("./res/debug/roundData_" + std::to_string(fileNumber) + ".csv");
+
+	//If there is an error in opening the file, abort
 	if (!outFile)
 	{
-		std::cout << "File at ('. / res / debug / round.csv') failed to open (Is it open in excel?). Aborting!" << std::endl;
+		std::cout << "File at ('./res/debug/roundData_" + std::to_string(fileNumber) + ".csv') failed to open (Is it open in excel?). Aborting!" << std::endl;
 		abort();
 	}
 
@@ -214,7 +237,7 @@ void DebugManager::addScoreData(float time, Player players[4])
 void DebugManager::outputRoundScores()
 {
 	//Open file
-	std::ofstream outFile("./res/debug/lastRoundScore.txt");
+	std::ofstream outFile("./res/debug/lastRoundScore.txt", std::ostream::out | std::ofstream::trunc);
 
 	//Error check
 	if (!outFile)
