@@ -21,3 +21,6 @@ build/GameState.obj
 build/Kinematic.obj
 build/Mesh.obj
 build/Texture2D.obj
+res/debug/roundData.csv
+res/debug/lastRoundScore.txt
+build/CollisionBoxes.obj

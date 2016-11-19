@@ -73,6 +73,8 @@ private:
 	GameObject roadblock5;
 	GameObject roadblock6;
 	GameObject skyBox;
+	GameObject busStop;
+
 	Mesh* crown;
 
 	Player buses[4];
@@ -96,5 +98,6 @@ private:
 	Sprite fillbarshade[4];
 	Sprite fillbarbackground[4];
 	Sprite billboardlight[4];
+	int droppedOffPassengers[4];
 };
 #endif

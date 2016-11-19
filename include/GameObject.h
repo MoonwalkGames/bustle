@@ -44,7 +44,7 @@ public:
 	void setScaleZ(float newZ);
 
 	void setMesh(MESH_NAME newMesh); //Change the mesh by passing one of the mesh names from the enum in asset manager
-	void setTexture(TEXTURE_NAME newTexture); //Change the texture by passing one of the texture names from the enum in asset manager
+	void setTexture(TEXTURE_NAME newTexture); //Change the texture by passing one of the texture names from the enumf in asset manager
 	void setColour(glm::vec4 colourRGBA); //Change the colour and alpha value of the mesh
 
 	glm::vec3 getPosition() const; //Returns the position 

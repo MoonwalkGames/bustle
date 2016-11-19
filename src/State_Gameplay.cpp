@@ -91,6 +91,12 @@ void State_Gameplay::load()
 	busTargets[2] = buses[2].getPosition();
 	busTargets[3] = buses[3].getPosition();
 
+	droppedOffPassengers[0] = 0;
+	droppedOffPassengers[1] = 0;
+	droppedOffPassengers[2] = 0;
+	droppedOffPassengers[3] = 0;
+
+
 	//Init the crown
 	crown = &AM::assets()->getMesh(MESH_CROWN);
 
@@ -238,6 +244,9 @@ void State_Gameplay::load()
 	fillbarshade[3].setPosition(-50.97f, 19.7f, 20.5f);
 	fillbarshade[3].setRotation(0.0f, 90.0f, 0.0f);
 	fillbarshade[3].setScale(19.0f, 5.0f, 1.0f);
+
+	//set up the bus stop
+	busStop = GameObject(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_CROWN, TEX_BUS0_RED);
 
 
 	//Set up the skybox
@@ -671,12 +680,24 @@ void State_Gameplay::update()
 			}
 		}
 	}
+	//player vs bus stop collisions
+	Col_Sphere busStopSphere = Col_Sphere(busStop.getPosition(), 1.0f);
+	for (int i = 0; i < 4; i++)
+	{
+		if (CollisionHandler::PLAYERvSPHERE(buses[i], busStopSphere) && buses[i].getPoints() > 0)
+		{
+			buses[i].addPoints(-1);
+			droppedOffPassengers[i]++;
+			printf("%d\n", droppedOffPassengers[i]);
+		}
+	}
 	//Detect collision HERE^
 	
 	//If there's a leader, draw the crown
 
 	updateCrownedPlayer();
 	drawCrown();
+	busStop.update(DH::deltaTime);
 
 	//Reset the scene if 'r' is pressed or start is pressed on a button
 	if (DH::getKey('r') || controllers[0].checkButton(BUTTON_START) || controllers[1].checkButton(BUTTON_START) || controllers[2].checkButton(BUTTON_START) || controllers[3].checkButton(BUTTON_START))

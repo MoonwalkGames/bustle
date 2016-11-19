@@ -148,6 +148,20 @@ Collision CollisionHandler::PLAYERvPASSENGER(const Player& a, const Passenger& b
 	return res;
 }
 
+Collision CollisionHandler::PLAYERvSPHERE(const Player& a, const Col_Sphere& b)
+{
+	Collision res(false, glm::vec3(0.0f));
+	Col_Sphere aExtentSphere(a.getPosition(), busStageExtents[a.getStage()].x);
+
+	if (SPHEREvSPHERE(aExtentSphere, b))
+	{
+		//Currently just using rough extent for player collection. 
+		//Col_Traffic_Light aTrafficLight = Col_Traffic_Light(a.getStage(), a.getPosition(), a.getRotation(), busStageExtents[a.getStage()]);
+		res = Collision(true, glm::vec3(0));
+	}
+	return res;
+}
+
 Collision CollisionHandler::PLAYERvPLAYER(const Player& a, const Player& b)
 {
 	static int counter = 0;

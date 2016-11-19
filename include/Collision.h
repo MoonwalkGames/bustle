@@ -34,11 +34,13 @@ public:
 	static Collision SPHEREvAABB(const Col_Sphere& a, const Col_AABB& b);
 	static Collision SPHEREvOBB(const Col_Sphere& a, const Col_OBB& b);
 	static Collision AABBvOBB(const Col_AABB& a, const Col_OBB& b);
+	static Collision PLAYERvSPHERE(const Player & a, const Col_Sphere & b);
 
 	//Type B vs Type A
 	static Collision AABBvSPHERE(const Col_AABB& a, const Col_Sphere& b);
 	static Collision OBBvSPHERE(const Col_OBB& a, const Col_Sphere& b);
 	static Collision OBBvAABB(const Col_OBB& a, const Col_AABB& b);
+	static Collision SPHEREvPLAYER(const Col_Sphere & a, const Player & b);
 
 	//Gameobject VS Gameobject
 	static Collision OBJECTvOBJECT(const GameObject& a, const GameObject& b);
