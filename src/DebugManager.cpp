@@ -111,8 +111,6 @@ void DebugManager::displayDebugText(Player players[4], float deltaT) const
 /* ===== Analytics ===== */
 void DebugManager::addData(float time, Player players[4])
 {
-	cout << "Adding data!" << endl;
-
 	//Position heatmap (do this four times)
 	for (int i = 0; i < 4; i++)
 	{

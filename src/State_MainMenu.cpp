@@ -245,6 +245,13 @@ void State_MainMenu::load()
 	skyBox = GameObject(MESH_SKYBOX, TEX_SKYBOX);
 	skyBox.setRotationY(90.0f);
 	skyBox.setScale(150.0f, 150.0f, 150.0f);
+
+	emitter = ParticleEmitter(glm::vec3(0.0f, 30.0f, 0.0f), 30);
+	emitter.setParticleColourRange(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
+	emitter.setParticleMesh(MESH_CROWN);
+	emitter.setParticleVelRange(glm::vec3(-25.0f, 10.0f, -25.0f), glm::vec3(25.0f, 15.0f, 25.0f));
+	emitter.setParticleLifeRange(5.0f, 10.0f);
+	emitter.applyParticleValues();
 }
 
 void State_MainMenu::update()
@@ -254,7 +261,7 @@ void State_MainMenu::update()
 	if (DH::getKey('g'))
 		playButton.addToRotation(0.0f, 5.0f, 0.0f);
 
-	printf("%f, %f, %f\n", menuCameraPos.x, menuCameraPos.y, menuCameraPos.z);
+	//printf("%f, %f, %f\n", menuCameraPos.x, menuCameraPos.y, menuCameraPos.z);
 	//Set up the camera
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -263,6 +270,8 @@ void State_MainMenu::update()
 	gluPerspective(75.0f, DH::getAspectRatio(), 0.1f, 10000.0f);
 	gluLookAt(menuCameraPos.x, menuCameraPos.y, menuCameraPos.z, 0, 1, 0, 0, 1, 0);
 	menuCameraPos = glm::rotate(menuCameraPos, degToRad * 0.05f, glm::vec3(0, 1, 0));
+
+	emitter.update(DH::deltaTime);
 
 	//Moves the bus targets based on steering behaviors
 	for (int i = 0; i < 4; i++)

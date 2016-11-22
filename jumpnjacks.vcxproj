@@ -90,6 +90,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\m_controller.cpp" />
+    <ClCompile Include="src\Particle.cpp" />
     <ClCompile Include="src\Passenger.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
@@ -111,6 +112,7 @@
     <ClInclude Include="include\MathHelper.h" />
     <ClInclude Include="include\Mesh.h" />
     <ClInclude Include="include\m_controller.h" />
+    <ClInclude Include="include\Particle.h" />
     <ClInclude Include="include\Passenger.h" />
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\Sprite.h" />

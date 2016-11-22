@@ -27,16 +27,15 @@ namespace MathHelper
 	{
 		if (min > max)
 		{
-			std::cout << "Error: Min is greater than max! Aborting!" << std::endl;
-			abort();
+			float temp = min;
+			min = max;
+			max = temp;
 		}
-		else
-		{
-			float randomValue = float(rand()) / float(RAND_MAX);
-			float range = max - min;
+		
+		float randomValue = float(rand()) / float(RAND_MAX);
+		float range = max - min;
 
-			return (randomValue * range) + min;
-		}
+		return (randomValue * range) + min;
 	}
 
 	static glm::vec3 randomVec3(float min, float max) {

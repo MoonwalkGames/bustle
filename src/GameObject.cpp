@@ -255,8 +255,6 @@ void GameObject::seek(glm::vec3 target, float movementSpeed, float turnSpeed)
 	glm::vec3 direction = target - position;
 	rotation.y = DH::radToDeg(atan2(direction.z, direction.x));
 	
-	printf("Angle: %f Direction vector: %f %f %f\n", rotation.y, direction.x, direction.y, direction.z);
-
 	//Checks it the object has reached its target using an arbitrarily small value. If it has, returns since there is nothing left to do. If it hasn't moves the object using the properly scaled direction vector
 	if (direction.length() == 0.0f)
 		return;
@@ -305,6 +303,7 @@ void GameObject::update(float dt)
 	}*/
 		
 	//Checks if there is a mesh assigned before tyring to draw it
+	glColor4f(colour.x, colour.y, colour.z, colour.w);
 	if (mesh != 0)
 	{
 		//Checks if there is a texture, if there is draws the mesh with texture coordinates too

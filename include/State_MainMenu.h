@@ -6,6 +6,8 @@
 #include "Passenger.h"
 #include "Player.h"
 #include "Sprite.h"
+#include "Particle.h"
+
 class State_MainMenu : public GameState
 {
 public:
@@ -97,5 +99,7 @@ private:
 	int currentSelection = 0;
 	MController controller;
 	float timeSinceLastInput;
+
+	ParticleEmitter emitter;
 };
 #endif

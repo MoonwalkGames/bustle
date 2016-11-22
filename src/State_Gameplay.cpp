@@ -282,7 +282,6 @@ void State_Gameplay::update()
 	if (inIntro)
 	{
 		FOV = MathHelper::LERP(FOV, 1.0f, DH::getDeltaTime());
-		printf("FOV: %f\n", FOV);
 		gluPerspective(FOV, DH::getAspectRatio(), 0.1f, 10000.0f);
 		cameraPos = MathHelper::LERP(cameraPos, introLerpTarget, DH::getDeltaTime() * 2.0f);
 		gluLookAt(cameraPos.x, cameraPos.y, cameraPos.z, 0, 1, 0, 0, 1, 0);
