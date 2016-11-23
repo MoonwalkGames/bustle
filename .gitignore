@@ -21,3 +21,4 @@ build/GameState.obj
 build/Kinematic.obj
 build/Mesh.obj
 build/Texture2D.obj
+build/Collision.obj

@@ -245,7 +245,7 @@ Collision CollisionHandler::TRAFFIC_LIGHTvTRAFFIC_LIGHT(const Player& a, const P
 			switch (a.getStage())
 			{
 			case firstStage:
-				aExternalStart += (BUS_WIDTH * 0.5f) * aForwardNormal;
+				aExternalStart += (BUS_WIDTH * 0.75f) * aForwardNormal;
 				
 				break;
 
