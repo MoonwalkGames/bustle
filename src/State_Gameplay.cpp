@@ -781,7 +781,7 @@ void State_Gameplay::updateStages()
 			buses[i].setTurningSpeed(10.0f);
 			fillbar[i].setActiveFrame(2);
 		}
-		else if (points < 25)
+		else if (points < 20)
 		{
 			buses[i].setStage(secondStage);
 			buses[i].setMesh(MESH_BUS1);
@@ -789,7 +789,7 @@ void State_Gameplay::updateStages()
 			buses[i].setTurningSpeed(0.85f);
 			fillbar[i].setActiveFrame(4);
 		}
-		else if (points < 35)
+		else if (points < 30)
 		{
 			buses[i].setStage(thirdStage);
 			buses[i].setMesh(MESH_BUS2);
@@ -797,7 +797,7 @@ void State_Gameplay::updateStages()
 			buses[i].setTurningSpeed(0.75f);
 			fillbar[i].setActiveFrame(6);
 		}
-		else if (points < 50)
+		else if (points < 40)
 		{
 			buses[i].setStage(fourthStage);
 			buses[i].setMesh(MESH_BUS3);
@@ -805,7 +805,7 @@ void State_Gameplay::updateStages()
 			buses[i].setTurningSpeed(0.6f);
 			fillbar[i].setActiveFrame(8);
 		}
-		else if (points >= 50)
+		else if (points >= 40)
 		{
 			buses[i].setStage(fifthStage);
 			buses[i].setMesh(MESH_BUS4);
