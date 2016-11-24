@@ -83,13 +83,12 @@ private:
 	MController controllers[4];
 	std::vector<Passenger> passengers;
 	glm::vec3 cameraPos;
+	glm::vec3 rotatedCameraPos;
 	glm::vec3 gameplayCameraPos;
-	glm::vec3 introLerpTarget;
 	bool debugDrawing;
 	float timeSinceLastDataPush;
 	bool inIntro = true;
 	bool firstPerson = false;
-	float FOV;
 	float rotation;
 	//UI
 	float timeStart;

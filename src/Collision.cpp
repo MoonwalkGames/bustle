@@ -223,7 +223,7 @@ Collision CollisionHandler::TRAFFIC_LIGHTvTRAFFIC_LIGHT(const Player& a, const P
 				bubbleResult = CollisionHandler::SPHEREvSPHERE(aTrafficLight.bubbles[i], bTrafficLight.bubbles[j]);
 				if (bubbleResult.status)
 				{
-					result.status = true;
+			result.status = true;
 					//printf("Granular check passed! %d vs %d! \n", i, j);
 				
 					result.penetration += bubbleResult.penetration;
@@ -231,7 +231,7 @@ Collision CollisionHandler::TRAFFIC_LIGHTvTRAFFIC_LIGHT(const Player& a, const P
 				}
 			}
 		}
-		if (result.penetration != glm::vec3(0))
+		if (result.penetration != glm::vec3(0.0f))
 		{
 
 			//raycast and collide
@@ -245,7 +245,7 @@ Collision CollisionHandler::TRAFFIC_LIGHTvTRAFFIC_LIGHT(const Player& a, const P
 			switch (a.getStage())
 			{
 			case firstStage:
-				aExternalStart += (BUS_WIDTH * 0.75f) * aForwardNormal;
+				aExternalStart += (BUS_WIDTH * 0.5f) * aForwardNormal;
 				
 				break;
 
@@ -265,7 +265,7 @@ Collision CollisionHandler::TRAFFIC_LIGHTvTRAFFIC_LIGHT(const Player& a, const P
 				
 				break;
 			}
-			aExternalEnd = aExternalStart + aForwardNormal * BUS_WIDTH;
+			aExternalEnd = aExternalStart + aForwardNormal * BUS_WIDTH * 1.5f;
 			//b internal line segment
 			glm::vec3 bInternalStart = b.getPosition();
 			glm::vec3 bInternalEnd = b.getPosition();

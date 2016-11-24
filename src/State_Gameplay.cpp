@@ -16,7 +16,6 @@ void State_Gameplay::load()
 	//Seed the random number generator
 	rotation = 0;
 	srand(time(0));
-	FOV = 60.0f;
 	//Init the level mesh
 	levelPlay = GameObject(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_LEVELPLAY, TEX_LEVELPLAY);
 	levelSidewalk1 = GameObject(glm::vec3(25.5f, 0.0f, 25.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_SIDEWALK, TEX_SIDEWALK);
@@ -120,9 +119,8 @@ void State_Gameplay::load()
 		controllers[i] = MController(i);
 
 	//Delete later but allows us to control the camera position
-	cameraPos = glm::vec3(10.0f, 1000.0f, -10.0f);
-	gameplayCameraPos = glm::vec3(68.0f, 70.0f, -68.0f);
-	introLerpTarget = glm::vec3(30.0f, 30.0f, -30.0f);
+	cameraPos = glm::vec3(0.0f, 1000.0f, 0.0f);
+	gameplayCameraPos = glm::vec3(68.0f, 75.0f, -68.0f);
 	
 	//Set up the camera
 	DH::aspectRatio = 16.0f / 9.0f;
@@ -303,23 +301,22 @@ void State_Gameplay::update()
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	//glOrtho(-60.0f, 60.0f, -60.0f, 60.0f, 0.1f, 1000.0f);
+	glOrtho(-60.0f * DH::getOrthoStretch(), 60.0f * DH::getOrthoStretch(), -60.0f, 60.0f, -5.0f, 7000.0f);
 	if (inIntro)
 	{
-		FOV = MathHelper::LERP(FOV, 1.0f, DH::getDeltaTime());
-		gluPerspective(FOV, DH::getAspectRatio(), 0.1f, 10000.0f);
-		cameraPos = MathHelper::LERP(cameraPos, introLerpTarget, DH::getDeltaTime() * 2.0f);
-		gluLookAt(cameraPos.x, cameraPos.y, cameraPos.z, 0, 1, 0, 0, 1, 0);
-		introLerpTarget = MathHelper::LERP(introLerpTarget, glm::vec3(500.0f, 500.0f, -500.0f), DH::deltaTime * 2.0f);
-		if (abs(cameraPos.x - introLerpTarget.x) < 5.0f)
-			if (abs(cameraPos.y - introLerpTarget.y) < 5.0f)
-				if (abs(cameraPos.z - introLerpTarget.z) < 5.0f)
+		cameraPos = MathHelper::LERP(cameraPos, gameplayCameraPos, DH::getDeltaTime() * 2.0f);
+		//rotatedCameraPos = glm::rotate(cameraPos, MathHelper::LERP(3.0f, 0.0f, DH::getDeltaTime()), glm::vec3(0.0f, 1.0f, 0.0f));
+		gluLookAt(cameraPos.x, cameraPos.y, cameraPos.z, -25, 0, 25, 0, 1, 0);
+		if (abs(cameraPos.x - gameplayCameraPos.x) < 0.1f)
+			if (abs(cameraPos.y - gameplayCameraPos.y) < 0.1f)
+				if (abs(cameraPos.z - gameplayCameraPos.z) < 0.1f)
 					inIntro = false;
 	}
 	else if(!firstPerson)
 	{
-		glOrtho(-60.0f * DH::getOrthoStretch(), 60.0f * DH::getOrthoStretch(), -60.0f, 60.0f, -5.0f, 7000.0f);
+		
 		//gluLookAt(gameplayCameraPos.x, gameplayCameraPos.y, gameplayCameraPos.z, 0, 0, 0, 0, 1, 0);
-		gluLookAt(gameplayCameraPos.x, gameplayCameraPos.y + 5.0f, gameplayCameraPos.z, -25, 0, 25, 0, 1, 0);
+		gluLookAt(gameplayCameraPos.x, gameplayCameraPos.y, gameplayCameraPos.z, -25, 0, 25, 0, 1, 0);
 	}
 
 	glm::vec3 targetDirection;

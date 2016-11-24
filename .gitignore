@@ -22,3 +22,5 @@ build/Kinematic.obj
 build/Mesh.obj
 build/Texture2D.obj
 build/Collision.obj
+*.csv
+res/debug/lastRoundScore.txt
