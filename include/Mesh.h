@@ -77,7 +77,7 @@ struct Face
 	void draw(bool textured) const
 	{
 		//Pass the face normal to OpenGl for lighting
-		glNormal3f(faceNormal.x, faceNormal.y, faceNormal.z);
+		//glNormal3f(faceNormal.x, faceNormal.y, faceNormal.z);
 
 		for (int i = 0; i < 3; i++)
 		{
@@ -87,6 +87,9 @@ struct Face
 
 			//Passes the vertices to OpenGl
 			glVertex3f(vertices[i].position.x, vertices[i].position.y, vertices[i].position.z);
+
+			//Pass the normals to OpenGL for lighting
+			glNormal3f(vertices[i].normal.x, vertices[i].normal.y, vertices[i].normal.z);
 		}
 	}
 

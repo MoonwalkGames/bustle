@@ -20,6 +20,9 @@ public:
 	void drawCrown();
 	void drawUI();
 	void drawBuses();
+	glm::vec3 getClockHandEndPosition(float angle);
+	void enableLighting();
+
 private:
 	GameObject levelPlay;
 	GameObject levelSidewalk1;
@@ -89,6 +92,7 @@ private:
 	float FOV;
 	float rotation;
 	//UI
+	float timeStart;
 	float timeLeft;
 	std::vector<Sprite> timer;
 	Sprite billboards[4];
@@ -96,5 +100,8 @@ private:
 	Sprite fillbarshade[4];
 	Sprite fillbarbackground[4];
 	Sprite billboardlight[4];
+
+	Sprite clock[3];
+	std::vector<glm::vec3> clockHandPositions;
 };
 #endif

@@ -91,6 +91,27 @@ void State_Gameplay::load()
 	busTargets[2] = buses[2].getPosition();
 	busTargets[3] = buses[3].getPosition();
 
+	//Init the clock
+	clock[0] = Sprite(TEX_CLOCK, 2, 1);
+	clock[1] = Sprite(TEX_CLOCK, 2, 1);
+	clock[2] = Sprite(TEX_CLOCK, 2, 1);
+
+	clock[0].setActiveFrame(0);
+	clock[1].setActiveFrame(1);
+	clock[2].setActiveFrame(1);
+
+	clock[0].setPosition(-50.0f, 10.0f, 50.0f); 
+	clock[1].setPosition(-50.0f, 10.0f, 49.98f);
+	clock[2].setPosition(-50.0f, 10.0f, 49.95f);
+
+	clock[0].setScale(15.0f, 15.0f, 15.0f);
+	clock[1].setScale(10.0f, 15.0f, 15.0f);
+	clock[2].setScale(13.0f, 10.0f, 15.0f);
+
+	clock[0].setRotationY(135.0f);
+	clock[1].setRotationY(135.0f);
+	clock[2].setRotationY(135.0f);
+	
 	//Init the crown
 	crown = &AM::assets()->getMesh(MESH_CROWN);
 
@@ -117,7 +138,8 @@ void State_Gameplay::load()
 
 	// ----- Set up the UI ------ ///
 	//set up the timer
-	timeLeft = 120.0f;
+	timeStart = 30.0f;
+	timeLeft = timeStart;
 	timer = Sprite::createTextVector(TEX_FONT, -5.0f, -10.0f, 5.0f, 5.0f, "0:00");
 
 	//Set up the billboards
@@ -248,6 +270,8 @@ void State_Gameplay::load()
 	//Initialize the data & analytics
 	DBG::debug()->addData(getTimeOnState(), buses);
 	DBG::debug()->addScoreData(getTimeOnState(), buses);
+
+	enableLighting();
 }
 
 void State_Gameplay::update()
@@ -294,7 +318,8 @@ void State_Gameplay::update()
 	else if(!firstPerson)
 	{
 		glOrtho(-60.0f * DH::getOrthoStretch(), 60.0f * DH::getOrthoStretch(), -60.0f, 60.0f, -5.0f, 7000.0f);
-		gluLookAt(gameplayCameraPos.x, gameplayCameraPos.y, gameplayCameraPos.z, 0, 0, 0, 0, 1, 0);
+		//gluLookAt(gameplayCameraPos.x, gameplayCameraPos.y, gameplayCameraPos.z, 0, 0, 0, 0, 1, 0);
+		gluLookAt(gameplayCameraPos.x, gameplayCameraPos.y + 5.0f, gameplayCameraPos.z, -25, 0, 25, 0, 1, 0);
 	}
 
 	glm::vec3 targetDirection;
@@ -562,6 +587,45 @@ void State_Gameplay::update()
 		roadblock5.update(DH::getDeltaTime());
 		roadblock6.update(DH::getDeltaTime());
 
+		//Rotate the clock hand based on the time left
+		float startRot = 90.0f;
+		float endRot = 450.0f;
+		float endRot2 = 4410.0f;
+		float clockRot_T = timeLeft / timeStart;
+		glm::vec3 colorFinal = glm::vec3(0.99f, 0.24f, 0.051f);
+
+		clock[1].setRotationZ(MathHelper::LERP(startRot, endRot, clockRot_T));
+		clock[2].setRotationZ(MathHelper::LERP(startRot, endRot2, clockRot_T));
+
+		//Add the clock hand position to the list
+		clockHandPositions.push_back(getClockHandEndPosition(clock[1].getRotation().z));
+
+		/*glPointSize(5.0f);
+		glColor4f(1.0f, 0.0f, 0.0f, 0.33f);
+		glBegin(GL_LINES);
+		for (int i = 0; i < clockHandPositions.size(); i++)
+		{
+			glVertex3f(clock[1].getPosition().x, clock[1].getPosition().y, clock[1].getPosition().z);
+			glVertex3f(clockHandPositions[i].x, clockHandPositions[i].y, clockHandPositions[i].z);
+		}
+		glEnd();
+		glColor3f(1.0f, 1.0f, 1.0f);*/
+
+		//Draw the clock hand and the clock face
+		if (clockRot_T <= 0.25f)
+		{
+			//Make the clock blink red if the time is almost up
+			if ((int)(clockRot_T * 100) % 2 == 0)
+				glColor3f(0.99f, 0.24f, 0.051f);
+		}
+		/*glm::vec3 clockColour = MathHelper::LERP(glm::vec3(1.0f), colorFinal, 1 - clockRot_T);
+		glColor3f(clockColour.x, clockColour.y, clockColour.z);*/
+		clock[0].update(DH::deltaTime);
+		glColor3f(1.0f, 1.0f, 1.0f);
+
+		clock[1].update(DH::deltaTime);
+		clock[2].update(DH::deltaTime);
+
 		//Update and draw the passengers
 
 		AM::assets()->bindTexture(TEX_PASSENGER);
@@ -673,7 +737,6 @@ void State_Gameplay::update()
 	//Detect collision HERE^
 	
 	//If there's a leader, draw the crown
-
 	updateCrownedPlayer();
 	drawCrown();
 
@@ -781,7 +844,7 @@ void State_Gameplay::updateStages()
 			buses[i].setTurningSpeed(10.0f);
 			fillbar[i].setActiveFrame(2);
 		}
-		else if (points < 20)
+		else if (points < 25)
 		{
 			buses[i].setStage(secondStage);
 			buses[i].setMesh(MESH_BUS1);
@@ -789,7 +852,7 @@ void State_Gameplay::updateStages()
 			buses[i].setTurningSpeed(0.85f);
 			fillbar[i].setActiveFrame(4);
 		}
-		else if (points < 30)
+		else if (points < 35)
 		{
 			buses[i].setStage(thirdStage);
 			buses[i].setMesh(MESH_BUS2);
@@ -797,7 +860,7 @@ void State_Gameplay::updateStages()
 			buses[i].setTurningSpeed(0.75f);
 			fillbar[i].setActiveFrame(6);
 		}
-		else if (points < 40)
+		else if (points < 50)
 		{
 			buses[i].setStage(fourthStage);
 			buses[i].setMesh(MESH_BUS3);
@@ -805,7 +868,7 @@ void State_Gameplay::updateStages()
 			buses[i].setTurningSpeed(0.6f);
 			fillbar[i].setActiveFrame(8);
 		}
-		else if (points >= 40)
+		else if (points >= 50)
 		{
 			buses[i].setStage(fifthStage);
 			buses[i].setMesh(MESH_BUS4);
@@ -896,7 +959,7 @@ void State_Gameplay::drawUI()
 		timerString = std::to_string(int(timeLeft) / 60) + ":" + std::to_string(int(timeLeft) % 60);
 
 	timer = Sprite::changeTextVector(TEX_FONT, timer, timerString);
-	Sprite::drawTextVector(timer, DH::getDeltaTime());
+	//Sprite::drawTextVector(timer, DH::getDeltaTime());
 }
 
 void State_Gameplay::drawBuses()
@@ -956,4 +1019,82 @@ void State_Gameplay::drawBuses()
 		AM::assets()->bindTexture(TEX_BUS4_GREEN);
 
 	buses[3].update(DH::getDeltaTime());
+
+	//Update the light
+	static float lightPosX = 0.0f;
+	static float lightPosY = 0.0f;
+	static float lightPosZ = 0.0f;
+	static GameObject light = GameObject();
+
+	if (DH::getKey('j'))
+		lightPosX++;
+	else if (DH::getKey('l'))
+		lightPosX--;
+
+	if (DH::getKey('i'))
+		lightPosZ++;
+	else if (DH::getKey('k'))
+		lightPosZ--;
+
+	if (DH::getKey('o'))
+		lightPosY++;
+	else if (DH::getKey('u'))
+		lightPosY--;
+
+	cout << "LIGHT POS: " << lightPosX << "\t" << lightPosY << "\t" << lightPosZ << endl;
+
+	glm::vec3 lightPointA = glm::vec3(0.0f, 2.5f, -250.0f);
+	glm::vec3 lightPointB = glm::vec3(0.0f, 35.0f, -100.0f);
+	glm::vec3 lightPointC = glm::vec3(0.0f, 35.0f, 100.0f);
+	glm::vec3 lightPointD = glm::vec3(0.0f, 2.5f, 250.0f);
+	glm::vec3 currentLightLocation = MathHelper::catmull(lightPointA, lightPointB, lightPointC, lightPointD, timeLeft / timeStart);
+	GLfloat lightPosition[] = { currentLightLocation.x, currentLightLocation.y, currentLightLocation.z, 1.0f };
+	glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
+
+	glm::vec3 lightColourA = glm::vec3(0.98f, 0.945f, 0.5f);
+	glm::vec3 lightColourB = glm::vec3(0.17f, 0.19f, 0.46f);
+	glm::vec3 currentLightColour = MathHelper::LERP(lightColourA, lightColourB, 1 - timeLeft / timeStart);
+	GLfloat mat_diffuse[] = { currentLightColour.x, currentLightColour.y, currentLightColour.z, 1.0f };
+	//glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, mat_diffuse);
+	//GLfloat light_position[] = { lightPosX, lightPosY, lightPosZ, 1.0 };
+	//glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+	//light.setPosition(light_position[0], light_position[1], light_position[2]);
+	//light.update(DH::deltaTime);
 }
+
+glm::vec3 State_Gameplay::getClockHandEndPosition(float angle)
+{
+	cout << angle << endl;
+
+	glm::vec3 handPosition = glm::vec3(0.0f);
+	glm::vec3 handBaseEndPosition = glm::vec3(1, 0, 0);
+
+	glm::vec3 transformedEndPosition = clock[1].getLocalToWorldMatrix() * glm::vec4(handBaseEndPosition, 1.0f);
+
+	return transformedEndPosition;
+}
+
+void State_Gameplay::enableLighting()
+{
+	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+	GLfloat mat_shininess[] = { 50.0 };
+	GLfloat mat_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
+	GLfloat mat_ambient[] = { 1.0, 1.0, 1.0, 1.0 };
+
+	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+	glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+
+	GLfloat light_position[] = { -250.0f, 10.0f, 0.0f, 1.0 };
+	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+
+	glShadeModel(GL_SMOOTH);
+
+	glEnable(GL_COLOR_MATERIAL); // final polygon color will be based on glColor and glMaterial
+}
+

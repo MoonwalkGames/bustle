@@ -204,7 +204,7 @@ glm::mat4 GameObject::getInverseTransformMatrix() const
 	glm::mat3 rotMatrix_X = glm::rotate(DH::degToRad(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
 	glm::mat3 rotMatrix_Y = glm::rotate(DH::degToRad(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
 	glm::mat3 rotMatrix_Z = glm::rotate(DH::degToRad(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-	glm::mat3 rotMatrixFull = rotMatrix_Z * rotMatrix_Y * rotMatrix_X;
+	glm::mat3 rotMatrixFull = rotMatrix_X * rotMatrix_Y * rotMatrix_Z;
 	glm::mat3 rotMatrixFullTransposed = glm::transpose(rotMatrixFull);
 	glm::vec3 rotatedNegativeTranslationVector = rotMatrixFull * -position;
 
@@ -281,7 +281,7 @@ void GameObject::update(float dt)
 	glm::mat4 rotMatrix_X = glm::rotate(DH::degToRad(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
 	glm::mat4 rotMatrix_Y = glm::rotate(DH::degToRad(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
 	glm::mat4 rotMatrix_Z = glm::rotate(DH::degToRad(rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-	glm::mat4 fullRotationMatrix = rotMatrix_Z * rotMatrix_Y * rotMatrix_X;
+	glm::mat4 fullRotationMatrix = rotMatrix_X * rotMatrix_Y * rotMatrix_Z;
 
 	//Create the translation matrix
 	glm::mat4 translationMatrix = glm::translate(position);

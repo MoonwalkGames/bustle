@@ -109,7 +109,7 @@ void State_MainMenu::load()
 	//fillbar background
 	fillbarbackground[0] = Sprite(TEX_FILLBAR, 1, 10);
 	fillbarbackground[0].setActiveFrame(1);
-	fillbarbackground[0].setPosition(29.0f, 19.7f, 51.49f);
+	fillbarbackground[0].setPosition(29.0f, 19.7f, 51.55f);
 	fillbarbackground[0].setRotation(0.0f, 180.0f, 0.0f);
 	fillbarbackground[0].setScale(27.5f, 7.5f, 1.0f);
 
@@ -143,7 +143,7 @@ void State_MainMenu::load()
 	//fillbar background
 	fillbarbackground[1] = Sprite(TEX_FILLBAR, 1, 10);
 	fillbarbackground[1].setActiveFrame(1);
-	fillbarbackground[1].setPosition(-21.0f, 19.7f, 51.49f);
+	fillbarbackground[1].setPosition(-21.0f, 19.7f, 51.55f);
 	fillbarbackground[1].setRotation(0.0f, 180.0f, 0.0f);
 	fillbarbackground[1].setScale(27.5f, 7.5f, 1.0f);
 
@@ -171,7 +171,7 @@ void State_MainMenu::load()
 	//fillbar background
 	fillbarbackground[2] = Sprite(TEX_FILLBAR, 1, 10);
 	fillbarbackground[2].setActiveFrame(1);
-	fillbarbackground[2].setPosition(-50.99f, 19.7f, 20.5);
+	fillbarbackground[2].setPosition(-51.05f, 19.7f, 20.5);
 	fillbarbackground[2].setRotation(0.0f, 90.0f, 0.0f);
 	fillbarbackground[2].setScale(27.5f, 7.5f, 1.0f);
 
@@ -199,7 +199,7 @@ void State_MainMenu::load()
 	//fillbar background
 	fillbarbackground[3] = Sprite(TEX_FILLBAR, 1, 10);
 	fillbarbackground[3].setActiveFrame(1);
-	fillbarbackground[3].setPosition(-52.59f, 19.7f, -28.0f);
+	fillbarbackground[3].setPosition(-52.65f, 19.7f, -28.0f);
 	fillbarbackground[3].setRotation(0.0f, 90.0f, 0.0f);
 	fillbarbackground[3].setScale(27.5f, 7.5f, 1.0f);
 
@@ -245,13 +245,6 @@ void State_MainMenu::load()
 	skyBox = GameObject(MESH_SKYBOX, TEX_SKYBOX);
 	skyBox.setRotationY(90.0f);
 	skyBox.setScale(150.0f, 150.0f, 150.0f);
-
-	emitter = ParticleEmitter(glm::vec3(0.0f, 30.0f, 0.0f), 30);
-	emitter.setParticleColourRange(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f), glm::vec4(1.0f, 1.0f, 1.0f, 1.0f));
-	emitter.setParticleMesh(MESH_CROWN);
-	emitter.setParticleVelRange(glm::vec3(-25.0f, 10.0f, -25.0f), glm::vec3(25.0f, 15.0f, 25.0f));
-	emitter.setParticleLifeRange(5.0f, 10.0f);
-	emitter.applyParticleValues();
 }
 
 void State_MainMenu::update()
@@ -270,8 +263,6 @@ void State_MainMenu::update()
 	gluPerspective(75.0f, DH::getAspectRatio(), 0.1f, 10000.0f);
 	gluLookAt(menuCameraPos.x, menuCameraPos.y, menuCameraPos.z, 0, 1, 0, 0, 1, 0);
 	menuCameraPos = glm::rotate(menuCameraPos, degToRad * 0.05f, glm::vec3(0, 1, 0));
-
-	emitter.update(DH::deltaTime);
 
 	//Moves the bus targets based on steering behaviors
 	for (int i = 0; i < 4; i++)
@@ -691,7 +682,7 @@ void State_MainMenu::drawUI()
 
 	//Draw billboards in world spcae
 	for (int i = 0; i < 4; i++) {
-		billboards[i].update(DH::deltaTime);
+		//billboards[i].update(DH::deltaTime);
 		fillbarbackground[i].update(DH::deltaTime);
 		switch (i) {
 		case 0:

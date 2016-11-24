@@ -99,7 +99,5 @@ private:
 	int currentSelection = 0;
 	MController controller;
 	float timeSinceLastInput;
-
-	ParticleEmitter emitter;
 };
 #endif

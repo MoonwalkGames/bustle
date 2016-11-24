@@ -23,6 +23,40 @@ namespace MathHelper
 		return float((currentPoint - p1) / (p2 - p1));
 	}
 
+	// Returns a point between p1 and p2 - provided by Mike
+	template <typename T>
+	T catmull(T p0, T p1, T p2, T p3, float t)
+	{
+		return	((p1 * 2.0f) + (-p0 + p2) * t +
+			((p0 * 2.0f) - (p1 * 5.0f) + (p2 * 4.0f) - p3) * (t * t) +
+			(-p0 + (p1 * 3.0f) - (p2 * 3.0f) + p3) * (t * t * t)) * 0.5f;
+	}
+
+	//// Bezier - Different variations on the algorithm that allow for recursion...basically, each step up just calls the lower case - provided by Mike
+	//Base Case
+	template <typename T>
+	T bezier(T p0, float t) {
+		return p0;
+	}
+
+	//Two points (basically just one LERP) - provided by Mike
+	template<typename T>
+	T bezier(T p0, T p1, float t) {
+		return Math::lerp(Math::bezier(p0, t), Math::bezier(p1, t), t);
+	}
+
+	//Three points (basically two LERP's) - provided by Mike
+	template<typename T>
+	T bezier(T p0, T p1, T p2, float t) {
+		return Math::lerp(Math::bezier(p0, p1, t), Math::bezier(p1, p2, t), t);
+	}
+
+	//Four points - provided by Mike
+	template <typename T>
+	T bezier(T p0, T p1, T p2, T p3, float t) {
+		return Math::lerp(Math::bezier(p0, p1, p2, t), Math::bezier(p1, p2, p3, t), t);
+	}
+
 	static float randomFloat(float min, float max)
 	{
 		if (min > max)

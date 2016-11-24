@@ -91,7 +91,7 @@ void Sprite::update(float dt)
 	glm::mat4 rotMatrix_X = glm::rotate(degToRad * rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
 	glm::mat4 rotMatrix_Y = glm::rotate(degToRad * rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
 	glm::mat4 rotMatrix_Z = glm::rotate(degToRad * rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
-	glm::mat4 fullRotationMatrix = rotMatrix_Z * rotMatrix_Y * rotMatrix_X;
+	glm::mat4 fullRotationMatrix = rotMatrix_X * rotMatrix_Y * rotMatrix_Z;
 
 	//Create the translation matrix
 	glm::mat4 translationMatrix = glm::translate(position);
@@ -107,6 +107,9 @@ void Sprite::update(float dt)
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, texture->getTextureID());
 
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_LIGHTING);
+
 	//Draw the sprite
 	glBegin(GL_QUADS);
 	{
@@ -116,6 +119,9 @@ void Sprite::update(float dt)
 		glTexCoord2f(activeFrame.uMin, activeFrame.vMax); glVertex3f(-0.5f, 0.5f, 0.0f);
 	}
 	glEnd();
+
+	glEnable(GL_LIGHTING);
+	glEnable(GL_CULL_FACE);
 
 	if (DBG::debug()->getVisualDebugEnabled())
 		debugDraw(dt);
