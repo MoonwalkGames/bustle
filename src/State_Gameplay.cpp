@@ -100,7 +100,7 @@ void State_Gameplay::load()
 	clock[1].setActiveFrame(1);
 	clock[2].setActiveFrame(1);
 
-	clock[0].setPosition(-50.0f, 10.0f, 50.0f); 
+	clock[0].setPosition(-50.0f, 10.0f, 50.0f);
 	clock[1].setPosition(-50.0f, 10.0f, 49.98f);
 	clock[2].setPosition(-50.0f, 10.0f, 49.95f);
 
@@ -111,7 +111,7 @@ void State_Gameplay::load()
 	clock[0].setRotationY(135.0f);
 	clock[1].setRotationY(135.0f);
 	clock[2].setRotationY(135.0f);
-	
+
 	//Init the crown
 	crown = &AM::assets()->getMesh(MESH_CROWN);
 
@@ -123,14 +123,14 @@ void State_Gameplay::load()
 	cameraPos = glm::vec3(10.0f, 1000.0f, -10.0f);
 	gameplayCameraPos = glm::vec3(68.0f, 70.0f, -68.0f);
 	introLerpTarget = glm::vec3(30.0f, 30.0f, -30.0f);
-	
+
 	//Set up the camera
 	DH::aspectRatio = 16.0f / 9.0f;
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(-75.0f, 75.0f, -75.0f, 75.0f, 0.1f, 10000.0f);
 	gluLookAt(cameraPos.x, cameraPos.y, cameraPos.z, 0, 0, 0, 0, 1, 0);
-	
+
 	//Enable visual debug mode
 	DBG::debug()->setDebugEnabled(true);
 	DBG::debug()->setVisualDebugEnabled(false);
@@ -138,7 +138,7 @@ void State_Gameplay::load()
 
 	// ----- Set up the UI ------ ///
 	//set up the timer
-	timeStart = 30.0f;
+	timeStart = 1000.0f;
 	timeLeft = timeStart;
 	timer = Sprite::createTextVector(TEX_FONT, -5.0f, -10.0f, 5.0f, 5.0f, "0:00");
 
@@ -276,7 +276,7 @@ void State_Gameplay::load()
 
 void State_Gameplay::update()
 {
-//	static float FOV = 75.0f;
+	//	static float FOV = 75.0f;
 	if (DH::getKey('h'))
 		GM::game()->setActiveState(STATE_GAMEPLAY);
 
@@ -298,7 +298,7 @@ void State_Gameplay::update()
 		DBG::debug()->addData(getTimeOnState(), buses);
 		DBG::debug()->addScoreData(getTimeOnState(), buses);
 	}
-		
+
 	//Set up the camera
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -315,7 +315,7 @@ void State_Gameplay::update()
 				if (abs(cameraPos.z - introLerpTarget.z) < 5.0f)
 					inIntro = false;
 	}
-	else if(!firstPerson)
+	else if (!firstPerson)
 	{
 		glOrtho(-60.0f * DH::getOrthoStretch(), 60.0f * DH::getOrthoStretch(), -60.0f, 60.0f, -5.0f, 7000.0f);
 		//gluLookAt(gameplayCameraPos.x, gameplayCameraPos.y, gameplayCameraPos.z, 0, 0, 0, 0, 1, 0);
@@ -336,15 +336,14 @@ void State_Gameplay::update()
 			//Calculates the vector between the bus and the target
 			glm::vec3 desired = busTargets[i] - buses[i].getPosition();
 
-			//Move target based on controller input if the target is within a certain distance from the controller
-			//if ((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z) < 90.0f)
-			busTargets[i] += (worldRotatedController / 1.5f);
-
+			//******restrain target movement from going too far away
+			if (!((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z) > 90.0f))
+				busTargets[i] += worldRotatedController;
+			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			if (busTargets[i].x > 55.0f)
 				busTargets[i].x = 55.0f;
 			else if (busTargets[i].x < -55.0f)
 				busTargets[i].x = -55.0f;
-
 			if (busTargets[i].z > 55.0f)
 				busTargets[i].z = 55.0f;
 			else if (busTargets[i].z < -55.0f)
@@ -353,19 +352,26 @@ void State_Gameplay::update()
 			glm::vec3 currentForwardVector = buses[i].getForwardVector();
 			desired = busTargets[i] - buses[i].getPosition(); //Calculates the new desired vector since we moved the target
 
-			if (!(controllers[i].lX == 0 && controllers[i].lY == 0))
-				currentForwardVector = MathHelper::LERP(currentForwardVector, desired, DH::getDeltaTime() * buses[i].getTurningSpeed());
-
+			if (controllers[i].lX != 0 && controllers[i].lY != 0 &&(currentForwardVector != desired)) {
+					currentForwardVector = MathHelper::LERP(currentForwardVector, desired, DH::getDeltaTime() * buses[i].getTurningSpeed());
+			}
 			if (desired.x != 0.0f || desired.y != 0.0f || desired.z != 0.0f)
 				buses[i].setForwardVector(currentForwardVector);
 
 			// --- Move the bus --- //
 			//Check if the bus has reached the target. If so, zero out velocity. Only does this if no input on controller
-
-			if (((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z) < 90.0f) && (controllers[i].lX == 0 && controllers[i].lY == 0))
+			if ((controllers[i].lX == 0 && controllers[i].lY == 0))
 				buses[i].setVelocity(0.0f, 0.0f, 0.0f);
+
+
+
 			else//Otherwise, move forward
-				buses[i].setVelocity(glm::normalize(buses[i].getForwardVector()) * buses[i].getMovementSpeed());
+			{
+				float Maxspeed = (((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z)) / 90.0f);
+				if (Maxspeed > 1.0f)
+					Maxspeed = 1.0f;
+				buses[i].setVelocity(glm::normalize(buses[i].getForwardVector()) * (buses[i].getMovementSpeed()*Maxspeed));
+			}
 			//Draw the bus target
 			if (DBG::debug()->getVisualDebugEnabled())
 			{
@@ -470,7 +476,7 @@ void State_Gameplay::update()
 				glViewport(0, 0, DH::windowWidth / 2, DH::windowHeight / 2);
 			else if (i == 3)
 				glViewport(DH::windowWidth / 2, 0, DH::windowWidth / 2, DH::windowHeight / 2);
-			
+
 
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
@@ -685,7 +691,7 @@ void State_Gameplay::update()
 				{
 					if (res.outcome == full_loss)
 					{
-						
+
 					}
 					else if (res.outcome == partial_loss)
 					{
@@ -713,7 +719,7 @@ void State_Gameplay::update()
 						//buses[i].addImpulse(-res.penetration * 1000.0f);
 					}
 				}
-			}			
+			}
 		}
 		//Adding drag
 		//if (buses[i].getVelocity().x != 0.0f && buses[i].getVelocity().y != 0.0f && buses[i].getVelocity().z != 0.0f)
@@ -735,7 +741,7 @@ void State_Gameplay::update()
 		}
 	}
 	//Detect collision HERE^
-	
+
 	//If there's a leader, draw the crown
 	updateCrownedPlayer();
 	drawCrown();
@@ -840,8 +846,8 @@ void State_Gameplay::updateStages()
 		{
 			buses[i].setStage(firstStage);
 			buses[i].setMesh(MESH_BUS0);
-			buses[i].setMovementSpeed(45.0f);
-			buses[i].setTurningSpeed(10.0f);
+			buses[i].setMovementSpeed(55.0f);
+			buses[i].setTurningSpeed(2.0f);
 			fillbar[i].setActiveFrame(2);
 		}
 		else if (points < 25)
@@ -849,7 +855,7 @@ void State_Gameplay::updateStages()
 			buses[i].setStage(secondStage);
 			buses[i].setMesh(MESH_BUS1);
 			buses[i].setMovementSpeed(40.0f);
-			buses[i].setTurningSpeed(0.85f);
+			buses[i].setTurningSpeed(0.7f);
 			fillbar[i].setActiveFrame(4);
 		}
 		else if (points < 35)
@@ -857,7 +863,7 @@ void State_Gameplay::updateStages()
 			buses[i].setStage(thirdStage);
 			buses[i].setMesh(MESH_BUS2);
 			buses[i].setMovementSpeed(35.0f);
-			buses[i].setTurningSpeed(0.75f);
+			buses[i].setTurningSpeed(0.6f);
 			fillbar[i].setActiveFrame(6);
 		}
 		else if (points < 50)
@@ -865,7 +871,7 @@ void State_Gameplay::updateStages()
 			buses[i].setStage(fourthStage);
 			buses[i].setMesh(MESH_BUS3);
 			buses[i].setMovementSpeed(30.0f);
-			buses[i].setTurningSpeed(0.6f);
+			buses[i].setTurningSpeed(0.4f);
 			fillbar[i].setActiveFrame(8);
 		}
 		else if (points >= 50)
@@ -873,7 +879,7 @@ void State_Gameplay::updateStages()
 			buses[i].setStage(fifthStage);
 			buses[i].setMesh(MESH_BUS4);
 			buses[i].setMovementSpeed(25.0f);
-			buses[i].setTurningSpeed(0.45f);
+			buses[i].setTurningSpeed(0.1f);
 			fillbar[i].setActiveFrame(9);
 		}
 	}
@@ -965,16 +971,16 @@ void State_Gameplay::drawUI()
 void State_Gameplay::drawBuses()
 {
 	//Bind correct texture for Player 1
-	if(buses[0].getStage() == firstStage)
-		AM::assets()->bindTexture(TEX_BUS0_RED); 
+	if (buses[0].getStage() == firstStage)
+		AM::assets()->bindTexture(TEX_BUS0_RED);
 	else if (buses[0].getStage() == secondStage)
-		AM::assets()->bindTexture(TEX_BUS1_RED); 
+		AM::assets()->bindTexture(TEX_BUS1_RED);
 	else if (buses[0].getStage() == thirdStage)
-		AM::assets()->bindTexture(TEX_BUS2_RED); 
+		AM::assets()->bindTexture(TEX_BUS2_RED);
 	if (buses[0].getStage() == fourthStage)
-		AM::assets()->bindTexture(TEX_BUS3_RED); 
+		AM::assets()->bindTexture(TEX_BUS3_RED);
 	if (buses[0].getStage() == fifthStage)
-		AM::assets()->bindTexture(TEX_BUS4_RED); 
+		AM::assets()->bindTexture(TEX_BUS4_RED);
 
 	buses[0].update(DH::getDeltaTime());
 
@@ -989,7 +995,7 @@ void State_Gameplay::drawBuses()
 		AM::assets()->bindTexture(TEX_BUS3_BLUE);
 	if (buses[1].getStage() == fifthStage)
 		AM::assets()->bindTexture(TEX_BUS4_BLUE);
-	
+
 	buses[1].update(DH::getDeltaTime());
 
 	//Bind correct texture for Player 3
@@ -1003,7 +1009,7 @@ void State_Gameplay::drawBuses()
 		AM::assets()->bindTexture(TEX_BUS3_YELLOW);
 	if (buses[2].getStage() == fifthStage)
 		AM::assets()->bindTexture(TEX_BUS4_YELLOW);
-	
+
 	buses[2].update(DH::getDeltaTime());
 
 	//Bind correct texture for Player 4
