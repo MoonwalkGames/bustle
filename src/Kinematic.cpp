@@ -225,14 +225,19 @@ void Kinematic::update(float dt)
 	//Resets the acceleration to the constants so impulse can be added back the next frame again
 	acceleration = constantAcceleration;
 
-	//Calls the parent update function which positions the object properly in the scene and then renders it
-	if (DBG::debug()->getVisualDebugEnabled())
-		drawDebug(dt);
-
 	GameObject::update(dt);
 }
 
-void Kinematic::drawDebug(float dt)
+void Kinematic::draw()
+{
+	//Calls the parent update function which positions the object properly in the scene and then renders it
+	if (DBG::debug()->getVisualDebugEnabled())
+		drawDebug();
+
+	GameObject::draw();
+}
+
+void Kinematic::drawDebug()
 {
 	glLoadIdentity();
 	glDisable(GL_TEXTURE_2D);
@@ -259,7 +264,7 @@ void Kinematic::drawDebug(float dt)
 	glColor3f(1.0f, 1.0f, 1.0f);
 	glEnable(GL_TEXTURE_2D);
 
-	GameObject::drawDebug(dt);
+	GameObject::drawDebug();
 }
 
 /*

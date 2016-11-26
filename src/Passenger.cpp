@@ -56,15 +56,20 @@ void Passenger::update(float deltaTime)
 		//flee(something)
 	}
 	
-	if (DBG::debug()->getVisualDebugEnabled())
-		drawDebug(deltaTime);
-
 	Kinematic::update(deltaTime);
 }
 
-void Passenger::drawDebug(float dt)
+void Passenger::draw()
 {
-	Kinematic::drawDebug(dt);
+	if (DBG::debug()->getVisualDebugEnabled())
+		drawDebug();
+
+	Kinematic::draw();
+}
+
+void Passenger::drawDebug()
+{
+	Kinematic::drawDebug();
 }
 
 bool Passenger::getAbleToBePickedUp() const {

@@ -288,20 +288,23 @@ void GameObject::update(float dt)
 
 	//Compiles the transformation together in the correct order: Scale -> Rotate -> Translate (Note the right to left notation)
 	localToWorld = translationMatrix * fullRotationMatrix * scaleMatrix;
+}
 
+void GameObject::draw()
+{
 	//Passes the matrix to OpenGL which automatically applies the transformations
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(glm::value_ptr(localToWorld));
 
 	//Checks if there is a texture assigned before trying to bind it, otherwise temporarily disables textures so it renders with colours
 	/*if (texture != 0)
-		texture->bind();
+	texture->bind();
 	else
 	{
-		glDisable(GL_TEXTURE_2D);
-		glColor4f(colour.x, colour.y, colour.z, colour.w);
+	glDisable(GL_TEXTURE_2D);
+	glColor4f(colour.x, colour.y, colour.z, colour.w);
 	}*/
-		
+
 	//Checks if there is a mesh assigned before tyring to draw it
 	glColor4f(colour.x, colour.y, colour.z, colour.w);
 	if (mesh != 0)
@@ -312,21 +315,21 @@ void GameObject::update(float dt)
 		else
 			mesh->draw(false);
 	}
-		
+
 	//Checks if there is a texture assigned before trying to unbind it, otherwise re-enables textures
 	/*if (texture != 0)
-		texture->unbind();
+	texture->unbind();
 	else
-		glEnable(GL_TEXTURE_2D);*/
+	glEnable(GL_TEXTURE_2D);*/
 
 	if (DBG::debug()->getVisualDebugEnabled())
-		drawDebug(dt);
+		drawDebug();
 
 	//Loads identity for cleanliness
 	glLoadIdentity();
 }
 
-void GameObject::drawDebug(float dt)
+void GameObject::drawDebug()
 {
 	glm::vec3 localX = glm::vec3(1.0f, 0.0f, 0.0f);
 	glm::vec3 localY = glm::vec3(0.0f, 1.0f, 0.0f);

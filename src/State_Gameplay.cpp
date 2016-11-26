@@ -36,6 +36,24 @@ void State_Gameplay::load()
 	backgroundSidewalk4 = GameObject(glm::vec3(-75.5f, 0.0f, -25.5f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_SIDEWALK, TEX_BACKGROUNDSIDEWALK);
 	backgroundSidewalk5 = GameObject(glm::vec3(-75.8f, 0.0f, 75.8f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_SIDEWALK, TEX_BACKGROUNDSIDEWALK);
 
+	levelPlay.update(DH::deltaTime);
+	levelSidewalk1.update(DH::deltaTime);
+	levelSidewalk2.update(DH::deltaTime);
+	levelSidewalk3.update(DH::deltaTime);
+	levelSidewalk4.update(DH::deltaTime);
+	levelBackgroundL.update(DH::deltaTime);
+	levelBackgroundR.update(DH::deltaTime);
+	levelBackgroundM.update(DH::deltaTime);
+	levelUnderground1.update(DH::deltaTime);
+	levelUnderground2.update(DH::deltaTime);
+	levelUnderground3.update(DH::deltaTime);
+	levelUnderground4.update(DH::deltaTime);
+	backgroundSidewalk1.update(DH::deltaTime);
+	backgroundSidewalk2.update(DH::deltaTime);
+	backgroundSidewalk3.update(DH::deltaTime);
+	backgroundSidewalk4.update(DH::deltaTime);
+	backgroundSidewalk5.update(DH::deltaTime);
+
 	//Init the front buildings 
 	baseBuilding1 = GameObject(glm::vec3(40.0f, 8.95f, 60.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(2.0f), MESH_BASEBUILDING, TEX_BASEBUILDING1);
 	baseBuilding2 = GameObject(glm::vec3(10.0f, 8.95f, 60.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(2.0f), MESH_BASEBUILDING, TEX_BASEBUILDING1);
@@ -45,6 +63,15 @@ void State_Gameplay::load()
 	baseBuilding6 = GameObject(glm::vec3(-60.0f, 8.95f, 10.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(2.0f), MESH_BASEBUILDING, TEX_BASEBUILDING3);
 	baseBuilding7 = GameObject(glm::vec3(-60.0f, 8.95f, -10.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(2.0f), MESH_BASEBUILDING, TEX_BASEBUILDING4);
 	baseBuilding8 = GameObject(glm::vec3(-60.0f, 8.95f, -40.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(2.0f), MESH_BASEBUILDING, TEX_BASEBUILDING4);
+
+	baseBuilding1.update(DH::deltaTime);
+	baseBuilding2.update(DH::deltaTime);
+	baseBuilding3.update(DH::deltaTime);
+	baseBuilding4.update(DH::deltaTime);
+	baseBuilding5.update(DH::deltaTime);
+	baseBuilding6.update(DH::deltaTime);
+	baseBuilding7.update(DH::deltaTime);
+	baseBuilding8.update(DH::deltaTime);
 
 	//Init the back buildings
 	baseBuilding9 = GameObject(glm::vec3(40.0f, 8.95f, 70.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(2.0f), MESH_BASEBUILDING, TEX_BASEBUILDING4);
@@ -60,17 +87,40 @@ void State_Gameplay::load()
 	baseBuilding19 = GameObject(glm::vec3(20.0f, 8.95f, 90.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(2.0f), MESH_BASEBUILDING, TEX_BASEBUILDING4);
 	baseBuilding20 = GameObject(glm::vec3(10.0f, 8.95f, 90.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(2.0f), MESH_BASEBUILDING, TEX_BASEBUILDING4);
 
+	baseBuilding9.update(DH::deltaTime);
+	baseBuilding10.update(DH::deltaTime);
+	baseBuilding11.update(DH::deltaTime);
+	baseBuilding12.update(DH::deltaTime);
+	baseBuilding13.update(DH::deltaTime);
+	baseBuilding14.update(DH::deltaTime);
+	baseBuilding15.update(DH::deltaTime);
+	baseBuilding16.update(DH::deltaTime);
+	baseBuilding17.update(DH::deltaTime);
+	baseBuilding18.update(DH::deltaTime);
+	baseBuilding19.update(DH::deltaTime);
+	baseBuilding20.update(DH::deltaTime);
+
 	//Init the billboard buildings
 	boardBuilding1 = GameObject(glm::vec3(25.0f, 5.5f, 60.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_BOARDBUILDING, TEX_BOARDBUILDING1);
 	boardBuilding2 = GameObject(glm::vec3(-25.0f, 5.5f, 60.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_BOARDBUILDING, TEX_BOARDBUILDING2);
 	boardBuilding3 = GameObject(glm::vec3(-60.0f, 5.5f, 25.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_BOARDBUILDING, TEX_BOARDBUILDING3);
 	boardBuilding4 = GameObject(glm::vec3(-60.0f, 5.5f, -25.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_BOARDBUILDING, TEX_BOARDBUILDING4);
 
+	boardBuilding1.update(DH::deltaTime);
+	boardBuilding2.update(DH::deltaTime);
+	boardBuilding3.update(DH::deltaTime);
+	boardBuilding4.update(DH::deltaTime);
+
 	//Init the billboards
 	billboard1 = GameObject(glm::vec3(25.0f, 19.0f, 60.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_BILLBOARD, TEX_BILLBOARD1);
 	billboard2 = GameObject(glm::vec3(-25.0f, 19.0f, 60.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_BILLBOARD, TEX_BILLBOARD2);
 	billboard3 = GameObject(glm::vec3(-60.0f, 19.0f, 25.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_BILLBOARD, TEX_BILLBOARD3);
 	billboard4 = GameObject(glm::vec3(-60.0f, 19.0f, -25.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_BILLBOARD, TEX_BILLBOARD4);
+
+	billboard1.update(DH::deltaTime);
+	billboard2.update(DH::deltaTime);
+	billboard3.update(DH::deltaTime);
+	billboard4.update(DH::deltaTime);
 
 	//Init the roadblocks
 	roadblock1 = GameObject(glm::vec3(50.5f, 1.0f, 60.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_ROADBLOCK, TEX_ROADBLOCK);
@@ -79,6 +129,13 @@ void State_Gameplay::load()
 	roadblock4 = GameObject(glm::vec3(-60.0f, 1.0f, 50.5f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_ROADBLOCK, TEX_ROADBLOCK);
 	roadblock5 = GameObject(glm::vec3(-60.0f, 1.0f, 0.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_ROADBLOCK, TEX_ROADBLOCK);
 	roadblock6 = GameObject(glm::vec3(-60.0f, 1.0f, -50.5f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_ROADBLOCK, TEX_ROADBLOCK);
+
+	roadblock1.update(DH::deltaTime);
+	roadblock2.update(DH::deltaTime);
+	roadblock3.update(DH::deltaTime);
+	roadblock4.update(DH::deltaTime);
+	roadblock5.update(DH::deltaTime);
+	roadblock6.update(DH::deltaTime);
 
 	//Init the buses
 	buses[0] = Player(glm::vec3(-25.0f, 1.75f, -25.0f), glm::vec3(0.0f, -45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_RED);
@@ -111,6 +168,10 @@ void State_Gameplay::load()
 	clock[0].setRotationY(135.0f);
 	clock[1].setRotationY(135.0f);
 	clock[2].setRotationY(135.0f);
+
+	clock[0].update(DH::deltaTime);
+	clock[1].update(DH::deltaTime);
+	clock[2].update(DH::deltaTime);
 	
 	//Init the crown
 	crown = &AM::assets()->getMesh(MESH_CROWN);
@@ -148,6 +209,7 @@ void State_Gameplay::load()
 	billboards[0].setPosition(29.0f, 23.0f, 51.5f);
 	billboards[0].setRotation(0.0f, 180.0f, 0.0f);
 	billboards[0].setScale(30.0f, 15.0f, 1.0f);
+	billboards[0].update(DH::deltaTime);
 
 	//fillbar background
 	fillbarbackground[0] = Sprite(TEX_FILLBAR, 1, 10);
@@ -155,6 +217,7 @@ void State_Gameplay::load()
 	fillbarbackground[0].setPosition(29.0f, 19.7f, 51.49f);
 	fillbarbackground[0].setRotation(0.0f, 180.0f, 0.0f);
 	fillbarbackground[0].setScale(27.5f, 7.5f, 1.0f);
+	fillbarbackground[0].update(DH::deltaTime);
 
 	//fillbar progress
 	fillbar[0] = Sprite(TEX_FILLBAR, 1, 10);
@@ -162,6 +225,7 @@ void State_Gameplay::load()
 	fillbar[0].setPosition(29.0f, 19.7f, 51.48f);
 	fillbar[0].setRotation(0.0f, 180.0f, 0.0f);
 	fillbar[0].setScale(27.5f, 7.5f, 1.0f);
+	fillbar[0].update(DH::deltaTime);
 
 	//fillbar shading
 	fillbarshade[0] = Sprite(TEX_FILLBAR, 1, 10);
@@ -169,6 +233,7 @@ void State_Gameplay::load()
 	fillbarshade[0].setPosition(29.0f, 19.7f, 51.47f);
 	fillbarshade[0].setRotation(0.0f, 180.0f, 0.0f);
 	fillbarshade[0].setScale(27.5f, 7.5f, 1.0f);
+	fillbarshade[0].update(DH::deltaTime);
 
 	//billboardlighting
 	billboardlight[0] = Sprite(TEX_BILLBOARDLIGHTS, 1, 2);
@@ -176,12 +241,14 @@ void State_Gameplay::load()
 	billboardlight[0].setPosition(29.0f, 24.0f, 51.46f);
 	billboardlight[0].setRotation(0.0f, 180.0f, 0.0f);
 	billboardlight[0].setScale(42.0f, 24.0f, 1.0f);
+	billboardlight[0].update(DH::deltaTime);
 
 	//billboard two///////////////////////////////////////////////////////////////////////////////////
 	billboards[1] = Sprite(TEX_BILLBOARD, 1, 1);
 	billboards[1].setPosition(-21.0f, 23.0f, 51.5f);
 	billboards[1].setRotation(0.0f, 180.0f, 0.0f);
 	billboards[1].setScale(30.0f, 15.0f, 1.0f);
+	billboards[1].update(DH::deltaTime);
 
 	//fillbar background
 	fillbarbackground[1] = Sprite(TEX_FILLBAR, 1, 10);
@@ -189,6 +256,7 @@ void State_Gameplay::load()
 	fillbarbackground[1].setPosition(-21.0f, 19.7f, 51.49f);
 	fillbarbackground[1].setRotation(0.0f, 180.0f, 0.0f);
 	fillbarbackground[1].setScale(27.5f, 7.5f, 1.0f);
+	fillbarbackground[1].update(DH::deltaTime);
 
 	//fillbar progress
 	fillbar[1] = Sprite(TEX_FILLBAR, 1, 10);
@@ -196,6 +264,7 @@ void State_Gameplay::load()
 	fillbar[1].setPosition(-21.0f, 19.7f, 51.48f);
 	fillbar[1].setRotation(0.0f, 180.0f, 0.0f);
 	fillbar[1].setScale(27.5f, 7.5f, 1.0f);
+	fillbar[1].update(DH::deltaTime);
 
 	//fillbar shade
 	fillbarshade[1] = Sprite(TEX_FILLBAR, 1, 10);
@@ -203,6 +272,7 @@ void State_Gameplay::load()
 	fillbarshade[1].setPosition(-21.0f, 19.7f, 51.47f);
 	fillbarshade[1].setRotation(0.0f, 180.0f, 0.0f);
 	fillbarshade[1].setScale(19.0f, 5.0f, 1.0f);
+	fillbarshade[1].update(DH::deltaTime);
 
 
 	//billboard three//////////////////////////////////////////////////////////
@@ -210,6 +280,7 @@ void State_Gameplay::load()
 	billboards[2].setPosition(-52.6f, 23.0f, -29.5f);
 	billboards[2].setRotation(0.0f, 90.0f, 0.0f);
 	billboards[2].setScale(30.0f, 15.0f, 1.0f);
+	billboards[2].update(DH::deltaTime);
 
 	//fillbar background
 	fillbarbackground[2] = Sprite(TEX_FILLBAR, 1, 10);
@@ -217,6 +288,7 @@ void State_Gameplay::load()
 	fillbarbackground[2].setPosition(-52.59f, 19.7f, -28.0f);
 	fillbarbackground[2].setRotation(0.0f, 90.0f, 0.0f);
 	fillbarbackground[2].setScale(27.5f, 7.5f, 1.0f);
+	fillbarbackground[2].update(DH::deltaTime);
 
 	//fillbar progress
 	fillbar[2] = Sprite(TEX_FILLBAR, 1, 10);
@@ -224,6 +296,7 @@ void State_Gameplay::load()
 	fillbar[2].setPosition(-52.58f, 19.7f, -28.0f);
 	fillbar[2].setRotation(0.0f, 90.0f, 0.0f);
 	fillbar[2].setScale(27.5f, 7.5f, 1.0f);
+	fillbar[2].update(DH::deltaTime);
 
 	//fillbar shade
 	fillbarshade[2] = Sprite(TEX_FILLBAR, 1, 10);
@@ -231,7 +304,7 @@ void State_Gameplay::load()
 	fillbarshade[2].setPosition(-52.57f, 19.7f, -28.0f);
 	fillbarshade[2].setRotation(0.0f, 90.0f, 0.0f);
 	fillbarshade[2].setScale(27.5f, 7.5f, 1.0f);
-
+	fillbarshade[2].update(DH::deltaTime);
 
 
 	//billboard four///////////////////////////////////////////////////////////////
@@ -239,6 +312,7 @@ void State_Gameplay::load()
 	billboards[3].setPosition(-51.0f, 23.0f, 20.5);
 	billboards[3].setRotation(0.0f, 90.0f, 0.0f);
 	billboards[3].setScale(30.0f, 15.0f, 1.0f);
+	billboards[3].update(DH::deltaTime);
 
 	//fillbar background
 	fillbarbackground[3] = Sprite(TEX_FILLBAR, 1, 10);
@@ -246,6 +320,7 @@ void State_Gameplay::load()
 	fillbarbackground[3].setPosition(-50.99f, 19.7f, 20.5);
 	fillbarbackground[3].setRotation(0.0f, 90.0f, 0.0f);
 	fillbarbackground[3].setScale(27.5f, 7.5f, 1.0f);
+	fillbarbackground[3].update(DH::deltaTime);
 
 	//fillbar progress
 	fillbar[3] = Sprite(TEX_FILLBAR, 1, 10);
@@ -253,6 +328,7 @@ void State_Gameplay::load()
 	fillbar[3].setPosition(-50.98f, 19.7f, 20.5f);
 	fillbar[3].setRotation(0.0f, 90.0f, 0.0f);
 	fillbar[3].setScale(27.5f, 7.5f, 1.0f);
+	fillbar[3].update(DH::deltaTime);
 
 	//fillbar shade
 	fillbarshade[3] = Sprite(TEX_FILLBAR, 1, 10);
@@ -260,12 +336,13 @@ void State_Gameplay::load()
 	fillbarshade[3].setPosition(-50.97f, 19.7f, 20.5f);
 	fillbarshade[3].setRotation(0.0f, 90.0f, 0.0f);
 	fillbarshade[3].setScale(19.0f, 5.0f, 1.0f);
-
+	fillbarshade[3].update(DH::deltaTime);
 
 	//Set up the skybox
 	skyBox = GameObject(MESH_SKYBOX, TEX_SKYBOX);
 	skyBox.setRotationY(90.0f);
 	skyBox.setScale(150.0f, 150.0f, 150.0f);
+	skyBox.update(DH::deltaTime);
 
 	//Initialize the data & analytics
 	DBG::debug()->addData(getTimeOnState(), buses);
@@ -486,106 +563,106 @@ void State_Gameplay::update()
 
 		//Draw the skybox
 		AM::assets()->bindTexture(TEX_SKYBOX);
-		skyBox.update(DH::getDeltaTime());
+		skyBox.draw();
 
 		//Draw the level mmesh
 		AM::assets()->bindTexture(TEX_LEVELPLAY);
-		levelPlay.update(DH::getDeltaTime());
+		levelPlay.draw();
 
 		//Draw the level sidewalk
 		AM::assets()->bindTexture(TEX_SIDEWALK);
-		levelSidewalk1.update(DH::getDeltaTime());
-		levelSidewalk2.update(DH::getDeltaTime());
-		levelSidewalk3.update(DH::getDeltaTime());
-		levelSidewalk4.update(DH::getDeltaTime());
+		levelSidewalk1.draw();
+		levelSidewalk2.draw();
+		levelSidewalk3.draw();
+		levelSidewalk4.draw();
 
 		//Draw the level background
 		AM::assets()->bindTexture(TEX_LEVELBACKGROUND);
-		levelBackgroundL.update(DH::getDeltaTime());
-		levelBackgroundR.update(DH::getDeltaTime());
+		levelBackgroundL.draw();
+		levelBackgroundR.draw();
 
 		//Draw the level background middle
 		AM::assets()->bindTexture(TEX_LEVELBACKGROUNDM);
-		levelBackgroundM.update(DH::getDeltaTime());
+		levelBackgroundM.draw();
 
 		//Draw the level underground
 		AM::assets()->bindTexture(TEX_LEVELUNDERGROUND);
-		levelUnderground1.update(DH::getDeltaTime());
-		levelUnderground2.update(DH::getDeltaTime());
-		levelUnderground3.update(DH::getDeltaTime());
-		levelUnderground4.update(DH::getDeltaTime());
+		levelUnderground1.draw();
+		levelUnderground2.draw();
+		levelUnderground3.draw();
+		levelUnderground4.draw();
 
 		//Draw the level background sidewalk
 		AM::assets()->bindTexture(TEX_BACKGROUNDSIDEWALK);
-		backgroundSidewalk1.update(DH::getDeltaTime());
-		backgroundSidewalk2.update(DH::getDeltaTime());
-		backgroundSidewalk3.update(DH::getDeltaTime());
-		backgroundSidewalk4.update(DH::getDeltaTime());
-		backgroundSidewalk5.update(DH::getDeltaTime());
+		backgroundSidewalk1.draw();
+		backgroundSidewalk2.draw();
+		backgroundSidewalk3.draw();
+		backgroundSidewalk4.draw();
+		backgroundSidewalk5.draw();
 
 		//Draw the base buildings
 		AM::assets()->bindTexture(TEX_BASEBUILDING1);
-		baseBuilding1.update(DH::getDeltaTime());
-		baseBuilding2.update(DH::getDeltaTime());
+		baseBuilding1.draw();
+		baseBuilding2.draw();
 
 		AM::assets()->bindTexture(TEX_BASEBUILDING2);
-		baseBuilding3.update(DH::getDeltaTime());
-		baseBuilding4.update(DH::getDeltaTime());
+		baseBuilding3.draw();
+		baseBuilding4.draw();
 
 		AM::assets()->bindTexture(TEX_BASEBUILDING3);
-		baseBuilding5.update(DH::getDeltaTime());
-		baseBuilding6.update(DH::getDeltaTime());
+		baseBuilding5.draw();
+		baseBuilding6.draw();
 
 		AM::assets()->bindTexture(TEX_BASEBUILDING4);
-		baseBuilding7.update(DH::getDeltaTime());
-		baseBuilding8.update(DH::getDeltaTime());
-		baseBuilding9.update(DH::getDeltaTime());
-		baseBuilding10.update(DH::getDeltaTime());
-		baseBuilding11.update(DH::getDeltaTime());
-		baseBuilding12.update(DH::getDeltaTime());
-		baseBuilding13.update(DH::getDeltaTime());
-		baseBuilding14.update(DH::getDeltaTime());
-		baseBuilding15.update(DH::getDeltaTime());
-		baseBuilding16.update(DH::getDeltaTime());
-		baseBuilding17.update(DH::getDeltaTime());
-		baseBuilding18.update(DH::getDeltaTime());
-		baseBuilding19.update(DH::getDeltaTime());
-		baseBuilding20.update(DH::getDeltaTime());
+		baseBuilding7.draw();
+		baseBuilding8.draw();
+		baseBuilding9.draw();
+		baseBuilding10.draw();
+		baseBuilding11.draw();
+		baseBuilding12.draw();
+		baseBuilding13.draw();
+		baseBuilding14.draw();
+		baseBuilding15.draw();
+		baseBuilding16.draw();
+		baseBuilding17.draw();
+		baseBuilding18.draw();
+		baseBuilding19.draw();
+		baseBuilding20.draw();
 
 		//Draw the board buildings
 		AM::assets()->bindTexture(TEX_BOARDBUILDING1);
-		boardBuilding1.update(DH::getDeltaTime());
+		boardBuilding1.draw();
 
 		AM::assets()->bindTexture(TEX_BOARDBUILDING2);
-		boardBuilding2.update(DH::getDeltaTime());
+		boardBuilding2.draw();
 
 		AM::assets()->bindTexture(TEX_BOARDBUILDING3);
-		boardBuilding3.update(DH::getDeltaTime());
+		boardBuilding3.draw();
 
 		AM::assets()->bindTexture(TEX_BOARDBUILDING4);
-		boardBuilding4.update(DH::getDeltaTime());
+		boardBuilding4.draw();
 
 		//Draw the billboards
 		AM::assets()->bindTexture(TEX_BILLBOARD1);
-		billboard1.update(DH::getDeltaTime());
+		billboard1.draw();
 
 		AM::assets()->bindTexture(TEX_BILLBOARD2);
-		billboard2.update(DH::getDeltaTime());
+		billboard2.draw();
 
 		AM::assets()->bindTexture(TEX_BILLBOARD3);
-		billboard3.update(DH::getDeltaTime());
+		billboard3.draw();
 
 		AM::assets()->bindTexture(TEX_BILLBOARD4);
-		billboard4.update(DH::getDeltaTime());
+		billboard4.draw();
 
 		//Draw the roadblocks
 		AM::assets()->bindTexture(TEX_ROADBLOCK);
-		roadblock1.update(DH::getDeltaTime());
-		roadblock2.update(DH::getDeltaTime());
-		roadblock3.update(DH::getDeltaTime());
-		roadblock4.update(DH::getDeltaTime());
-		roadblock5.update(DH::getDeltaTime());
-		roadblock6.update(DH::getDeltaTime());
+		roadblock1.draw();
+		roadblock2.draw();
+		roadblock3.draw();
+		roadblock4.draw();
+		roadblock5.draw();
+		roadblock6.draw();
 
 		//Rotate the clock hand based on the time left
 		float startRot = 90.0f;
@@ -620,17 +697,20 @@ void State_Gameplay::update()
 		}
 		/*glm::vec3 clockColour = MathHelper::LERP(glm::vec3(1.0f), colorFinal, 1 - clockRot_T);
 		glColor3f(clockColour.x, clockColour.y, clockColour.z);*/
-		clock[0].update(DH::deltaTime);
+		clock[0].draw();
 		glColor3f(1.0f, 1.0f, 1.0f);
 
 		clock[1].update(DH::deltaTime);
 		clock[2].update(DH::deltaTime);
 
+		clock[1].draw();
+		clock[2].draw();
+
 		//Update and draw the passengers
 
 		AM::assets()->bindTexture(TEX_PASSENGER);
 
-		for (int i = 0; i < passengers.size(); i++)
+		for (unsigned int i = 0; i < passengers.size(); i++)
 
 		{
 
@@ -660,7 +740,7 @@ void State_Gameplay::update()
 			//passengers[i].addImpulse(SteeringBehaviour::avoidence(passengers, i, 3.0f, 3.0f));
 
 			passengers[i].update(DH::getDeltaTime());
-
+			passengers[i].draw();
 		}
 
 		//Output the number of passengers to the console
@@ -901,31 +981,31 @@ void State_Gameplay::drawUI()
 {
 	//Draw billboards in world spcae
 	for (int i = 0; i < 4; i++) {
-		billboards[i].update(DH::deltaTime);
-		fillbarbackground[i].update(DH::deltaTime);
+		billboards[i].draw();
+		fillbarbackground[i].draw();
 		switch (i) {
 		case 0:
 			//r
 			glColor3f(1.0f, 0.0f, 0.0f);
-			fillbar[0].update(DH::deltaTime);
+			fillbar[0].draw();
 			glColor3f(1.0f, 1.0f, 1.0f);
 			break;
 		case 1:
 			//b
 			glColor3f(0.0f, 0.0f, 1.0f);
-			fillbar[1].update(DH::deltaTime);
+			fillbar[1].draw();
 			glColor3f(1.0f, 1.0f, 1.0f);
 			break;
 		case 2:
 			//g
 			glColor3f(1.0f, 1.0f, 0.0f);
-			fillbar[2].update(DH::deltaTime);
+			fillbar[2].draw();
 			glColor3f(1.0f, 1.0f, 1.0f);
 			break;
 		case 3:
 			//y
 			glColor3f(0.0f, 1.0f, 0.0f);
-			fillbar[3].update(DH::deltaTime);
+			fillbar[3].draw();
 			glColor3f(1.0f, 1.0f, 1.0f);
 			break;
 		default:
@@ -938,7 +1018,7 @@ void State_Gameplay::drawUI()
 		//+fillbarshade[i].update(DH::deltaTime);
 	}
 
-	billboardlight[0].update(DH::deltaTime);
+	billboardlight[0].draw();
 
 	//Reset view for HUD in screen space
 	glViewport(0, 0, DH::windowWidth, DH::windowHeight);
@@ -977,6 +1057,7 @@ void State_Gameplay::drawBuses()
 		AM::assets()->bindTexture(TEX_BUS4_RED); 
 
 	buses[0].update(DH::getDeltaTime());
+	buses[0].draw();
 
 	//Bind correct texture for Player 2
 	if (buses[1].getStage() == firstStage)
@@ -991,6 +1072,7 @@ void State_Gameplay::drawBuses()
 		AM::assets()->bindTexture(TEX_BUS4_BLUE);
 	
 	buses[1].update(DH::getDeltaTime());
+	buses[1].draw();
 
 	//Bind correct texture for Player 3
 	if (buses[2].getStage() == firstStage)
@@ -1005,6 +1087,7 @@ void State_Gameplay::drawBuses()
 		AM::assets()->bindTexture(TEX_BUS4_YELLOW);
 	
 	buses[2].update(DH::getDeltaTime());
+	buses[2].draw();
 
 	//Bind correct texture for Player 4
 	if (buses[3].getStage() == firstStage)
@@ -1019,6 +1102,7 @@ void State_Gameplay::drawBuses()
 		AM::assets()->bindTexture(TEX_BUS4_GREEN);
 
 	buses[3].update(DH::getDeltaTime());
+	buses[3].draw();
 
 	//Update the light
 	static float lightPosX = 0.0f;
@@ -1041,8 +1125,6 @@ void State_Gameplay::drawBuses()
 	else if (DH::getKey('u'))
 		lightPosY--;
 
-	cout << "LIGHT POS: " << lightPosX << "\t" << lightPosY << "\t" << lightPosZ << endl;
-
 	glm::vec3 lightPointA = glm::vec3(0.0f, 2.5f, -250.0f);
 	glm::vec3 lightPointB = glm::vec3(0.0f, 35.0f, -100.0f);
 	glm::vec3 lightPointC = glm::vec3(0.0f, 35.0f, 100.0f);
@@ -1057,10 +1139,6 @@ void State_Gameplay::drawBuses()
 	GLfloat mat_diffuse[] = { currentLightColour.x, currentLightColour.y, currentLightColour.z, 1.0f };
 	//glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, mat_diffuse);
-	//GLfloat light_position[] = { lightPosX, lightPosY, lightPosZ, 1.0 };
-	//glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-	//light.setPosition(light_position[0], light_position[1], light_position[2]);
-	//light.update(DH::deltaTime);
 }
 
 glm::vec3 State_Gameplay::getClockHandEndPosition(float angle)

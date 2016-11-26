@@ -13,13 +13,9 @@ class State_MainMenu : public GameState
 public:
 	State_MainMenu() {}
 	~State_MainMenu() {}
-	void toggleDebugDrawing();
 	void load();
 	void update();
-	void launchPassengers(int busNumber, int amount);
-	void updateCrownedPlayer();
 	void updateStages();
-	void drawCrown();
 	void drawUI();
 	void drawBuses();
 	

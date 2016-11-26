@@ -98,7 +98,10 @@ void Sprite::update(float dt)
 
 	//Compiles the transformation together in the correct order: Scale -> Rotate -> Translate (Note the right to left notation)
 	localToWorld = translationMatrix * fullRotationMatrix * scaleMatrix;
+}
 
+void Sprite::draw()
+{
 	//Passes the matrix to OpenGL which automatically applies the transformations
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(glm::value_ptr(localToWorld));
@@ -124,14 +127,14 @@ void Sprite::update(float dt)
 	glEnable(GL_CULL_FACE);
 
 	if (DBG::debug()->getVisualDebugEnabled())
-		debugDraw(dt);
+		debugDraw();
 
 	glLoadIdentity();
 }
 
-void Sprite::debugDraw(float dt)
+void Sprite::debugDraw()
 {
-	Kinematic::drawDebug(dt);
+	Kinematic::drawDebug();
 }
 
 void Sprite::nextFrame()

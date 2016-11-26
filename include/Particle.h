@@ -24,6 +24,11 @@ struct Particle : public Kinematic
 
 		Kinematic::update(deltaTime);
 	}
+
+	void draw()
+	{
+		Kinematic::draw();
+	}
 };
 
 /*

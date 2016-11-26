@@ -113,16 +113,11 @@ void State_EndRound::load()
 	billboard3.update(DH::deltaTime);
 	billboard4.update(DH::deltaTime);
 
-	//Init the buses
+	//Init the buses and don't update them because they are not static
 	buses[0] = GameObject(glm::vec3(20.5f + 10.0f, 2.25f, -20.5f + 7.5f), glm::vec3(0.0f, 45.0f + 40.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS2, TEX_BUS2_RED);
 	buses[1] = GameObject(glm::vec3(19.5f + 3.0f, 2.25f, -19.5f + 2.5f), glm::vec3(0.0f, 45.0f + 10.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS2, TEX_BUS2_RED);
 	buses[2] = GameObject(glm::vec3(19.5f - 2.5f, 2.25f, -19.5f - 3.0f), glm::vec3(0.0f, 45.0f - 10.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS2, TEX_BUS2_RED);
 	buses[3] = GameObject(glm::vec3(20.5f - 7.5f, 2.25f, -20.5f - 10.0f), glm::vec3(0.0f, 45.0f - 40.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), MESH_BUS2, TEX_BUS2_RED);
-
-	buses[0].update(DH::deltaTime);
-	buses[1].update(DH::deltaTime);
-	buses[2].update(DH::deltaTime);
-	buses[3].update(DH::deltaTime);
 
 	//Init the roadblocks
 	roadblock1 = GameObject(glm::vec3(50.5f, 1.0f, 60.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_ROADBLOCK, TEX_ROADBLOCK);
@@ -132,19 +127,10 @@ void State_EndRound::load()
 	roadblock5 = GameObject(glm::vec3(-60.0f, 1.0f, 0.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_ROADBLOCK, TEX_ROADBLOCK);
 	roadblock6 = GameObject(glm::vec3(-60.0f, 1.0f, -50.5f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_ROADBLOCK, TEX_ROADBLOCK);
 
-	roadblock1.update(DH::deltaTime);
-	roadblock2.update(DH::deltaTime);
-	roadblock3.update(DH::deltaTime);
-	roadblock4.update(DH::deltaTime);
-	roadblock5.update(DH::deltaTime);
-	roadblock6.update(DH::deltaTime);
-
 	//Init the skybox
 	skybox = GameObject(MESH_SKYBOX, TEX_SKYBOX);
 	skybox.setRotationY(90.0f);
 	skybox.setScale(10.0f, 10.0f, 10.0f);
-
-	skybox.update(DH::deltaTime);
 
 	//Init the crown mesh
 	crown = &AM::assets()->getMesh(MESH_CROWN);
@@ -187,119 +173,119 @@ void State_EndRound::update()
 
 	//Draw the skybox
 	AM::assets()->bindTexture(TEX_SKYBOX);
-	skybox.draw();
+	skybox.update(DH::getDeltaTime());
 
 	//Draw the level mmesh
 	AM::assets()->bindTexture(TEX_LEVELPLAY);
-	levelPlay.draw();
+	levelPlay.update(DH::getDeltaTime());
 
 	//Draw the level sidewalk
 	AM::assets()->bindTexture(TEX_SIDEWALK);
-	levelSidewalk1.draw();
-	levelSidewalk2.draw();
-	levelSidewalk3.draw();
-	levelSidewalk4.draw();
+	levelSidewalk1.update(DH::getDeltaTime());
+	levelSidewalk2.update(DH::getDeltaTime());
+	levelSidewalk3.update(DH::getDeltaTime());
+	levelSidewalk4.update(DH::getDeltaTime());
 
 	//Draw the level background
 	AM::assets()->bindTexture(TEX_LEVELBACKGROUND);
-	levelBackgroundL.draw();
-	levelBackgroundR.draw();
+	levelBackgroundL.update(DH::getDeltaTime());
+	levelBackgroundR.update(DH::getDeltaTime());
 
 	//Draw the level background middle
 	AM::assets()->bindTexture(TEX_LEVELBACKGROUNDM);
-	levelBackgroundM.draw();
+	levelBackgroundM.update(DH::getDeltaTime());
 
 	//Draw the level underground
 	AM::assets()->bindTexture(TEX_LEVELUNDERGROUND);
-	levelUnderground1.draw();
-	levelUnderground2.draw();
-	levelUnderground3.draw();
-	levelUnderground4.draw();
+	levelUnderground1.update(DH::getDeltaTime());
+	levelUnderground2.update(DH::getDeltaTime());
+	levelUnderground3.update(DH::getDeltaTime());
+	levelUnderground4.update(DH::getDeltaTime());
 
 	//Draw the level background sidewalk
 	AM::assets()->bindTexture(TEX_BACKGROUNDSIDEWALK);
-	backgroundSidewalk1.draw();
-	backgroundSidewalk2.draw();
-	backgroundSidewalk3.draw();
-	backgroundSidewalk4.draw();
-	backgroundSidewalk5.draw();
+	backgroundSidewalk1.update(DH::getDeltaTime());
+	backgroundSidewalk2.update(DH::getDeltaTime());
+	backgroundSidewalk3.update(DH::getDeltaTime());
+	backgroundSidewalk4.update(DH::getDeltaTime());
+	backgroundSidewalk5.update(DH::getDeltaTime());
 
 	//Draw the base buildings
 	AM::assets()->bindTexture(TEX_BASEBUILDING1);
-	baseBuilding1.draw();
-	baseBuilding2.draw();
+	baseBuilding1.update(DH::getDeltaTime());
+	baseBuilding2.update(DH::getDeltaTime());
 
 	AM::assets()->bindTexture(TEX_BASEBUILDING2);
-	baseBuilding3.draw();
-	baseBuilding4.draw();
+	baseBuilding3.update(DH::getDeltaTime());
+	baseBuilding4.update(DH::getDeltaTime());
 
 	AM::assets()->bindTexture(TEX_BASEBUILDING3);
-	baseBuilding5.draw();
-	baseBuilding6.draw();
+	baseBuilding5.update(DH::getDeltaTime());
+	baseBuilding6.update(DH::getDeltaTime());
 
 	AM::assets()->bindTexture(TEX_BASEBUILDING4);
-	baseBuilding7.draw();
-	baseBuilding8.draw();
-	baseBuilding9.draw();
-	baseBuilding10.draw();
-	baseBuilding11.draw();
-	baseBuilding12.draw();
-	baseBuilding13.draw();
-	baseBuilding14.draw();
-	baseBuilding15.draw();
-	baseBuilding16.draw();
-	baseBuilding17.draw();
-	baseBuilding18.draw();
-	baseBuilding19.draw();
-	baseBuilding20.draw();
+	baseBuilding7.update(DH::getDeltaTime());
+	baseBuilding8.update(DH::getDeltaTime());
+	baseBuilding9.update(DH::getDeltaTime());
+	baseBuilding10.update(DH::getDeltaTime());
+	baseBuilding11.update(DH::getDeltaTime());
+	baseBuilding12.update(DH::getDeltaTime());
+	baseBuilding13.update(DH::getDeltaTime());
+	baseBuilding14.update(DH::getDeltaTime());
+	baseBuilding15.update(DH::getDeltaTime());
+	baseBuilding16.update(DH::getDeltaTime());
+	baseBuilding17.update(DH::getDeltaTime());
+	baseBuilding18.update(DH::getDeltaTime());
+	baseBuilding19.update(DH::getDeltaTime());
+	baseBuilding20.update(DH::getDeltaTime());
 
 	//Draw the board buildings
 	AM::assets()->bindTexture(TEX_BOARDBUILDING1);
-	boardBuilding1.draw();
+	boardBuilding1.update(DH::getDeltaTime());
 
 	AM::assets()->bindTexture(TEX_BOARDBUILDING2);
-	boardBuilding2.draw();
+	boardBuilding2.update(DH::getDeltaTime());
 
 	AM::assets()->bindTexture(TEX_BOARDBUILDING3);
-	boardBuilding3.draw();
+	boardBuilding3.update(DH::getDeltaTime());
 
 	AM::assets()->bindTexture(TEX_BOARDBUILDING4);
-	boardBuilding4.draw();
+	boardBuilding4.update(DH::getDeltaTime());
 
 	//Draw the billboards
 	AM::assets()->bindTexture(TEX_BILLBOARD1);
-	billboard1.draw();
+	billboard1.update(DH::getDeltaTime());
 
 	AM::assets()->bindTexture(TEX_BILLBOARD2);
-	billboard2.draw();
+	billboard2.update(DH::getDeltaTime());
 
 	AM::assets()->bindTexture(TEX_BILLBOARD3);
-	billboard3.draw();
+	billboard3.update(DH::getDeltaTime());
 
 	AM::assets()->bindTexture(TEX_BILLBOARD4);
-	billboard4.draw();
+	billboard4.update(DH::getDeltaTime());
 
 	//Draw the buses
 	AM::assets()->bindTexture(TEX_BUS2_RED); //Red bus
-	buses[0].draw();
+	buses[0].update(DH::deltaTime);
 
 	AM::assets()->bindTexture(TEX_BUS2_BLUE); //Blue bus
-	buses[1].draw();
+	buses[1].update(DH::deltaTime);
 
 	AM::assets()->bindTexture(TEX_BUS2_GREEN); //Green bus
-	buses[2].draw();
+	buses[2].update(DH::deltaTime);
 
 	AM::assets()->bindTexture(TEX_BUS2_YELLOW); //Yellow bus
-	buses[3].draw();
+	buses[3].update(DH::deltaTime);
 
 	//Draw the roadblocks
 	AM::assets()->bindTexture(TEX_ROADBLOCK);
-	roadblock1.draw();
-	roadblock2.draw();
-	roadblock3.draw();
-	roadblock4.draw();
-	roadblock5.draw();
-	roadblock6.draw();
+	roadblock1.update(DH::getDeltaTime());
+	roadblock2.update(DH::getDeltaTime());
+	roadblock3.update(DH::getDeltaTime());
+	roadblock4.update(DH::getDeltaTime());
+	roadblock5.update(DH::getDeltaTime());
+	roadblock6.update(DH::getDeltaTime());
 
 	//Draw the passengers and remove the ones that hit the ground
 	AM::assets()->bindTexture(TEX_PASSENGER);
@@ -307,7 +293,6 @@ void State_EndRound::update()
 	for (unsigned int i = 0; i < activePassengers.size(); i++)
 	{
 		activePassengers[i].update(DH::deltaTime);
-		activePassengers[i].draw();
 
 		if (activePassengers[i].getPosition().x < -45.0f || activePassengers[i].getPosition().z > 45.0f)
 		{

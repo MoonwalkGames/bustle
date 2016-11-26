@@ -70,7 +70,8 @@ public:
 	void flee(glm::vec3 taget, float movementSpeed, float turnSpeed); //Uses the basic flee algorithm to make this object flee from the point passed
 
 	virtual void update(float dt); //Polymorphic update function, handles the movement and drawing of the gameobject every frame
-	virtual void drawDebug(float dt); //Polymorphic debug draw function, draws things like local axes, velocity, collision boxes, etc
+	virtual void draw(); //Polymorphic draw function, separate since not all objects need to be updated every frame
+	virtual void drawDebug(); //Polymorphic debug draw function, draws things like local axes, velocity, collision boxes, etc
 
 protected:
 	glm::vec3 position; //The position stored as an x,y,z
