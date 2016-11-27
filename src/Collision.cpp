@@ -195,7 +195,7 @@ Collision CollisionHandler::TRAFFIC_LIGHTvTRAFFIC_LIGHT(const Player& a, const P
 	}
 	if (CollisionHandler::SPHEREvSPHERE(aExtentSphere, bExtentSphere).status)
 	{
-				//printf("\n\n\nRough check passed!\t");
+		//printf("\n\n\nRough check passed!\t");
 		int aNumBubbles;
 		int bNumBubbles;
 		if (a.getStage() == firstStage)
@@ -223,7 +223,7 @@ Collision CollisionHandler::TRAFFIC_LIGHTvTRAFFIC_LIGHT(const Player& a, const P
 				bubbleResult = CollisionHandler::SPHEREvSPHERE(aTrafficLight.bubbles[i], bTrafficLight.bubbles[j]);
 				if (bubbleResult.status)
 				{
-			result.status = true;
+					result.status = true;
 					//printf("Granular check passed! %d vs %d! \n", i, j);
 				
 					result.penetration += bubbleResult.penetration;
@@ -250,7 +250,7 @@ Collision CollisionHandler::TRAFFIC_LIGHTvTRAFFIC_LIGHT(const Player& a, const P
 				break;
 
 			case secondStage:
-				aExternalStart += (BUS_WIDTH ) * aForwardNormal;
+				aExternalStart += (BUS_WIDTH) * aForwardNormal;
 				
 				break;
 
@@ -265,7 +265,7 @@ Collision CollisionHandler::TRAFFIC_LIGHTvTRAFFIC_LIGHT(const Player& a, const P
 				
 				break;
 			}
-			aExternalEnd = aExternalStart + aForwardNormal * BUS_WIDTH * 1.5f;
+			aExternalEnd = aExternalStart + aForwardNormal * BUS_WIDTH * 10.0f;
 			//b internal line segment
 			glm::vec3 bInternalStart = b.getPosition();
 			glm::vec3 bInternalEnd = b.getPosition();
@@ -297,15 +297,15 @@ Collision CollisionHandler::TRAFFIC_LIGHTvTRAFFIC_LIGHT(const Player& a, const P
 			//b external line segment
 			glm::vec3 bExternalStart = bInternalEnd;
 			glm::vec3 bExternalEnd = bExternalStart;
-			bExternalEnd += BUS_WIDTH * bForwardNormal;
+			bExternalEnd += BUS_WIDTH * bForwardNormal * 2.5f;
 
 			if (DBG::debug()->getVisualDebugEnabled())
 			{
 				
 				glBegin(GL_LINES);
 				{
-					glVertex3f(aExternalStart.x, aExternalStart.y, aExternalStart.z);
-					glVertex3f(aExternalEnd.x, aExternalEnd.y, aExternalEnd.z);
+					glVertex3f(aExternalStart.x, aExternalStart.y + 5, aExternalStart.z);
+					glVertex3f(aExternalEnd.x, aExternalEnd.y + 5, aExternalEnd.z);
 				}
 				glEnd();
 				
@@ -318,34 +318,43 @@ Collision CollisionHandler::TRAFFIC_LIGHTvTRAFFIC_LIGHT(const Player& a, const P
 
 				glBegin(GL_LINES);
 				{
-					glVertex3f(bExternalStart.x, bExternalStart.y, bExternalStart.z);
-					glVertex3f(bInternalEnd.x, bInternalEnd.y, bInternalEnd.z);
+					glVertex3f(bExternalStart.x, bExternalStart.y + 5, bExternalStart.z);
+					glVertex3f(bInternalEnd.x, bInternalEnd.y + 5, bInternalEnd.z);
 				}
 				glEnd();
 			}
-
-			//if a's external line segment intersects with b's internal line segment, A wins. 
-			if (MathHelper::checkLineSegmentIntersection(aExternalStart, aExternalEnd, bInternalStart, bInternalEnd))
+			if (b.getVelocity() == glm::vec3(0.0f))
+			{
 				result.outcome = win;
-
-			//else, if a's external line segment intersects with b's external line segment, partial win
-			else if (MathHelper::checkLineSegmentIntersection(aExternalStart, aExternalEnd, bExternalStart, bExternalEnd))
-				result.outcome = partial_loss;
-
-			//else, A either lost, or it rear ended B
+			}
 			else
 			{
-				//if a rear ended b, it's a win, as long as B is above stage 0
-				if (CollisionHandler::SPHEREvSPHERE(aTrafficLight.bubbles[0], bTrafficLight.bubbles[bTrafficLight.bubbles.size() - 1]) && b.getStage() > 0)
+
+				//if a's external line segment intersects with b's internal line segment, A wins. 
+				if (MathHelper::checkLineSegmentIntersection(aExternalStart, aExternalEnd, bInternalStart, bInternalEnd))
 					result.outcome = win;
 
-				//else it's a loss
-				else
-					result.outcome = full_loss;
+				//else, if a's external line segment intersects with b's external line segment, partial win
+				else if (MathHelper::checkLineSegmentIntersection(aExternalStart, aExternalEnd, bExternalStart, bExternalEnd))
+					if (SPHEREvSPHERE(aTrafficLight.bubbles[0], bTrafficLight.bubbles[0]))
+						result.outcome = partial_loss;
+
+				//else, A either lost, or it rear ended B
+					else
+					{
+						//if a rear ended b, it's a win, as long as B is above stage 0
+						if (b.getStage() == firstStage)
+							result.outcome = win;
+						else if (CollisionHandler::SPHEREvSPHERE(aTrafficLight.bubbles[0], bTrafficLight.bubbles[bTrafficLight.bubbles.size() - 1]))
+							result.outcome = win;
+
+						//else it's a loss
+						else
+							result.outcome = full_loss;
+					}
 			}
 			return result;
 		}
 	}
 	return Collision(false, glm::vec3(0.0f, 0.0f, 0.0f));
 }
-

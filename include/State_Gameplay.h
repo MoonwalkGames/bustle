@@ -22,6 +22,9 @@ public:
 	void drawBuses();
 	glm::vec3 getClockHandEndPosition(float angle);
 	void enableLighting();
+	void checkMatrixStackStatus();
+	void excecute();
+	void summonCar();
 
 private:
 	GameObject levelPlay;
@@ -76,6 +79,8 @@ private:
 	GameObject roadblock5;
 	GameObject roadblock6;
 	GameObject skyBox;
+	Kinematic car;
+	int timesCarSummoned;
 	Mesh* crown;
 
 	Player buses[4];
@@ -90,6 +95,8 @@ private:
 	bool inIntro = true;
 	bool firstPerson = false;
 	float rotation;
+	bool aButtonEnabled;
+	bool pressedLastFrame;
 	//UI
 	float timeStart;
 	float timeLeft;
@@ -99,8 +106,8 @@ private:
 	Sprite fillbarshade[4];
 	Sprite fillbarbackground[4];
 	Sprite billboardlight[4];
-
 	Sprite clock[3];
 	std::vector<glm::vec3> clockHandPositions;
+	bool carOnScreen = false;
 };
 #endif

@@ -72,6 +72,11 @@ namespace MathHelper
 		return (randomValue * range) + min;
 	}
 
+	static int randomInt(int min, int max)
+	{
+		return rand() % (max - min + 1) + min;
+	}
+
 	static glm::vec3 randomVec3(float min, float max) {
 		return glm::vec3(randomFloat(min, max), randomFloat(min, max), randomFloat(min, max));
 	}

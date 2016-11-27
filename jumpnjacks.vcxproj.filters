@@ -72,6 +72,9 @@
     <ClCompile Include="src\Particle.cpp">
       <Filter>source</Filter>
     </ClCompile>
+    <ClCompile Include="src\audioEngine.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Mesh.h">
@@ -136,6 +139,12 @@
     </ClInclude>
     <ClInclude Include="include\Particle.h">
       <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\AudioEngine.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\State_Loading.h">
+      <Filter>game states</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

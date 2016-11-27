@@ -34,6 +34,8 @@ int main(int argc, char **argv)
 	glutMotionFunc(DisplayHandler::checkMouseMotion);
 	glutPassiveMotionFunc(DisplayHandler::checkMousePassiveMotion);
 	glutTimerFunc(1, DisplayHandler::timer, 0);
+	//init fmod
+	AE::sounds()->init();
 	
 	//Perform initialization on the display and the assets themselves
 	DisplayHandler::init();

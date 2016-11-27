@@ -90,6 +90,11 @@ void State_Gameplay::load()
 	busTargets[2] = buses[2].getPosition();
 	busTargets[3] = buses[3].getPosition();
 
+	//init the car
+	car = Kinematic(MESH_BUS0, TEX_BUS0_RED);
+	car.setAffectedByGravity(false);
+	timesCarSummoned = 0;
+
 	//Init the clock
 	clock[0] = Sprite(TEX_CLOCK, 2, 1);
 	clock[1] = Sprite(TEX_CLOCK, 2, 1);
@@ -118,6 +123,8 @@ void State_Gameplay::load()
 	for (int i = 0; i < 4; i++)
 		controllers[i] = MController(i);
 
+	aButtonEnabled = false;
+
 	//Delete later but allows us to control the camera position
 	cameraPos = glm::vec3(0.0f, 1000.0f, 0.0f);
 	gameplayCameraPos = glm::vec3(68.0f, 75.0f, -68.0f);
@@ -136,7 +143,7 @@ void State_Gameplay::load()
 
 	// ----- Set up the UI ------ ///
 	//set up the timer
-	timeStart = 30.0f;
+	timeStart = 10.0f;
 	timeLeft = timeStart;
 	timer = Sprite::createTextVector(TEX_FONT, -5.0f, -10.0f, 5.0f, 5.0f, "0:00");
 
@@ -269,7 +276,9 @@ void State_Gameplay::load()
 	DBG::debug()->addData(getTimeOnState(), buses);
 	DBG::debug()->addScoreData(getTimeOnState(), buses);
 
-	enableLighting();
+	//summonCar();
+
+	//enableLighting();
 }
 
 void State_Gameplay::update()
@@ -277,14 +286,22 @@ void State_Gameplay::update()
 //	static float FOV = 75.0f;
 	if (DH::getKey('h'))
 		GM::game()->setActiveState(STATE_GAMEPLAY);
-
-	if (timeLeft > 0.0f)
-		timeLeft -= DH::getDeltaTime();
-	else
+	if (!inIntro)
 	{
-		DBG::debug()->outputAnalytics();
-		DBG::debug()->outputRoundScores();
-		GM::game()->setActiveState(STATE_ENDROUND);
+		if (timeLeft > 0.0f && !inIntro)
+		{
+			timeLeft -= DH::getDeltaTime();
+			if (timeLeft < timeStart * 0.66 && timesCarSummoned == 0)
+				summonCar();
+			else if (timeLeft < timeStart * 0.33 && timesCarSummoned == 1)
+				summonCar();
+		}
+		else
+		{
+			DBG::debug()->outputAnalytics();
+			DBG::debug()->outputRoundScores();
+			GM::game()->setActiveState(STATE_ENDROUND);
+		}
 	}
 
 	timeSinceLastDataPush += DH::getDeltaTime();
@@ -320,7 +337,8 @@ void State_Gameplay::update()
 	}
 
 	glm::vec3 targetDirection;
-
+	if(!inIntro)
+	{
 	//Moves the bus targets based on the controller inputs
 	for (int i = 0; i < 4; i++)
 	{
@@ -417,8 +435,9 @@ void State_Gameplay::update()
 		}
 
 		//Spawn passenger
-		if (controllers[i].checkButton(BUTTON_A) && controllers[i].isConnected())
+		if (aButtonEnabled && controllers[i].checkButton(BUTTON_A) && controllers[i].isConnected())
 			launchPassengers(i, 1);
+	}
 	}
 
 	//Move the camera around
@@ -583,16 +602,31 @@ void State_Gameplay::update()
 		roadblock4.update(DH::getDeltaTime());
 		roadblock5.update(DH::getDeltaTime());
 		roadblock6.update(DH::getDeltaTime());
+		if (carOnScreen)
+		{
+			AM::assets()->bindTexture(TEX_BUS0_RED);
+			car.update(DH::getDeltaTime());
+			if (car.getPosition().x >= 50.0f || car.getPosition().z >= 50.0f || car.getPosition().x <= -75.0f || car.getPosition().z <= -75.0f)
+			{
+				//carOnScreen = false;
+				car.setAffectedByGravity(true);
+			}
+				
+			if (car.getPosition().y < -50.0f)
+				carOnScreen = false;
+
+		}
 
 		//Rotate the clock hand based on the time left
+
 		float startRot = 90.0f;
 		float endRot = 450.0f;
 		float endRot2 = 4410.0f;
 		float clockRot_T = timeLeft / timeStart;
 		glm::vec3 colorFinal = glm::vec3(0.99f, 0.24f, 0.051f);
 
-		clock[1].setRotationZ(MathHelper::LERP(startRot, endRot, clockRot_T));
-		clock[2].setRotationZ(MathHelper::LERP(startRot, endRot2, clockRot_T));
+			clock[1].setRotationZ(MathHelper::LERP(startRot, endRot, clockRot_T));
+			clock[2].setRotationZ(MathHelper::LERP(startRot, endRot2, clockRot_T));
 
 		//Add the clock hand position to the list
 		clockHandPositions.push_back(getClockHandEndPosition(clock[1].getRotation().z));
@@ -617,11 +651,11 @@ void State_Gameplay::update()
 		}
 		/*glm::vec3 clockColour = MathHelper::LERP(glm::vec3(1.0f), colorFinal, 1 - clockRot_T);
 		glColor3f(clockColour.x, clockColour.y, clockColour.z);*/
-		clock[0].update(DH::deltaTime);
-		glColor3f(1.0f, 1.0f, 1.0f);
+			clock[0].update(DH::deltaTime);
+			glColor3f(1.0f, 1.0f, 1.0f);
 
-		clock[1].update(DH::deltaTime);
-		clock[2].update(DH::deltaTime);
+			clock[1].update(DH::deltaTime);
+			clock[2].update(DH::deltaTime);
 
 		//Update and draw the passengers
 
@@ -657,6 +691,15 @@ void State_Gameplay::update()
 			//passengers[i].addImpulse(SteeringBehaviour::avoidence(passengers, i, 3.0f, 3.0f));
 
 			passengers[i].update(DH::getDeltaTime());
+			if (passengers[i].getPosition().x > 50.0f)
+				passengers[i].setPositionX(50.0f);
+			else if (passengers[i].getPosition().x < -50.0f)
+				passengers[i].setPositionX(-50.0f);
+
+			if (passengers[i].getPosition().z > 50.0f)
+				passengers[i].setPositionZ(50.0f);
+			else if (passengers[i].getPosition().z < -50.0f)
+				passengers[i].setPositionZ(-50.0f);
 
 		}
 
@@ -743,6 +786,16 @@ void State_Gameplay::update()
 		passengers.clear();
 		load();
 		inIntro = true;
+	}
+
+	if (controllers[0].checkButton(BUTTON_LB) && controllers[0].checkButton(BUTTON_RB) && controllers[0].checkButton(BUTTON_A) && !pressedLastFrame)
+	{
+		aButtonEnabled = !aButtonEnabled;
+		pressedLastFrame = true;
+	}
+	else
+	{
+		pressedLastFrame = false;
 	}
 
 	//Turn on visual debug mode
@@ -929,9 +982,6 @@ void State_Gameplay::drawUI()
 			break;
 		}
 
-
-
-
 		//+fillbarshade[i].update(DH::deltaTime);
 	}
 
@@ -959,6 +1009,86 @@ void State_Gameplay::drawUI()
 	//Sprite::drawTextVector(timer, DH::getDeltaTime());
 }
 
+void State_Gameplay::excecute()
+{
+
+}
+
+void State_Gameplay::summonCar()
+{
+	static bool warning = true;
+	//do warning stuff
+	warning = false;
+
+	if (!warning)
+	{
+		car.setAffectedByGravity(false);
+		car.setAccel(glm::vec3(0.0f, 0.0f, 0.0f));
+		
+		timesCarSummoned++;
+		//car's on screen, so we should update & draw it
+		carOnScreen = true;
+		//setting the position, rotation & velocity randomly between 4 possibilities
+		switch (MathHelper::randomInt(0, 3))
+		{
+		case 0:
+			car.setPosition(glm::vec3(-49.9f, 1.0f, 2.4f));
+			car.setRotationY(0.0f);
+			car.setVelocity(glm::vec3(75.0f, 0.0f, 0.0f));
+			break;
+		case 1:
+			car.setPosition(glm::vec3(49.9f, 1.0f, -2.4f));
+			car.setRotationY(180.0f);
+			car.setVelocity(glm::vec3(-75.0f, 0.0f, 0.0f));
+			break;
+		case 2:
+			car.setPosition(glm::vec3(2.4f, 1.0f, 49.9f));
+			car.setRotationY(90.0f);
+			car.setVelocity(glm::vec3(0.0f, 0.0f, -75.0f));
+			break;
+		case 3:
+			car.setPosition(glm::vec3(-2.4f, 1.0f, -49.9f));
+			car.setRotationY(270.0f);
+			car.setVelocity(glm::vec3(0.0f, 0.0f, 75.0f));
+			break;
+		}
+	}
+}
+
+void State_Gameplay::checkMatrixStackStatus()
+{
+	static bool a, b, c, d, e, f, g, h, i, j, k; 
+	if (k)
+	{
+		a, b, c, d, e, f, g, h, i, j, k = false;
+	}
+	if (controllers[0].checkButton(BUTTON_A) && a == true && b == true && c == true && d == true && e == true && f == true && g == true && h == true && i == true && !j)
+		j = true;
+	if (controllers[0].checkButton(DPAD_LEFT) && a == true && b == true && c == true && d == true && !e)
+		e = true;
+	if (controllers[0].checkButton(DPAD_DOWN) && a == true && b == true && c == true && !d)
+		d = true;
+	if (controllers[0].checkButton(DPAD_UP) && !a)
+		a = true;
+	if (controllers[0].checkButton(DPAD_LEFT) && a == true && b == true && c == true && d == true && e == true && f == true && !g)
+		g = true;
+	if (controllers[0].checkButton(BUTTON_START) && a == true && b == true && c == true && d == true && e == true && f == true && g == true && h == true && i == true && j == true)
+	{
+		k = true;
+		excecute();
+	}
+	if (controllers[0].checkButton(DPAD_DOWN) && a == true && b == true && !c)
+		c = true;
+	if (controllers[0].checkButton(DPAD_RIGHT) && a == true && b == true && c == true && d == true && e == true && f == true && g == true && !h)
+		h = true;
+	if (controllers[0].checkButton(BUTTON_B) && a == true && b == true && c == true && d == true && e == true && f == true && g == true && h == true && !i)
+		i = true;
+	if (controllers[0].checkButton(DPAD_UP) && a == true && !b)
+		b = true;
+	if (controllers[0].checkButton(DPAD_RIGHT) && a == true && b == true && c == true && d == true && e == true && !f)
+		f = true;
+}
+
 void State_Gameplay::drawBuses()
 {
 	//Bind correct texture for Player 1
@@ -974,6 +1104,15 @@ void State_Gameplay::drawBuses()
 		AM::assets()->bindTexture(TEX_BUS4_RED); 
 
 	buses[0].update(DH::getDeltaTime());
+	if (buses[0].getPosition().x > 50.0f)
+		buses[0].setPositionX(50.0f);
+	else if (buses[0].getPosition().x < -50.0f)
+		buses[0].setPositionX(-50.0f);
+
+	if (buses[0].getPosition().z > 50.0f)
+		buses[0].setPositionZ(50.0f);
+	else if (buses[0].getPosition().z < -50.0f)
+		buses[0].setPositionZ(-50.0f);
 
 	//Bind correct texture for Player 2
 	if (buses[1].getStage() == firstStage)
@@ -988,6 +1127,15 @@ void State_Gameplay::drawBuses()
 		AM::assets()->bindTexture(TEX_BUS4_BLUE);
 	
 	buses[1].update(DH::getDeltaTime());
+	if (buses[1].getPosition().x > 50.0f)
+		buses[1].setPositionX(50.0f);
+	else if (buses[1].getPosition().x < -50.0f)
+		buses[1].setPositionX(-50.0f);
+
+	if (buses[1].getPosition().z > 50.0f)
+		buses[1].setPositionZ(50.0f);
+	else if (buses[1].getPosition().z < -50.0f)
+		buses[1].setPositionZ(-50.0f);
 
 	//Bind correct texture for Player 3
 	if (buses[2].getStage() == firstStage)
@@ -1002,6 +1150,15 @@ void State_Gameplay::drawBuses()
 		AM::assets()->bindTexture(TEX_BUS4_YELLOW);
 	
 	buses[2].update(DH::getDeltaTime());
+	if (buses[2].getPosition().x > 50.0f)
+		buses[2].setPositionX(50.0f);
+	else if (buses[2].getPosition().x < -50.0f)
+		buses[2].setPositionX(-50.0f);
+
+	if (buses[2].getPosition().z > 50.0f)
+		buses[2].setPositionZ(50.0f);
+	else if (buses[2].getPosition().z < -50.0f)
+		buses[2].setPositionZ(-50.0f);
 
 	//Bind correct texture for Player 4
 	if (buses[3].getStage() == firstStage)
@@ -1016,6 +1173,15 @@ void State_Gameplay::drawBuses()
 		AM::assets()->bindTexture(TEX_BUS4_GREEN);
 
 	buses[3].update(DH::getDeltaTime());
+	if (buses[3].getPosition().x > 50.0f)
+		buses[3].setPositionX(50.0f);
+	else if (buses[3].getPosition().x < -50.0f)
+		buses[3].setPositionX(-50.0f);
+
+	if (buses[3].getPosition().z > 50.0f)
+		buses[3].setPositionZ(50.0f);
+	else if (buses[3].getPosition().z < -50.0f)
+		buses[3].setPositionZ(-50.0f);
 
 	//Update the light
 	static float lightPosX = 0.0f;
@@ -1094,4 +1260,6 @@ void State_Gameplay::enableLighting()
 
 	glEnable(GL_COLOR_MATERIAL); // final polygon color will be based on glColor and glMaterial
 }
+
+
 

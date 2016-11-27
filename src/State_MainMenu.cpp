@@ -11,6 +11,14 @@ void State_MainMenu::load()
 	rotation = 0;
 	srand(time(0));
 
+	//load sounds
+	AE::sounds()->loadSound("./res/sound/gourmet_bork.mp3", true, true, false);
+	AE::sounds()->loadSound("./res/sound/bork.mp3", true, false, false);
+	AE::sounds()->loadSound("./res/sound/click.mp3", true, false, false);
+	AE::sounds()->loadSound("./res/sound/select.wav", true, false, false);
+	AE::sounds()->playSound("./res/sound/gourmet_bork.mp3", glm::vec3(0.0f), 3.0f);
+	
+	
 	//Init the level mesh
 	levelPlay = GameObject(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_LEVELPLAY, TEX_LEVELPLAY);
 	levelSidewalk1 = GameObject(glm::vec3(25.5f, 0.0f, 25.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_SIDEWALK, TEX_SIDEWALK);
@@ -305,7 +313,14 @@ void State_MainMenu::update()
 	if (DH::getKey(32) || (controller.isConnected() && controller.checkButton(BUTTON_A)))
 	{
 		if (currentSelection == 0)
+		{
+			
+			AE::sounds()->playSound("./res/sound/select.wav", glm::vec3(0.0f), 3.0f);
+			AE::sounds()->unLoadSound("./res/sound/gourmet_bork.mp3");
+			//AE::sounds()->unLoadSound("./res/sound/select.wav");
+			AE::sounds()->unLoadSound("./res/sound/click.mp3");
 			GameManager::game()->setActiveState(STATE_GAMEPLAY);
+		}
 		else
 			exit(0);
 	}
@@ -527,6 +542,8 @@ void State_MainMenu::update()
 	drawCrown();
 	//Draw the ui
 	drawUI();
+	
+	AE::sounds()->update();
 
 	//Bind a NULL texture at the end of the frame for cleanliness
 	glBindTexture(GL_TEXTURE_2D, NULL);
@@ -667,11 +684,13 @@ void State_MainMenu::drawUI()
 	{
 		timeSinceLastInput = 0.0f;
 		currentSelection--;
+		AE::sounds()->playSound("./res/sound/click.wav", glm::vec3(0.0f), 5.0f);
 	}
 	else if (((controller.isConnected() && controller.lY < 0.0f) || DH::getKey('s')) && timeSinceLastInput >= 0.2f)
 	{
 		timeSinceLastInput = 0.0f;
 		currentSelection++;
+		AE::sounds()->playSound("./res/sound/click.wav", glm::vec3(0.0f), 5.0f);
 	}
 
 	//Wraps the menu selection
