@@ -41,7 +41,8 @@ public:
 	void setTurningSpeed(float);
 	float getTurningSpeed() const;
 	float timePowerupStarted;
-	int powerup;
+	int powerup; //enumerated powerup this player has
+	bool attractive; //the attractive powerup, if this is true the passengers will seek to this bus
 
 private:
 	int points = 25;

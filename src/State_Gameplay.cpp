@@ -143,7 +143,7 @@ void State_Gameplay::load()
 
 	// ----- Set up the UI ------ ///
 	//set up the timer
-	timeStart = 10.0f;
+	timeStart = 15.0f;
 	timeLeft = timeStart;
 	timer = Sprite::createTextVector(TEX_FONT, -5.0f, -10.0f, 5.0f, 5.0f, "0:00");
 
@@ -276,7 +276,7 @@ void State_Gameplay::load()
 	DBG::debug()->addData(getTimeOnState(), buses);
 	DBG::debug()->addScoreData(getTimeOnState(), buses);
 
-	//summonCar();
+	summonCar();
 
 	//enableLighting();
 }
@@ -613,7 +613,7 @@ void State_Gameplay::update()
 		{
 			AM::assets()->bindTexture(TEX_CAR);
 			car.update(DH::getDeltaTime());
-			if (car.getPosition().x >= 50.0f || car.getPosition().z >= 100.0f || car.getPosition().x <= -100.0f || car.getPosition().z <= -50.0f)
+			if (car.getPosition().x >= 52.5f || car.getPosition().z <= -52.5f)
 			{
 				//carOnScreen = false;
 				car.setAffectedByGravity(true);
@@ -680,7 +680,16 @@ void State_Gameplay::update()
 			}
 
 			//wander behaviour
+
+			for (int j = 0; j < 4; j++)
+			{
+				if (buses[j].powerup == attractive_person)
+					passengers[i].addImpulse(SteeringBehaviour::seek(passengers[i].getPosition(), buses[j].getPosition(), 50.0f));
+			}
 			passengers[i].addImpulse(SteeringBehaviour::wander(passengers[i], 50.0f, 500.0f));
+
+			
+
 
 			//seek behaviour
 			//passengers[i].addImpulse(SteeringBehaviour::seek(passengers[i], buses[0].getPosition(), 3.0f));
@@ -951,7 +960,6 @@ void State_Gameplay::updatePowerups()
 			launchPassengers(i, (int)buses[i].getPoints() / 3);
 			buses[i].powerup = no_powerup;
 		}
-		else if (buses[i].powerup == attractive_person);
 
 	}
 }
@@ -1055,28 +1063,39 @@ void State_Gameplay::summonCar()
 		timesCarSummoned++;
 		//car's on screen, so we should update & draw it
 		carOnScreen = true;
-		//setting the position, rotation & velocity randomly between 4 possibilities
-		switch (MathHelper::randomInt(0, 3))
+		//setting the position, rotation & velocity randomly between 6 possibilities
+		switch (MathHelper::randomInt(0, 5))
 		{
 		case 0:
-			car.setPosition(glm::vec3(-49.9f, 1.0f, 2.4f));
+			//broken
+			car.setPosition(glm::vec3(-49.9f, 1.0f, 52.4f));
 			car.setRotationY(0.0f);
 			car.setVelocity(glm::vec3(75.0f, 0.0f, 0.0f));
 			break;
 		case 1:
-			car.setPosition(glm::vec3(49.9f, 1.0f, -2.4f));
-			car.setRotationY(180.0f);
-			car.setVelocity(glm::vec3(-75.0f, 0.0f, 0.0f));
+			car.setPosition(glm::vec3(-49.9f, 1.0f, 2.4f));
+			car.setRotationY(0.0f);
+			car.setVelocity(glm::vec3(75.0f, 0.0f, 0.0f));
 			break;
 		case 2:
+			car.setPosition(glm::vec3(-49.9f, 1.0f, -47.6f));
+			car.setRotationY(0.0f);
+			car.setVelocity(glm::vec3(75.0f, 0.0f, 0.0f));
+			break;
+		case 3:
+			car.setPosition(glm::vec3(52.4f, 1.0f, 49.9f));
+			car.setRotationY(90.0f);
+			car.setVelocity(glm::vec3(0.0f, 0.0f, -75.0f));
+			break;
+		case 4:
 			car.setPosition(glm::vec3(2.4f, 1.0f, 49.9f));
 			car.setRotationY(90.0f);
 			car.setVelocity(glm::vec3(0.0f, 0.0f, -75.0f));
 			break;
-		case 3:
-			car.setPosition(glm::vec3(-2.4f, 1.0f, -49.9f));
-			car.setRotationY(270.0f);
-			car.setVelocity(glm::vec3(0.0f, 0.0f, 75.0f));
+		case 5:
+			car.setPosition(glm::vec3(-47.6f, 1.0f, 49.9f));
+			car.setRotationY(90.0f);
+			car.setVelocity(glm::vec3(0.0f, 0.0f, -75.0f));
 			break;
 		}
 	}
@@ -1234,13 +1253,19 @@ void State_Gameplay::drawBuses()
 	if (DH::getKey('1'))
 		buses[0].powerup = smelly_dude;
 	if (DH::getKey('2'))
-		buses[0].powerup = attractive_person;
+	{
+		buses[0].powerup = attractive_person; 
+		buses[0].timePowerupStarted = timeLeft;
+	}
 	if (DH::getKey('3'))
 		buses[0].powerup = freeze_passengers;
 	if (DH::getKey('4'))
 		buses[0].powerup = freeze_buses;
 	if (DH::getKey('5'))
+	{
 		buses[0].powerup = star;
+		buses[0].timePowerupStarted = timeLeft;
+	}
 
 	cout << "LIGHT POS: " << lightPosX << "\t" << lightPosY << "\t" << lightPosZ << endl;
 
