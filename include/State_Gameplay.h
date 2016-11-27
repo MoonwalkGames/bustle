@@ -6,6 +6,17 @@
 #include "Passenger.h"
 #include "Player.h"
 #include "Sprite.h"
+
+enum powerups
+{
+	no_powerup,
+	smelly_dude,
+	attractive_person,
+	freeze_passengers,
+	freeze_buses,
+	star
+};
+
 class State_Gameplay : public GameState
 {
 public:
@@ -16,6 +27,7 @@ public:
 	void update();
 	void launchPassengers(int busNumber, int amount);
 	void updateCrownedPlayer();
+	void updatePowerups();
 	void updateStages();
 	void drawCrown();
 	void drawUI();

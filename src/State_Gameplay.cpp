@@ -91,7 +91,7 @@ void State_Gameplay::load()
 	busTargets[3] = buses[3].getPosition();
 
 	//init the car
-	car = Kinematic(MESH_BUS0, TEX_BUS0_RED);
+	car = Kinematic(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.5f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_CAR, TEX_CAR);
 	car.setAffectedByGravity(false);
 	timesCarSummoned = 0;
 
@@ -351,15 +351,14 @@ void State_Gameplay::update()
 			//Calculates the vector between the bus and the target
 			glm::vec3 desired = busTargets[i] - buses[i].getPosition();
 
-			//Move target based on controller input if the target is within a certain distance from the controller
-			//if ((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z) < 90.0f)
-			busTargets[i] += (worldRotatedController / 1.5f);
-
+			//******restrain target movement from going too far away
+			if (!((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z) > 90.0f))
+				busTargets[i] += worldRotatedController;
+			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			if (busTargets[i].x > 55.0f)
 				busTargets[i].x = 55.0f;
 			else if (busTargets[i].x < -55.0f)
 				busTargets[i].x = -55.0f;
-
 			if (busTargets[i].z > 55.0f)
 				busTargets[i].z = 55.0f;
 			else if (busTargets[i].z < -55.0f)
@@ -368,19 +367,26 @@ void State_Gameplay::update()
 			glm::vec3 currentForwardVector = buses[i].getForwardVector();
 			desired = busTargets[i] - buses[i].getPosition(); //Calculates the new desired vector since we moved the target
 
-			if (!(controllers[i].lX == 0 && controllers[i].lY == 0))
+			if (controllers[i].lX != 0 && controllers[i].lY != 0 && (currentForwardVector != desired)) {
 				currentForwardVector = MathHelper::LERP(currentForwardVector, desired, DH::getDeltaTime() * buses[i].getTurningSpeed());
-
+			}
 			if (desired.x != 0.0f || desired.y != 0.0f || desired.z != 0.0f)
 				buses[i].setForwardVector(currentForwardVector);
 
 			// --- Move the bus --- //
 			//Check if the bus has reached the target. If so, zero out velocity. Only does this if no input on controller
-
-			if (((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z) < 90.0f) && (controllers[i].lX == 0 && controllers[i].lY == 0))
+			if ((controllers[i].lX == 0 && controllers[i].lY == 0))
 				buses[i].setVelocity(0.0f, 0.0f, 0.0f);
+
+
+
 			else//Otherwise, move forward
-				buses[i].setVelocity(glm::normalize(buses[i].getForwardVector()) * buses[i].getMovementSpeed());
+			{
+				float Maxspeed = (((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z)) / 90.0f);
+				if (Maxspeed > 1.0f)
+					Maxspeed = 1.0f;
+				buses[i].setVelocity(glm::normalize(buses[i].getForwardVector()) * (buses[i].getMovementSpeed()*Maxspeed));
+			}
 			//Draw the bus target
 			if (DBG::debug()->getVisualDebugEnabled())
 			{
@@ -437,6 +443,7 @@ void State_Gameplay::update()
 		//Spawn passenger
 		if (aButtonEnabled && controllers[i].checkButton(BUTTON_A) && controllers[i].isConnected())
 			launchPassengers(i, 1);
+		
 	}
 	}
 
@@ -604,7 +611,7 @@ void State_Gameplay::update()
 		roadblock6.update(DH::getDeltaTime());
 		if (carOnScreen)
 		{
-			AM::assets()->bindTexture(TEX_BUS0_RED);
+			AM::assets()->bindTexture(TEX_CAR);
 			car.update(DH::getDeltaTime());
 			if (car.getPosition().x >= 50.0f || car.getPosition().z >= 100.0f || car.getPosition().x <= -100.0f || car.getPosition().z <= -50.0f)
 			{
@@ -776,6 +783,9 @@ void State_Gameplay::update()
 	}
 	//Detect collision HERE^
 	
+	//update powerup stuff
+	updatePowerups();
+
 	//If there's a leader, draw the crown
 	updateCrownedPlayer();
 	drawCrown();
@@ -890,8 +900,8 @@ void State_Gameplay::updateStages()
 		{
 			buses[i].setStage(firstStage);
 			buses[i].setMesh(MESH_BUS0);
-			buses[i].setMovementSpeed(45.0f);
-			buses[i].setTurningSpeed(10.0f);
+			buses[i].setMovementSpeed(55.0f);
+			buses[i].setTurningSpeed(2.0f);
 			fillbar[i].setActiveFrame(2);
 		}
 		else if (points < 25)
@@ -899,7 +909,7 @@ void State_Gameplay::updateStages()
 			buses[i].setStage(secondStage);
 			buses[i].setMesh(MESH_BUS1);
 			buses[i].setMovementSpeed(40.0f);
-			buses[i].setTurningSpeed(0.85f);
+			buses[i].setTurningSpeed(0.7f);
 			fillbar[i].setActiveFrame(4);
 		}
 		else if (points < 35)
@@ -907,7 +917,7 @@ void State_Gameplay::updateStages()
 			buses[i].setStage(thirdStage);
 			buses[i].setMesh(MESH_BUS2);
 			buses[i].setMovementSpeed(35.0f);
-			buses[i].setTurningSpeed(0.75f);
+			buses[i].setTurningSpeed(0.6f);
 			fillbar[i].setActiveFrame(6);
 		}
 		else if (points < 50)
@@ -915,7 +925,7 @@ void State_Gameplay::updateStages()
 			buses[i].setStage(fourthStage);
 			buses[i].setMesh(MESH_BUS3);
 			buses[i].setMovementSpeed(30.0f);
-			buses[i].setTurningSpeed(0.6f);
+			buses[i].setTurningSpeed(0.4f);
 			fillbar[i].setActiveFrame(8);
 		}
 		else if (points >= 50)
@@ -923,9 +933,26 @@ void State_Gameplay::updateStages()
 			buses[i].setStage(fifthStage);
 			buses[i].setMesh(MESH_BUS4);
 			buses[i].setMovementSpeed(25.0f);
-			buses[i].setTurningSpeed(0.45f);
+			buses[i].setTurningSpeed(0.1f);
 			fillbar[i].setActiveFrame(9);
 		}
+	}
+}
+
+void State_Gameplay::updatePowerups()
+{
+	static float powerupDuration = 5.0f;
+	for (int i = 0; i < 4; i++)
+	{
+		if (buses[i].powerup != no_powerup && buses[i].timePowerupStarted - timeLeft > powerupDuration)
+			buses[i].powerup = no_powerup;
+		if (buses[i].powerup == smelly_dude)
+		{
+			launchPassengers(i, (int)buses[i].getPoints() / 3);
+			buses[i].powerup = no_powerup;
+		}
+		else if (buses[i].powerup == attractive_person);
+
 	}
 }
 
@@ -1203,6 +1230,17 @@ void State_Gameplay::drawBuses()
 		lightPosY++;
 	else if (DH::getKey('u'))
 		lightPosY--;
+	//attractive, freeze, freeze, star
+	if (DH::getKey('1'))
+		buses[0].powerup = smelly_dude;
+	if (DH::getKey('2'))
+		buses[0].powerup = attractive_person;
+	if (DH::getKey('3'))
+		buses[0].powerup = freeze_passengers;
+	if (DH::getKey('4'))
+		buses[0].powerup = freeze_buses;
+	if (DH::getKey('5'))
+		buses[0].powerup = star;
 
 	cout << "LIGHT POS: " << lightPosX << "\t" << lightPosY << "\t" << lightPosZ << endl;
 

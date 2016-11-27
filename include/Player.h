@@ -40,7 +40,8 @@ public:
 	float getMovementSpeed() const;
 	void setTurningSpeed(float);
 	float getTurningSpeed() const;
-	
+	float timePowerupStarted;
+	int powerup;
 
 private:
 	int points = 25;
@@ -48,6 +49,7 @@ private:
 	bool inTheLead = false;
 	float busMovementSpeed = 35.0f;
 	float busTurnSpeed = 0.75f;
+	
 };
 
 #endif
