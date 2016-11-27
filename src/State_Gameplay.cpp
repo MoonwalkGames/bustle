@@ -209,7 +209,7 @@ void State_Gameplay::load()
 
 	// ----- Set up the UI ------ ///
 	//set up the timer
-	timeStart = 15.0f;
+	timeStart = 120.0f;
 	timeLeft = timeStart;
 	timer = Sprite::createTextVector(TEX_FONT, -5.0f, -10.0f, 5.0f, 5.0f, "0:00");
 
@@ -371,9 +371,19 @@ void State_Gameplay::update()
 		if (timeLeft > 0.0f && !inIntro)
 		{
 			timeLeft -= DH::getDeltaTime();
-			if (timeLeft < timeStart * 0.66 && timesCarSummoned == 0)
+			if (timeLeft < timeStart * 0.875 && timesCarSummoned == 0)
 				summonCar();
-			else if (timeLeft < timeStart * 0.33 && timesCarSummoned == 1)
+			else if (timeLeft < timeStart * 0.75f && timesCarSummoned == 1)
+				summonCar();
+			else if (timeLeft < timeStart * 0.625f && timesCarSummoned == 2)
+				summonCar();
+			else if (timeLeft < timeStart * 0.5f && timesCarSummoned == 3)
+				summonCar();
+			else if (timeLeft < timeStart * 0.375f && timesCarSummoned == 4)
+				summonCar();
+			else if (timeLeft < timeStart * 0.25f && timesCarSummoned == 5)
+				summonCar();
+			else if (timeLeft < timeStart * 0.125f && timesCarSummoned == 6)
 				summonCar();
 		}
 		else
@@ -700,6 +710,12 @@ void State_Gameplay::update()
 			car.update(DH::getDeltaTime());
 			car.draw();
 			
+			if (((2.5f > car.getPosition().x && car.getPosition().x > -2.5f) || (2.5f > car.getPosition().z && car.getPosition().z > -2.5f)) && !carLaunched)
+			{
+				carLaunched = true;
+				launchSpecialPassengers();
+			}
+
 			if (car.getPosition().x >= 52.5f || car.getPosition().z <= -52.5f)
 			{
 				//carOnScreen = false;
@@ -759,7 +775,7 @@ void State_Gameplay::update()
 		for (unsigned int i = 0; i < passengers.size(); i++)
 
 		{
-
+			passengersFrozen = false;
 			//so passengers dont fly
 			if (passengers[i].getState() == GROUNDED)
 			{
@@ -773,6 +789,8 @@ void State_Gameplay::update()
 			{
 				if (buses[j].powerup == attractive_person)
 					passengers[i].addImpulse(SteeringBehaviour::seek(passengers[i].getPosition(), buses[j].getPosition(), 350.0f));
+				if (buses[j].powerup == freeze_passengers)
+					passengersFrozen = true;
 			}
 			passengers[i].addImpulse(SteeringBehaviour::wander(passengers[i], 50.0f, 500.0f));
 
@@ -793,7 +811,6 @@ void State_Gameplay::update()
 
 			//avoidence behaviour
 			//passengers[i].addImpulse(SteeringBehaviour::avoidence(passengers, i, 3.0f, 3.0f));
-
 			passengers[i].update(DH::getDeltaTime());
 			passengers[i].draw();
 
@@ -806,6 +823,45 @@ void State_Gameplay::update()
 				passengers[i].setPositionZ(50.0f);
 			else if (passengers[i].getPosition().z < -50.0f)
 				passengers[i].setPositionZ(-50.0f);
+
+		}
+
+		//Update and draw the special passengers
+		for (unsigned int i = 0; i < specialPassengers.size(); i++)
+
+		{
+			passengersFrozen = false;
+			//so passengers dont fly
+			if (specialPassengers[i].getState() == GROUNDED)
+			{
+				specialPassengers[i].setVelocity(glm::normalize(specialPassengers[i].getVelocity())*5.0f);
+				specialPassengers[i].setPositionY(0.0f);
+			}
+
+			//wander behaviour
+
+			for (int j = 0; j < 4; j++)
+			{
+				if (buses[j].powerup == attractive_person)
+					specialPassengers[i].addImpulse(SteeringBehaviour::seek(specialPassengers[i].getPosition(), buses[j].getPosition(), 350.0f));
+				if (buses[j].powerup == freeze_passengers)
+					passengersFrozen = true;
+			}
+			specialPassengers[i].addImpulse(SteeringBehaviour::wander(specialPassengers[i], 50.0f, 500.0f));
+
+			if (!passengersFrozen)
+				specialPassengers[i].update(DH::getDeltaTime());
+			specialPassengers[i].draw();
+
+			if (specialPassengers[i].getPosition().x > 50.0f)
+				specialPassengers[i].setPositionX(50.0f);
+			else if (specialPassengers[i].getPosition().x < -50.0f)
+				specialPassengers[i].setPositionX(-50.0f);
+
+			if (specialPassengers[i].getPosition().z > 50.0f)
+				specialPassengers[i].setPositionZ(50.0f);
+			else if (specialPassengers[i].getPosition().z < -50.0f)
+				specialPassengers[i].setPositionZ(-50.0f);
 
 		}
 
@@ -827,6 +883,7 @@ void State_Gameplay::update()
 			if (i != j)
 			{
 				res = CollisionHandler::PLAYERvPLAYER(buses[i], buses[j]);
+				//Star trumps all other powerups, it means that the player with the star always wins the collision.
 				if (res)
 				{
 					if (res.outcome == full_loss)
@@ -835,26 +892,44 @@ void State_Gameplay::update()
 					}
 					else if (res.outcome == partial_loss)
 					{
-						launchPassengers(i, 1);
-						launchPassengers(j, 1);
-						if (buses[i].powerup == smelly_dude)
+						if (buses[i].powerup == star)
 						{
-							launchPassengers(j, buses[j].getPoints() / 3);
-							buses[i].powerup = no_powerup;
+							launchPassengers(j, 2);
 						}
-						else if (buses[j].powerup == smelly_dude)
+						else if (buses[j].powerup = star)
 						{
-							launchPassengers(i, buses[i].getPoints() / 3);
-							buses[j].powerup = no_powerup;
+							launchPassengers(i, 2);
+						}
+						else
+						{
+							launchPassengers(i, 1);
+							launchPassengers(j, 1);
+							if (buses[i].powerup == smelly_dude)
+							{
+								launchPassengers(j, buses[j].getPoints() / 3);
+								buses[i].powerup = no_powerup;
+							}
+							else if (buses[j].powerup == smelly_dude)
+							{
+								launchPassengers(i, buses[i].getPoints() / 3);
+								buses[j].powerup = no_powerup;
+							}
 						}
 					}
 					else if (res.outcome == win)
 					{
-						launchPassengers(j, 2);
-						if (buses[i].powerup == smelly_dude)
+						if (buses[j].powerup != star)
 						{
-							launchPassengers(j, buses[j].getPoints() / 3);
-							buses[i].powerup = no_powerup;
+							launchPassengers(j, 2);
+							if (buses[i].powerup == smelly_dude)
+							{
+								launchPassengers(j, buses[j].getPoints() / 3);
+								buses[i].powerup = no_powerup;
+							}
+						}
+						else
+						{
+							launchPassengers(i, 2);
 						}
 					}
 					else
@@ -908,6 +983,34 @@ void State_Gameplay::update()
 			if (!passengers[j].getAlive())
 			{
 				passengers.erase(passengers.begin() + j);
+				j--;
+			}
+		}
+
+		for (unsigned int j = 0; j < specialPassengers.size(); j++)
+		{
+			if (CollisionHandler::PLAYERvPASSENGER(buses[i], specialPassengers[j]))
+			{
+				if (specialPassengers[j].getState() != PASSENGER_STATE::VACUUM)
+				{
+					specialPassengers[j].setState(PASSENGER_STATE::VACUUM);
+					specialPassengers[j].setTargetBusPosition(buses[i].getPosition());
+					specialPassengers[j].setBusTargetNumber(i);
+					
+				}
+			}
+			else
+			{
+				if (specialPassengers[j].getState() == PASSENGER_STATE::VACUUM)
+				{
+					specialPassengers[j].setTargetBusPosition(buses[specialPassengers[j].getBusTargetNumber()].getPosition());
+				}
+			}
+
+			if (!specialPassengers[j].getAlive())
+			{
+				buses[i].powerup = specialPassengers[j].powerup;
+				specialPassengers.erase(specialPassengers.begin() + j);
 				j--;
 			}
 		}
@@ -1184,6 +1287,7 @@ void State_Gameplay::excecute()
 
 void State_Gameplay::summonCar()
 {
+	carLaunched = false; //car just spawned, haven't launched passengers yet
 	static bool warning = true;
 	//do warning stuff
 	warning = false;
@@ -1459,5 +1563,26 @@ void State_Gameplay::enableLighting()
 	glEnable(GL_COLOR_MATERIAL); // final polygon color will be based on glColor and glMaterial
 }
 
+void State_Gameplay::launchSpecialPassengers()
+{
+	glm::vec3 startPosition = car.getPosition();
+	glm::vec3 startRotation;
+	glm::vec3 startScale;
+	int amount = MathHelper::randomInt(1, 3);
+	float launchSpeed = 25.0f;
+	glm::vec3 launchVel;
+
+	for (int i = 0; i < amount; i++)
+	{
+		startRotation = MathHelper::randomVec3(0.0f, 360.0f);
+		startScale = glm::vec3(1.2f);
+		launchVel = MathHelper::randomVec3(-1.0f, 1.0f);
+		launchVel.y = 1.5f;
+		launchVel = glm::normalize(launchVel);
+		launchVel *= launchSpeed;
+		SpecialPassenger newSpecialPassenger = SpecialPassenger(startPosition, startRotation, startScale, true, glm::vec3(0.0f, -9.81f, 0.0f), launchVel, 1.0f, MESH_PASSENGER_A, MESH_PASSENGER_B, MESH_PASSENGER_C, TEX_PASSENGER);
+		specialPassengers.push_back(newSpecialPassenger);
+	}
+}
 
 

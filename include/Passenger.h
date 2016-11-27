@@ -57,4 +57,13 @@ protected:
 	glm::vec3 targetBusPosition;
 	int busTargetNumber;
 };
+
+class SpecialPassenger : public Passenger
+{
+public:
+	SpecialPassenger(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, bool gravityAffected,
+		glm::vec3 accel, glm::vec3 launchVel, float mass, MESH_NAME meshA, MESH_NAME meshB, MESH_NAME meshC, TEXTURE_NAME texture);
+	void draw();
+	int powerup;
+};
 #endif

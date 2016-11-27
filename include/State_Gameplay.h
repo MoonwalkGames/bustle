@@ -37,6 +37,7 @@ public:
 	void checkMatrixStackStatus();
 	void excecute();
 	void summonCar();
+	void launchSpecialPassengers();
 
 private:
 	GameObject levelPlay;
@@ -94,12 +95,14 @@ private:
 	GameObject skyBox;
 	Kinematic car;
 	int timesCarSummoned;
+	bool passengersFrozen;
 	Mesh* crown;
 
 	Player buses[4];
 	glm::vec3 busTargets[4];
 	MController controllers[4];
 	std::vector<Passenger> passengers;
+	std::vector<SpecialPassenger> specialPassengers;
 	glm::vec3 cameraPos;
 	glm::vec3 rotatedCameraPos;
 	glm::vec3 gameplayCameraPos;
@@ -121,6 +124,7 @@ private:
 	Sprite billboardlight[4];
 	Sprite clock[3];
 	std::vector<glm::vec3> clockHandPositions;
-	bool carOnScreen = false;
+	bool carOnScreen = false; //if the car is on screen, then we should update & draw it
+	bool carLaunched = false; //if the car's already launched passengers, then we shouldn't do it again
 };
 #endif

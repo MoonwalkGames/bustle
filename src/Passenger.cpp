@@ -172,3 +172,47 @@ bool Passenger::getAlive() const
 	else //ALways returns true if not in vacuum state because can only 'die' in that state
 		return true;
 }
+
+SpecialPassenger::SpecialPassenger(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, bool gravityAffected, 
+	glm::vec3 accel, glm::vec3 launchVel, float mass, MESH_NAME meshA, MESH_NAME meshB, MESH_NAME meshC, TEXTURE_NAME texture) : 
+	Passenger(pos, rot, scl, gravityAffected, accel, launchVel, mass, meshA,  meshB,  meshC, texture)
+{
+	this->powerup = MathHelper::randomInt(1, 5);
+}
+/*
+enum powerups
+{
+no_powerup,
+smelly_dude,
+attractive_person,
+freeze_passengers,
+freeze_buses,
+star
+};*/
+void SpecialPassenger::draw()
+{
+	if(this->powerup == 1)
+		AM::assets()->bindTexture(TEX_BUS0_GREEN);
+	else if (this->powerup == 2)
+		AM::assets()->bindTexture(TEX_BUS0_RED);
+	else if (this->powerup == 3)
+		AM::assets()->bindTexture(TEX_BUS0_BLUE);
+	else if (this->powerup == 4)
+		AM::assets()->bindTexture(TEX_BUS0_BLUE);
+	else if (this->powerup == 5)
+		AM::assets()->bindTexture(TEX_BUS0_YELLOW);
+
+	if (DBG::debug()->getVisualDebugEnabled())
+		drawDebug();
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(glm::value_ptr(localToWorld));
+
+	//Draws the current mesh
+	if (currentMeshNumber == 0)
+		meshA_Data->draw(true);
+	else if (currentMeshNumber == 1)
+		meshB_Data->draw(true);
+	else if (currentMeshNumber == 2)
+		meshC_Data->draw(true);
+}
