@@ -606,7 +606,7 @@ void State_Gameplay::update()
 		{
 			AM::assets()->bindTexture(TEX_BUS0_RED);
 			car.update(DH::getDeltaTime());
-			if (car.getPosition().x >= 50.0f || car.getPosition().z >= 50.0f || car.getPosition().x <= -75.0f || car.getPosition().z <= -75.0f)
+			if (car.getPosition().x >= 50.0f || car.getPosition().z >= 100.0f || car.getPosition().x <= -100.0f || car.getPosition().z <= -50.0f)
 			{
 				//carOnScreen = false;
 				car.setAffectedByGravity(true);
