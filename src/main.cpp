@@ -37,8 +37,9 @@ int main(int argc, char **argv)
 	
 	//Perform initialization on the display and the assets themselves
 	DisplayHandler::init();
-	AM::assets()->loadAssets();
-	GM::game()->setActiveState(STATE_MAINMENU);
+
+	GM::game()->setActiveState(STATE_LOAD);
+
 	//Start the event handler
 	glutMainLoop();
 

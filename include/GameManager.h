@@ -6,6 +6,7 @@
 #include "State_Gameplay.h"
 #include "State_EndRound.h"
 #include "State_MainMenu.h"
+#include "State_Loading.h"
 
 /*
 	GameManager class
