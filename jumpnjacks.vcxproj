@@ -98,6 +98,7 @@
     <ClCompile Include="src\State_Gameplay.cpp" />
     <ClCompile Include="src\State_Loading.cpp" />
     <ClCompile Include="src\State_MainMenu.cpp" />
+    <ClCompile Include="src\State_Tutorial.cpp" />
     <ClCompile Include="src\Texture2D.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -121,6 +122,7 @@
     <ClInclude Include="include\State_Gameplay.h" />
     <ClInclude Include="include\State_Loading.h" />
     <ClInclude Include="include\State_MainMenu.h" />
+    <ClInclude Include="include\State_Tutorial.h" />
     <ClInclude Include="include\SteeringBehaviors.h" />
     <ClInclude Include="include\Texture2D.h" />
   </ItemGroup>

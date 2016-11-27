@@ -357,7 +357,7 @@ void State_Gameplay::load()
 
 void State_Gameplay::update()
 {
-//	static float FOV = 75.0f;
+	//static float FOV = 75.0f;
 	if (DH::getKey('h'))
 		GM::game()->setActiveState(STATE_GAMEPLAY);
 

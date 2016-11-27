@@ -96,6 +96,7 @@ void AssetManager::loadAssets()
 	loadedTextures.push_back(Texture2D("./res/img/tex_BillboardLights.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Clock.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_ClockTower.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_PlayerIndicator.png"));
 }
 
 void AssetManager::bindTexture(TEXTURE_NAME textureName)

@@ -390,7 +390,7 @@ void State_MainMenu::update()
 	if (DH::getKey(32) || (controller.isConnected() && controller.checkButton(BUTTON_A)))
 	{
 		if (currentSelection == 0)
-			GameManager::game()->setActiveState(STATE_GAMEPLAY);
+			GameManager::game()->setActiveState(STATE_TUTORIAL);
 		else
 			exit(0);
 	}
