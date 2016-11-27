@@ -38,6 +38,7 @@ protected:
 
 	int currentMeshNumber;
 	float morph_T;
+	bool morphForward;
 
 	//For different textures
 	int textureNumber;

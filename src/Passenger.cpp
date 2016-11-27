@@ -18,6 +18,7 @@ Passenger::Passenger(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, bool gravityAf
 
 	currentMeshNumber = 0;
 	morph_T = 0.0f;
+	morphForward = true;
 
 	textureNumber = rand() % 3;
 }
@@ -65,18 +66,28 @@ void Passenger::update(float deltaTime)
 		//flee(something)
 	}
 	
-	morph_T += deltaTime * 3.0f;
+	morph_T += deltaTime * 5.0f;
 
 	if (morph_T >= 1.0f)
 	{
-		currentMeshNumber++;
+		if (morphForward)
+			currentMeshNumber++;
+		else
+			currentMeshNumber--;
+
 		morph_T = 0.0f;
 
 		//Wraps the mesh number so it doesn't go above or below the min and max mesh number
 		if (currentMeshNumber > 2)
+		{
+			morphForward = false;
 			currentMeshNumber = 1;
+		}
 		else if (currentMeshNumber < 0)
+		{
+			morphForward = true;
 			currentMeshNumber = 1;
+		}
 	}
 	setForwardVector(-velocity);
 
