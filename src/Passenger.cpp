@@ -19,7 +19,7 @@ Passenger::Passenger(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, bool gravityAf
 	currentMeshNumber = 0;
 	morph_T = 0.0f;
 
-	textureNumber = rand() % 2;
+	textureNumber = rand() % 3;
 }
 
 void Passenger::update(float deltaTime)
@@ -89,6 +89,8 @@ void Passenger::draw()
 		AM::assets()->bindTexture(TEX_PASSENGER);
 	else if (textureNumber == 1)
 		AM::assets()->bindTexture(TEX_PASSENGER_2);
+	else if (textureNumber == 2)
+		AM::assets()->bindTexture(TEX_PASSENGER_3);
 
 	if (DBG::debug()->getVisualDebugEnabled())
 		drawDebug();

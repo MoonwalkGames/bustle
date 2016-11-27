@@ -72,6 +72,7 @@ private:
 	GameObject roadblock5;
 	GameObject roadblock6;
 	GameObject skyBox;
+	GameObject clockTower;
 
 	Player buses[4];
 	glm::vec3 busTargets[4];

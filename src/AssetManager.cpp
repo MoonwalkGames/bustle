@@ -42,6 +42,7 @@ void AssetManager::loadAssets()
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Skybox.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Crown.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Quad.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_ClockTower.obj"));
 	
 	/* ========== TEXTURES (Naming: tex_XXXXXX.png) ========== */
 	loadedTextures.push_back(Texture2D("./res/img/tex_Bus0_Red.png"));
@@ -66,6 +67,7 @@ void AssetManager::loadAssets()
 	loadedTextures.push_back(Texture2D("./res/img/tex_Bus4_Yellow.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Passenger.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Passenger_2.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Passenger_3.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_LevelArea.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_LevelBackground.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_LevelBackgroundM.png"));
@@ -93,6 +95,7 @@ void AssetManager::loadAssets()
 	loadedTextures.push_back(Texture2D("./res/img/tex_Billboard.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_BillboardLights.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Clock.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_ClockTower.png"));
 }
 
 void AssetManager::bindTexture(TEXTURE_NAME textureName)

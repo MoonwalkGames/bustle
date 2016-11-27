@@ -131,6 +131,10 @@ void State_MainMenu::load()
 	roadblock5.update(DH::deltaTime);
 	roadblock6.update(DH::deltaTime);
 
+	//Init the clock tower
+	clockTower = GameObject(glm::vec3(-60.0f, 20.0f, 60.0f), glm::vec3(0.0f, 45.0f, 0.0f), glm::vec3(5.0f), MESH_CLOCKTOWER, TEX_CLOCKTOWER);
+	clockTower.update(DH::deltaTime);
+
 	//Init the buses
 	buses[0] = Player(glm::vec3(-25.0f, 1.75f, -25.0f), glm::vec3(0.0f, -45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_RED);
 	buses[1] = Player(glm::vec3(-25.0f, 1.75f, 25.0f), glm::vec3(0.0f, 45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_BLUE);
@@ -493,6 +497,10 @@ void State_MainMenu::update()
 	roadblock4.draw();
 	roadblock5.draw();
 	roadblock6.draw();
+
+	//Draw the clock tower
+	AM::assets()->bindTexture(TEX_CLOCKTOWER);
+	clockTower.draw();
 
 	//Update and draw the buses
 	updateStages();

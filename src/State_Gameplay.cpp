@@ -137,6 +137,10 @@ void State_Gameplay::load()
 	roadblock5.update(DH::deltaTime);
 	roadblock6.update(DH::deltaTime);
 
+	//Init the clock tower
+	clockTower = GameObject(glm::vec3(-70.0f, 3.5f, 70.0f), glm::vec3(0.0f, 45.0f, 0.0f), glm::vec3(6.0f, 6.0f, 6.0f), MESH_CLOCKTOWER, TEX_CLOCKTOWER);
+	clockTower.update(DH::deltaTime);
+
 	//Init the buses
 	buses[0] = Player(glm::vec3(-25.0f, 1.75f, -25.0f), glm::vec3(0.0f, -45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_RED);
 	buses[1] = Player(glm::vec3(-25.0f, 1.75f, 25.0f), glm::vec3(0.0f, 45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_BLUE);
@@ -157,11 +161,11 @@ void State_Gameplay::load()
 	clock[1].setActiveFrame(1);
 	clock[2].setActiveFrame(1);
 
-	clock[0].setPosition(-50.0f, 10.0f, 50.0f); 
-	clock[1].setPosition(-50.0f, 10.0f, 49.98f);
-	clock[2].setPosition(-50.0f, 10.0f, 49.95f);
+	clock[0].setPosition(-63.5f, 21.0f, 63.5f); 
+	clock[1].setPosition(-63.48, 21.0f, 63.48);
+	clock[2].setPosition(-63.45, 21.0f, 63.45);
 
-	clock[0].setScale(15.0f, 15.0f, 15.0f);
+	clock[0].setScale(12.25f, 12.25f, 12.25f);
 	clock[1].setScale(10.0f, 15.0f, 15.0f);
 	clock[2].setScale(13.0f, 10.0f, 15.0f);
 
@@ -663,6 +667,10 @@ void State_Gameplay::update()
 		roadblock4.draw();
 		roadblock5.draw();
 		roadblock6.draw();
+
+		//Draw the clock tower
+		AM::assets()->bindTexture(TEX_CLOCKTOWER);
+		clockTower.draw();
 
 		//Rotate the clock hand based on the time left
 		float startRot = 90.0f;

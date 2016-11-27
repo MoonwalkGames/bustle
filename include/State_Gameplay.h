@@ -75,6 +75,7 @@ private:
 	GameObject roadblock4;
 	GameObject roadblock5;
 	GameObject roadblock6;
+	GameObject clockTower;
 	GameObject skyBox;
 	Mesh* crown;
 
