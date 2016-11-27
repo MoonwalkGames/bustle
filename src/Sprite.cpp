@@ -219,5 +219,8 @@ std::vector<Sprite> Sprite::changeTextVector(TEXTURE_NAME fontSheet, std::vector
 void Sprite::drawTextVector(std::vector<Sprite> textSprites, float dt)
 {
 	for (unsigned int i = 0; i < textSprites.size(); i++)
+	{
 		textSprites[i].update(dt);
+		textSprites[i].draw();
+	}
 }

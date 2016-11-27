@@ -1037,7 +1037,7 @@ void State_Gameplay::drawUI()
 	else
 		timerString = std::to_string(int(timeLeft) / 60) + ":" + std::to_string(int(timeLeft) % 60);
 
-	timer = Sprite::changeTextVector(TEX_FONT, timer, timerString);
+	//timer = Sprite::changeTextVector(TEX_FONT, timer, timerString);
 	//Sprite::drawTextVector(timer, DH::getDeltaTime());
 }
 
