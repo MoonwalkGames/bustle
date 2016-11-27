@@ -203,7 +203,7 @@ void State_Gameplay::load()
 
 	// ----- Set up the UI ------ ///
 	//set up the timer
-	timeStart = 30.0f;
+	timeStart = 300.0f;
 	timeLeft = timeStart;
 	timer = Sprite::createTextVector(TEX_FONT, -5.0f, -10.0f, 5.0f, 5.0f, "0:00");
 
@@ -807,17 +807,33 @@ void State_Gameplay::update()
 		//buses[i].addImpulse(-(glm::normalize(buses[i].getVelocity()) * 500.0f));
 	}
 	//player vs passenger collisions
-	int passengerVectorSize = passengers.size();
 	for (int i = 0; i < 4; i++)
 	{
-		for (int j = 0; j < passengerVectorSize; j++)
+		for (unsigned int j = 0; j < passengers.size(); j++)
 		{
 			if (CollisionHandler::PLAYERvPASSENGER(buses[i], passengers[j]))
 			{
+				if (passengers[j].getState() != PASSENGER_STATE::VACUUM)
+				{
+					passengers[j].setState(PASSENGER_STATE::VACUUM);
+					passengers[j].setTargetBusPosition(buses[i].getPosition());
+					passengers[j].setBusTargetNumber(i);
+					buses[i].addPoints(1);
+					buses[i].addMass(1.0f);
+				}
+			}
+			else
+			{
+				if (passengers[j].getState() == PASSENGER_STATE::VACUUM)
+				{
+					passengers[j].setTargetBusPosition(buses[passengers[j].getBusTargetNumber()].getPosition());
+				}
+			}
+
+			if (!passengers[j].getAlive())
+			{
 				passengers.erase(passengers.begin() + j);
-				passengerVectorSize--;
-				buses[i].addPoints(1);
-				buses[i].addMass(1.0f);
+				j--;
 			}
 		}
 	}

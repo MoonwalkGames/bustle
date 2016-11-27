@@ -7,7 +7,8 @@ enum PASSENGER_STATE
 {
 	FLYING_UP,
 	FALLING,
-	GROUNDED
+	GROUNDED,
+	VACUUM
 };
 
 class Passenger : public Kinematic
@@ -15,8 +16,15 @@ class Passenger : public Kinematic
 public:
 	Passenger(glm::vec3 pos, glm::vec3 launchRotation, glm::vec3 scl, bool gravityAffected, glm::vec3 accel, glm::vec3 launchVel, float mass, MESH_NAME meshA, MESH_NAME meshB, MESH_NAME meshC, TEXTURE_NAME texture);
 	~Passenger() {}
-	int getState() const { return currentState; }
+
+	int getState() const;
+	bool getAlive() const;
 	bool getAbleToBePickedUp() const;
+	int getBusTargetNumber() const;
+
+	void setState(PASSENGER_STATE state);
+	void setTargetBusPosition(glm::vec3 position);
+	void setBusTargetNumber(int targetNumber);
 
 	virtual void update(float deltaTime);
 	virtual void draw();
@@ -42,5 +50,11 @@ protected:
 
 	//For different textures
 	int textureNumber;
+
+	//For the 'sucking in' animation
+	float timeLeft;
+	glm::vec3 finalPosition; //Where the passenger was when they got picked up
+	glm::vec3 targetBusPosition;
+	int busTargetNumber;
 };
 #endif

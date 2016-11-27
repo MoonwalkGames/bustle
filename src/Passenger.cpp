@@ -20,6 +20,11 @@ Passenger::Passenger(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, bool gravityAf
 	morph_T = 0.0f;
 	morphForward = true;
 
+	timeLeft = 0.33f;
+	targetBusPosition = glm::vec3(0.0f);
+	finalPosition = glm::vec3(0.0f);
+	busTargetNumber = -1;
+
 	textureNumber = rand() % 3;
 }
 
@@ -61,9 +66,16 @@ void Passenger::update(float deltaTime)
 		if (position.y < 2.0f)
 			currentState = PASSENGER_STATE::GROUNDED;
 	}
-	else if (currentState == PASSENGER_STATE::GROUNDED)
+	else if (currentState == PASSENGER_STATE::VACUUM)
 	{
-		//flee(something)
+		//Set the final position when the passenger is first hit
+		if (finalPosition == glm::vec3(0.0f))
+			finalPosition = glm::vec3(position);
+
+		scale = MathHelper::LERP(glm::vec3(1.0f), glm::vec3(5.0f, 0.1f, 1.0f), 1 - timeLeft / 0.33f);
+		position = MathHelper::LERP(finalPosition, targetBusPosition, 1 - timeLeft / 0.33f);
+
+		timeLeft -= deltaTime;
 	}
 	
 	morph_T += deltaTime * 5.0f;
@@ -125,4 +137,38 @@ void Passenger::drawDebug()
 
 bool Passenger::getAbleToBePickedUp() const {
 	return ableToBePickedUp;
+}
+
+int Passenger::getState() const {
+	return currentState;
+}
+
+void Passenger::setState(PASSENGER_STATE state) {
+	currentState = state;
+}
+
+void Passenger::setTargetBusPosition(glm::vec3 position) {
+	targetBusPosition = position;
+}
+
+void Passenger::setBusTargetNumber(int number) {
+	busTargetNumber = number;
+}
+
+int Passenger::getBusTargetNumber() const {
+	return busTargetNumber;
+}
+
+bool Passenger::getAlive() const
+{
+	if (currentState == PASSENGER_STATE::VACUUM)
+	{
+		//Return dead only if the passenger's 'lifetime' has run out
+		if (timeLeft > 0.0f)
+			return true;
+		else
+			return false;
+	}
+	else //ALways returns true if not in vacuum state because can only 'die' in that state
+		return true;
 }
