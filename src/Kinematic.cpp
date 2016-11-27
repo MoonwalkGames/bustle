@@ -176,9 +176,9 @@ float Kinematic::getMass() const {
 void Kinematic::setAffectedByGravity(bool affected)
 {
 	if (affectedByGravity)
-		acceleration -= gravity;
-	else
 		acceleration += gravity;
+	else
+		acceleration -= gravity;
 
 	affectedByGravity = affected;
 }
@@ -192,6 +192,8 @@ Polymorphic update function
 */
 void Kinematic::update(float dt)
 {
+	
+
 	//Need to be able to reset the acceleration at the end of the frame, back to only the constant accels, without impulse
 	glm::vec3 constantAcceleration = acceleration;
 
@@ -203,21 +205,18 @@ void Kinematic::update(float dt)
 	velocity.y = velocity.y + (dt * acceleration.y) + ((-velocity.y) * dragConstant);
 	velocity.z = velocity.z + (dt * acceleration.z) + ((-velocity.z) * dragConstant);
 
+	//if not affected by gravity, no change in y
+	if (!this->affectedByGravity)
+	{
+		acceleration.y = 0;
+		velocity.y = 0;
+	}
+
 	//Integrates velocity into position
 	position.x += (velocity.x * dt) + (0.5 * dt * dt * acceleration.x);
 	position.y += (velocity.y * dt) + (0.5 * dt * dt * acceleration.y);
 	position.z += (velocity.z * dt) + (0.5 * dt * dt * acceleration.z);
-
-	//DELETE LATER - Restricting the objects to the world bounds//
-	if (position.x > 50.0f)
-		position.x = 50.0f;
-	else if (position.x < -50.0f)
-		position.x = -50.0f;
-
-	if (position.z > 50.0f)
-		position.z = 50.0f;
-	else if (position.z < -50.0f)
-		position.z = -50.0f;
+	
 
 	//Zeroes out the impulse since it only lasts for one frame
 	impulse = glm::vec3(0.0f);
@@ -225,14 +224,18 @@ void Kinematic::update(float dt)
 	//Resets the acceleration to the constants so impulse can be added back the next frame again
 	acceleration = constantAcceleration;
 
-	//Calls the parent update function which positions the object properly in the scene and then renders it
-	if (DBG::debug()->getVisualDebugEnabled())
-		drawDebug(dt);
-
 	GameObject::update(dt);
 }
 
-void Kinematic::drawDebug(float dt)
+void Kinematic::draw()
+{
+	if (DBG::debug()->getVisualDebugEnabled())
+		drawDebug();
+
+	GameObject::draw();
+}
+
+void Kinematic::drawDebug()
 {
 	glLoadIdentity();
 	glDisable(GL_TEXTURE_2D);
@@ -259,7 +262,7 @@ void Kinematic::drawDebug(float dt)
 	glColor3f(1.0f, 1.0f, 1.0f);
 	glEnable(GL_TEXTURE_2D);
 
-	GameObject::drawDebug(dt);
+	GameObject::drawDebug();
 }
 
 /*

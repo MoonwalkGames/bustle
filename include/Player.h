@@ -32,7 +32,8 @@ public:
 	int getPoints(); //Gets number of points
 	int getStage() const { return stage; }
 	virtual void update(float deltaTime);
-	virtual void debugDraw(float deltaTime);
+	virtual void draw();
+	virtual void debugDraw();
 	bool isLeading() const;
 	void setLeading(bool);
 	void setStage(int stage);
@@ -40,7 +41,9 @@ public:
 	float getMovementSpeed() const;
 	void setTurningSpeed(float);
 	float getTurningSpeed() const;
-	
+	float timePowerupStarted;
+	int powerup; //enumerated powerup this player has
+	bool attractive; //the attractive powerup, if this is true the passengers will seek to this bus
 
 private:
 	int points = 25;
@@ -48,6 +51,7 @@ private:
 	bool inTheLead = false;
 	float busMovementSpeed = 35.0f;
 	float busTurnSpeed = 0.75f;
+	
 };
 
 #endif

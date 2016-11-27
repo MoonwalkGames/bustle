@@ -6,6 +6,17 @@
 #include "Passenger.h"
 #include "Player.h"
 #include "Sprite.h"
+
+enum powerups
+{
+	no_powerup,
+	smelly_dude,
+	attractive_person,
+	freeze_passengers,
+	freeze_buses,
+	star
+};
+
 class State_Gameplay : public GameState
 {
 public:
@@ -16,12 +27,16 @@ public:
 	void update();
 	void launchPassengers(int busNumber, int amount);
 	void updateCrownedPlayer();
+	void updatePowerups();
 	void updateStages();
 	void drawCrown();
 	void drawUI();
 	void drawBuses();
 	glm::vec3 getClockHandEndPosition(float angle);
 	void enableLighting();
+	void checkMatrixStackStatus();
+	void excecute();
+	void summonCar();
 
 private:
 	GameObject levelPlay;
@@ -75,7 +90,10 @@ private:
 	GameObject roadblock4;
 	GameObject roadblock5;
 	GameObject roadblock6;
+	GameObject clockTower;
 	GameObject skyBox;
+	Kinematic car;
+	int timesCarSummoned;
 	Mesh* crown;
 
 	Player buses[4];
@@ -83,14 +101,15 @@ private:
 	MController controllers[4];
 	std::vector<Passenger> passengers;
 	glm::vec3 cameraPos;
+	glm::vec3 rotatedCameraPos;
 	glm::vec3 gameplayCameraPos;
-	glm::vec3 introLerpTarget;
 	bool debugDrawing;
 	float timeSinceLastDataPush;
 	bool inIntro = true;
 	bool firstPerson = false;
-	float FOV;
 	float rotation;
+	bool aButtonEnabled;
+	bool pressedLastFrame;
 	//UI
 	float timeStart;
 	float timeLeft;
@@ -100,8 +119,8 @@ private:
 	Sprite fillbarshade[4];
 	Sprite fillbarbackground[4];
 	Sprite billboardlight[4];
-
 	Sprite clock[3];
 	std::vector<glm::vec3> clockHandPositions;
+	bool carOnScreen = false;
 };
 #endif

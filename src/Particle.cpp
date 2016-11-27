@@ -21,8 +21,8 @@ ParticleEmitter::ParticleEmitter()
 	particleLifeRange = glm::vec2(0.0f);
 	particleVel_Min = glm::vec3(0.0f);
 	particleVel_Max = glm::vec3(0.0f);
-	particleColour_Min = glm::vec4(0.0f);
-	particleColour_Max = glm::vec4(0.0f);
+	particleColour_Min = glm::vec4(1.0f);
+	particleColour_Max = glm::vec4(1.0f);
 
 	//Optional renderables
 	particleMesh = NUM_MESHES; //Essentially treated as NULL
@@ -152,6 +152,9 @@ void ParticleEmitter::applyForceToParticles(glm::vec3 impulseForce)
 
 void ParticleEmitter::update(float deltaTime)
 {
+	if (particleTexture != NUM_TEXTURES)
+		glBindTexture(GL_TEXTURE_2D, AM::assets()->getTexture2D(particleTexture).getTextureID());
+
 	if (active)
 	{
 		for (unsigned int i = 0; i < particles.size(); i++)
@@ -168,6 +171,7 @@ void ParticleEmitter::update(float deltaTime)
 			}
 
 			particles[i].update(deltaTime);
+			particles[i].draw();
 		}
 	}
 }

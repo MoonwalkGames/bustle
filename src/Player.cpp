@@ -24,15 +24,20 @@ void Player::update(float deltaTime)
 	else
 		position.y = 3.0f;
 
-	if (DBG::debug()->getVisualDebugEnabled())
-		debugDraw(deltaTime);
-
 	Kinematic::update(deltaTime);
 }
 
-void Player::debugDraw(float deltaTime)
+void Player::draw()
 {
-	Kinematic::drawDebug(deltaTime);
+	if (DBG::debug()->getVisualDebugEnabled())
+		debugDraw();
+
+	Kinematic::draw();
+}
+
+void Player::debugDraw()
+{
+	Kinematic::drawDebug();
 }
 
 bool Player::isLeading() const 

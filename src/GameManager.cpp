@@ -5,10 +5,10 @@ GameManager* GameManager::inst = 0; //The singleton instance of this class
 //The constructor, sets the first active state and loads it
 GameManager::GameManager()
 {
-	activeStateNumber = STATE_GAMEPLAY;
-	activeState = new State_Gameplay();
-	activeState->load();
 	stillPlaying = true;
+
+	for (int i = 0; i < 4; i++)
+		activePlayers.push_back(false);
 }
 
 //The destructor, cleans up the activeState pointer
@@ -41,6 +41,10 @@ void GameManager::setActiveState(STATE newActiveState)
 		activeState = new State_EndRound();
 	else if (newActiveState == STATE_MAINMENU)
 		activeState = new State_MainMenu();
+	else if (newActiveState == STATE_LOAD)
+		activeState = new State_Loading();
+	else if (newActiveState == STATE_TUTORIAL)
+		activeState = new State_Tutorial();
 	else
 	{
 		std::cout << "ERROR: INVALID STATE NUMBER, DEFAULTING TO TEST STATE!!!" << std::endl;
@@ -68,6 +72,21 @@ float GameManager::getCurrentStateTime() const {
 //Call this to end the game
 void GameManager::setDonePlaying() {
 	stillPlaying = false;
+}
+
+//Set which players are active
+void GameManager::setActivePlayers(bool player1, bool player2, bool player3, bool player4)
+{
+	activePlayers[0] = player1;
+	activePlayers[1] = player2;
+	activePlayers[2] = player3;
+	activePlayers[3] = player4;
+}
+
+//Get which players are active
+std::vector<bool> GameManager::getActivePlayers() const
+{
+	return activePlayers;
 }
 
 /* Singleton pattern */

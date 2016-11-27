@@ -27,7 +27,9 @@ void AssetManager::loadAssets()
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Bus2.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Bus3.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Bus4.obj"));
-	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Passenger.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Passenger_A.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Passenger_B.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Passenger_C.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_LevelArea.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_LevelBackground.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_LevelBackgroundM.obj"));
@@ -39,6 +41,9 @@ void AssetManager::loadAssets()
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Roadblock.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Skybox.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Crown.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Car.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Quad.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_ClockTower.obj"));
 	
 	/* ========== TEXTURES (Naming: tex_XXXXXX.png) ========== */
 	loadedTextures.push_back(Texture2D("./res/img/tex_Bus0_Red.png"));
@@ -62,6 +67,8 @@ void AssetManager::loadAssets()
 	loadedTextures.push_back(Texture2D("./res/img/tex_Bus4_Green.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Bus4_Yellow.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Passenger.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Passenger_2.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Passenger_3.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_LevelArea.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_LevelBackground.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_LevelBackgroundM.png"));
@@ -89,6 +96,12 @@ void AssetManager::loadAssets()
 	loadedTextures.push_back(Texture2D("./res/img/tex_Billboard.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_BillboardLights.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Clock.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Car.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_ClockTower.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_PlayerIndicator.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Tut_Billboard1.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Tut_Billboard2.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Tut_StartIndicator.png"));
 }
 
 void AssetManager::bindTexture(TEXTURE_NAME textureName)

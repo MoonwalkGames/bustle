@@ -57,7 +57,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)\lib\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glut32.lib;DevIL.lib;xinput9_1_0.lib;ILU.lib;ILUT.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glut32.lib;DevIL.lib;xinput9_1_0.lib;ILU.lib;ILUT.lib;fmod_vc.lib;fmodstudio_vc.lib;fsbank_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -74,11 +74,12 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(SolutionDir)\lib\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glut32.lib;DevIL.lib;xinput9_1_0.lib;ILU.lib;ILUT.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glut32.lib;DevIL.lib;xinput9_1_0.lib;ILU.lib;ILUT.lib;fmod_vc.lib;fmodstudio_vc.lib;fsbank_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\AssetManager.cpp" />
+    <ClCompile Include="src\audioEngine.cpp" />
     <ClCompile Include="src\Collision.cpp" />
     <ClCompile Include="src\CollisionBoxes.cpp" />
     <ClCompile Include="src\DebugManager.cpp" />
@@ -96,11 +97,14 @@
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\State_EndRound.cpp" />
     <ClCompile Include="src\State_Gameplay.cpp" />
+    <ClCompile Include="src\State_Loading.cpp" />
     <ClCompile Include="src\State_MainMenu.cpp" />
+    <ClCompile Include="src\State_Tutorial.cpp" />
     <ClCompile Include="src\Texture2D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\AssetManager.h" />
+    <ClInclude Include="include\AudioEngine.h" />
     <ClInclude Include="include\Collision.h" />
     <ClInclude Include="include\CollisionBoxes.h" />
     <ClInclude Include="include\DebugManager.h" />
@@ -119,8 +123,10 @@
     <ClInclude Include="include\State_EndRound.h" />
     <ClInclude Include="include\State_Gameplay.h" />
     <ClInclude Include="include\State_MainMenu.h" />
+    <ClInclude Include="include\State_Tutorial.h" />
     <ClInclude Include="include\SteeringBehaviors.h" />
     <ClInclude Include="include\Texture2D.h" />
+    <ClInclude Include="src\State_Loading.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

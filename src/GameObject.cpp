@@ -288,7 +288,10 @@ void GameObject::update(float dt)
 
 	//Compiles the transformation together in the correct order: Scale -> Rotate -> Translate (Note the right to left notation)
 	localToWorld = translationMatrix * fullRotationMatrix * scaleMatrix;
+}
 
+void GameObject::draw()
+{
 	//Passes the matrix to OpenGL which automatically applies the transformations
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(glm::value_ptr(localToWorld));
@@ -320,13 +323,13 @@ void GameObject::update(float dt)
 		glEnable(GL_TEXTURE_2D);*/
 
 	if (DBG::debug()->getVisualDebugEnabled())
-		drawDebug(dt);
+		drawDebug();
 
 	//Loads identity for cleanliness
 	glLoadIdentity();
 }
 
-void GameObject::drawDebug(float dt)
+void GameObject::drawDebug()
 {
 	glm::vec3 localX = glm::vec3(1.0f, 0.0f, 0.0f);
 	glm::vec3 localY = glm::vec3(0.0f, 1.0f, 0.0f);

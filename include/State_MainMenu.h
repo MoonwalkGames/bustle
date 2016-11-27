@@ -7,19 +7,16 @@
 #include "Player.h"
 #include "Sprite.h"
 #include "Particle.h"
+#include "AudioEngine.h"
 
 class State_MainMenu : public GameState
 {
 public:
 	State_MainMenu() {}
 	~State_MainMenu() {}
-	void toggleDebugDrawing();
 	void load();
 	void update();
-	void launchPassengers(int busNumber, int amount);
-	void updateCrownedPlayer();
 	void updateStages();
-	void drawCrown();
 	void drawUI();
 	void drawBuses();
 	
@@ -75,6 +72,7 @@ private:
 	GameObject roadblock4;
 	GameObject roadblock5;
 	GameObject roadblock6;
+	GameObject clockTower;
 	GameObject skyBox;
 
 	Player buses[4];

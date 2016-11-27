@@ -20,7 +20,8 @@ public:
 	~Sprite();
 
 	virtual void update(float dt);
-	virtual void debugDraw(float dt);
+	virtual void draw();
+	virtual void debugDraw();
 	void nextFrame();
 	void setActiveFrame(int frameNumber);
 	void setCameraPos(glm::vec3 cameraPos, glm::vec3 cameraLookAtPos);

@@ -49,7 +49,8 @@ public:
 	bool getAffectedByGravity() const; //Returns if the object is affecte by gravity
 
 	virtual void update(float dt); //Polymorphic update function, positions the object using physics and then calls the parent update function to draw it properly
-	virtual void drawDebug(float dt); //Polymorphic debug draw function, draws things like local axes, velocity, collision boxes, etc
+	virtual void draw();
+	virtual void drawDebug(); //Polymorphic debug draw function, draws things like local axes, velocity, collision boxes, etc
 
 protected:
 	bool affectedByGravity; //If the object is affected by gravity or not...important because it will affect the inital acceleration passed into the constructor

@@ -24,6 +24,32 @@ struct Particle : public Kinematic
 
 		Kinematic::update(deltaTime);
 	}
+
+	void draw()
+	{
+		glColor4f(colour.x, colour.y, colour.z, colour.w);
+
+		glMatrixMode(GL_MODELVIEW);
+		glLoadMatrixf(glm::value_ptr(localToWorld));
+
+		if (mesh != 0)
+		{
+			if (texture == 0)
+				mesh->draw(false);
+			else
+				mesh->draw(true);
+		}
+		else
+		{
+			glPointSize(10.0f);
+
+			glBegin(GL_POINTS);
+			glVertex3f(position.x, position.y, position.z);
+			glEnd();
+
+			glPointSize(1.0f);
+		}
+	}
 };
 
 /*
