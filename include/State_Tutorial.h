@@ -13,6 +13,8 @@ public:
 	virtual void load();
 	virtual void update();
 
+	void drawStartIndicator();
+
 private:
 	// --- Level Objects --- //
 	GameObject skybox;
@@ -23,9 +25,16 @@ private:
 	bool playerEnabled[4];
 	int numPlayersEnabled;
 
-	// --- Players ---//
+	// --- Players --- //
 	Player buses[4];
+	glm::vec3 busTargets[4];
 	Sprite playerIndicators[4];
+
+	// --- Sprites --- //
+	Sprite startIndicator;
+	Sprite staticBillboard1;
+	Sprite staticBillboard2;
+	Sprite billboardPlayerIndicators[4];
 };
 
 #endif
