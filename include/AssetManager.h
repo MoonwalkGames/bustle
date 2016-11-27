@@ -20,7 +20,9 @@ enum MESH_NAME
 	MESH_BUS2,
 	MESH_BUS3,
 	MESH_BUS4,
-	MESH_PASSENGER,
+	MESH_PASSENGER_A,
+	MESH_PASSENGER_B,
+	MESH_PASSENGER_C,
 	MESH_LEVELPLAY,
 	MESH_LEVELBACKGROUND,
 	MESH_LEVELBACKGROUNDM,
@@ -59,6 +61,7 @@ enum TEXTURE_NAME
 	TEX_BUS4_GREEN,
 	TEX_BUS4_YELLOW,
 	TEX_PASSENGER,
+	TEX_PASSENGER_2,
 	TEX_LEVELPLAY,
 	TEX_LEVELBACKGROUND,
 	TEX_LEVELBACKGROUNDM,
@@ -123,6 +126,7 @@ public:
 
 	Mesh& getMesh(MESH_NAME meshName); //Returns a reference to the desired mesh, this is what allows for the mesh to be loaded once but used multiple times
 	Texture2D& getTexture2D(TEXTURE_NAME textureName); //Returns a reference to desired texture, this is what allows for the texture to be loaded once but used multiple times
+	std::vector<Face>& getMeshFaces(MESH_NAME meshName);
 
 	void loadAssets(); //Called in main(), actually loads in and sets up all of the assets that will be used in the game
 	void bindTexture(TEXTURE_NAME textureName); //Binds the texture that will be used for the next drawing calls

@@ -27,7 +27,9 @@ void AssetManager::loadAssets()
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Bus2.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Bus3.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Bus4.obj"));
-	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Passenger.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Passenger_A.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Passenger_B.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Passenger_C.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_LevelArea.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_LevelBackground.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_LevelBackgroundM.obj"));
@@ -62,6 +64,7 @@ void AssetManager::loadAssets()
 	loadedTextures.push_back(Texture2D("./res/img/tex_Bus4_Green.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Bus4_Yellow.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Passenger.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Passenger_2.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_LevelArea.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_LevelBackground.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_LevelBackgroundM.png"));
@@ -115,6 +118,11 @@ Mesh& AssetManager::getMesh(MESH_NAME meshName)
 		abort();
 	}
 	
+}
+
+std::vector<Face>& AssetManager::getMeshFaces(MESH_NAME meshName)
+{
+	return loadedMeshes[meshName].faces;
 }
 
 //Returns a reference to the desired texture, allows for multiples objects to use the same texture with only one loading time

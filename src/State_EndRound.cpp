@@ -568,6 +568,6 @@ void State_EndRound::launchPassenger(GameObject bus)
 	launchVel *= launchSpeed;
 
 	//Create and push back the new passenger
-	Passenger newPassenger = Passenger(startPosition, startRotation, startScale, true, glm::vec3(0.0f, -9.81f, 0.0f), launchVel, 1.0f, MESH_PASSENGER, TEX_PASSENGER);
+	Passenger newPassenger = Passenger(startPosition, startRotation, startScale, true, glm::vec3(0.0f, -9.81f, 0.0f), launchVel, 1.0f, MESH_PASSENGER_A, MESH_PASSENGER_B, MESH_PASSENGER_C, TEX_PASSENGER);
 	activePassengers.push_back(newPassenger);
 }

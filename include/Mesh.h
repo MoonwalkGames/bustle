@@ -122,8 +122,8 @@ public:
 	void output() const; //Outputs mesh data to the screen
  	std::vector<Vertex> getVertices() const; //Returns all of the vertices in the mesh (good for morhping)
 
-private:
 	std::vector<Face> faces; //Vector of faces
+private:
 	int numFaces; //How many vertices are in the mesh, calculated when the obj is loaded
 
 	void loadOBJ(const string& fileName); //private utility functions that actually loads the obj passed to the mesh in the constructor

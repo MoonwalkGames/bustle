@@ -348,7 +348,7 @@ void State_Gameplay::load()
 	DBG::debug()->addData(getTimeOnState(), buses);
 	DBG::debug()->addScoreData(getTimeOnState(), buses);
 
-	enableLighting();
+	//enableLighting();
 }
 
 void State_Gameplay::update()
@@ -708,8 +708,7 @@ void State_Gameplay::update()
 
 		//Update and draw the passengers
 
-		AM::assets()->bindTexture(TEX_PASSENGER);
-
+		//AM::assets()->bindTexture(TEX_PASSENGER);
 		for (unsigned int i = 0; i < passengers.size(); i++)
 
 		{
@@ -865,12 +864,12 @@ void State_Gameplay::launchPassengers(int busNumber, int amount)
 		for (int i = 0; i < amount; i++)
 		{
 			startRotation = MathHelper::randomVec3(0.0f, 360.0f);
-			startScale = MathHelper::randomVec3(0.5f, 1.75f);
+			startScale = glm::vec3(1.2f);
 			launchVel = MathHelper::randomVec3(-1.0f, 1.0f);
 			launchVel.y = 1.5f;
 			launchVel = glm::normalize(launchVel);
 			launchVel *= launchSpeed;
-			Passenger newPassenger = Passenger(startPosition, startRotation, startScale, true, glm::vec3(0.0f, -9.81f, 0.0f), launchVel, 1.0f, MESH_PASSENGER, TEX_PASSENGER);
+			Passenger newPassenger = Passenger(startPosition, startRotation, startScale, true, glm::vec3(0.0f, -9.81f, 0.0f), launchVel, 1.0f, MESH_PASSENGER_A, MESH_PASSENGER_B, MESH_PASSENGER_C, TEX_PASSENGER);
 			passengers.push_back(newPassenger);
 		}
 	}
