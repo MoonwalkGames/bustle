@@ -276,7 +276,7 @@ void State_Gameplay::load()
 	DBG::debug()->addData(getTimeOnState(), buses);
 	DBG::debug()->addScoreData(getTimeOnState(), buses);
 
-	summonCar();
+	//summonCar();
 
 	//enableLighting();
 }
@@ -684,7 +684,7 @@ void State_Gameplay::update()
 			for (int j = 0; j < 4; j++)
 			{
 				if (buses[j].powerup == attractive_person)
-					passengers[i].addImpulse(SteeringBehaviour::seek(passengers[i].getPosition(), buses[j].getPosition(), 50.0f));
+					passengers[i].addImpulse(SteeringBehaviour::seek(passengers[i].getPosition(), buses[j].getPosition(), 350.0f));
 			}
 			passengers[i].addImpulse(SteeringBehaviour::wander(passengers[i], 50.0f, 500.0f));
 
@@ -747,10 +747,25 @@ void State_Gameplay::update()
 					{
 						launchPassengers(i, 1);
 						launchPassengers(j, 1);
+						if (buses[i].powerup == smelly_dude)
+						{
+							launchPassengers(j, buses[j].getPoints() / 3);
+							buses[i].powerup = no_powerup;
+						}
+						else if (buses[j].powerup == smelly_dude)
+						{
+							launchPassengers(i, buses[i].getPoints() / 3);
+							buses[j].powerup = no_powerup;
+						}
 					}
 					else if (res.outcome == win)
 					{
 						launchPassengers(j, 2);
+						if (buses[i].powerup == smelly_dude)
+						{
+							launchPassengers(j, buses[j].getPoints() / 3);
+							buses[i].powerup = no_powerup;
+						}
 					}
 					else
 					{
@@ -950,15 +965,27 @@ void State_Gameplay::updateStages()
 
 void State_Gameplay::updatePowerups()
 {
-	static float powerupDuration = 5.0f;
+	static float smelly_dudeDuration = 5.0f;
+	static float attractive_personDuration = 3.0f;
+	static float freeze_busesDuration = 1.5f;
+	static float freeze_passengersDuration = 3.0f;
+	static float starDuration = 3.0f;
 	for (int i = 0; i < 4; i++)
 	{
-		if (buses[i].powerup != no_powerup && buses[i].timePowerupStarted - timeLeft > powerupDuration)
+		//removing powerups if they've been held for longer than the duration
+		if (buses[i].powerup == smelly_dude && buses[i].timePowerupStarted - timeLeft > smelly_dudeDuration)
 			buses[i].powerup = no_powerup;
+		else if (buses[i].powerup == attractive_person && buses[i].timePowerupStarted - timeLeft > attractive_personDuration)
+			buses[i].powerup = no_powerup;
+		else if (buses[i].powerup == freeze_buses && buses[i].timePowerupStarted - timeLeft > freeze_busesDuration)
+			buses[i].powerup = no_powerup;
+		else if (buses[i].powerup == star && buses[i].timePowerupStarted - timeLeft > starDuration)
+			buses[i].powerup = no_powerup;
+
 		if (buses[i].powerup == smelly_dude)
 		{
-			launchPassengers(i, (int)buses[i].getPoints() / 3);
-			buses[i].powerup = no_powerup;
+			//launchPassengers(i, (int)buses[i].getPoints() / 3);
+			//buses[i].powerup = no_powerup;
 		}
 
 	}
