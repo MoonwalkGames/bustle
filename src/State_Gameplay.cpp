@@ -137,7 +137,7 @@ void State_Gameplay::load()
 	roadblock6.update(DH::deltaTime);
 
 	//Init the clock tower
-	clockTower = GameObject(glm::vec3(-70.0f, 3.5f, 70.0f), glm::vec3(0.0f, 45.0f, 0.0f), glm::vec3(6.0f, 6.0f, 6.0f), MESH_CLOCKTOWER, TEX_CLOCKTOWER);
+	clockTower = GameObject(glm::vec3(-65.0f, 20.0f, 65.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(4.0f), MESH_CLOCKTOWER, TEX_CLOCKTOWER);
 	clockTower.update(DH::deltaTime);
 
 	//Init the buses
@@ -165,21 +165,46 @@ void State_Gameplay::load()
 	clock[1].setActiveFrame(1);
 	clock[2].setActiveFrame(1);
 
-	clock[0].setPosition(-63.5f, 21.0f, 63.5f);
-	clock[1].setPosition(-63.48, 21.0f, 63.48);
-	clock[2].setPosition(-63.45, 21.0f, 63.45);
+	clock[0].setPosition(-58.0f, 32.0f, 65.0f);
+	clock[1].setPosition(-57.98f, 32.0f, 64.98f);
+	clock[2].setPosition(-57.95f, 32.0f, 64.98f);
 
-	clock[0].setScale(12.25f, 12.25f, 12.25f);
-	clock[1].setScale(10.0f, 15.0f, 15.0f);
-	clock[2].setScale(13.0f, 10.0f, 15.0f);
+	clock[0].setScale(9.1875f, 9.1875f, 9.1875f);
+	clock[1].setScale(7.5f, 11.25f, 11.25f);
+	clock[2].setScale(9.75f, 7.5f, 11.25f);
 
-	clock[0].setRotationY(135.0f);
-	clock[1].setRotationY(135.0f);
-	clock[2].setRotationY(135.0f);
+	clock[0].setRotationY(90.0f);
+	clock[1].setRotationY(90.0f);
+	clock[2].setRotationY(90.0f);
 
 	clock[0].update(DH::deltaTime);
 	clock[1].update(DH::deltaTime);
 	clock[2].update(DH::deltaTime);
+
+	//clock2
+	clock2[0] = Sprite(TEX_CLOCK, 2, 1);
+	clock2[1] = Sprite(TEX_CLOCK, 2, 1);
+	clock2[2] = Sprite(TEX_CLOCK, 2, 1);
+
+	clock2[0].setActiveFrame(0);
+	clock2[1].setActiveFrame(1);
+	clock2[2].setActiveFrame(1);
+
+	clock2[0].setPosition(-65.0f, 32.0f, 58.0f);
+	clock2[1].setPosition(-64.98f, 32.0f, 57.98f);
+	clock2[2].setPosition(-64.98f, 32.0f, 57.95f);
+
+	clock2[0].setScale(9.1875f, 9.1875f, 9.1875f);
+	clock2[1].setScale(7.5f, 11.25f, 11.25f);
+	clock2[2].setScale(9.75f, 7.5f, 11.25f);
+
+	clock2[0].setRotationY(180.0f);
+	clock2[1].setRotationY(180.0f);
+	clock2[2].setRotationY(180.0f);
+
+	clock2[0].update(DH::deltaTime);
+	clock2[1].update(DH::deltaTime);
+	clock2[2].update(DH::deltaTime);
 
 	
 	//Init the crown
@@ -710,7 +735,7 @@ void State_Gameplay::update()
 			car.update(DH::getDeltaTime());
 			car.draw();
 			
-			if (((2.5f > car.getPosition().x && car.getPosition().x > -2.5f) || (2.5f > car.getPosition().z && car.getPosition().z > -2.5f)) && !carLaunched)
+			if (((car.getPosition().x > 0.0f) && car.getPosition().z < 0.0f) && !carLaunched)
 			{
 				carLaunched = true;
 				launchSpecialPassengers();
@@ -738,8 +763,12 @@ void State_Gameplay::update()
 			clock[1].setRotationZ(MathHelper::LERP(startRot, endRot, clockRot_T));
 			clock[2].setRotationZ(MathHelper::LERP(startRot, endRot2, clockRot_T));
 
+			clock2[1].setRotationZ(MathHelper::LERP(startRot, endRot, clockRot_T));
+			clock2[2].setRotationZ(MathHelper::LERP(startRot, endRot2, clockRot_T));
+
 		//Add the clock hand position to the list
 		clockHandPositions.push_back(getClockHandEndPosition(clock[1].getRotation().z));
+		clockHand2Positions.push_back(getClockHandEndPosition(clock2[1].getRotation().z));
 
 		/*glPointSize(5.0f);
 		glColor4f(1.0f, 0.0f, 0.0f, 0.33f);
@@ -770,6 +799,15 @@ void State_Gameplay::update()
 
 			clock[1].draw();
 			clock[2].draw();
+
+			clock2[0].draw();
+			glColor3f(1.0f, 1.0f, 1.0f);
+
+			clock2[1].update(DH::deltaTime);
+			clock2[2].update(DH::deltaTime);
+
+			clock2[1].draw();
+			clock2[2].draw();
 
 		//Update and draw the passengers
 		for (unsigned int i = 0; i < passengers.size(); i++)

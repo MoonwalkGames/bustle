@@ -123,7 +123,9 @@ private:
 	Sprite fillbarbackground[4];
 	Sprite billboardlight[4];
 	Sprite clock[3];
+	Sprite clock2[3];
 	std::vector<glm::vec3> clockHandPositions;
+	std::vector<glm::vec3> clockHand2Positions;
 	bool carOnScreen = false; //if the car is on screen, then we should update & draw it
 	bool carLaunched = false; //if the car's already launched passengers, then we shouldn't do it again
 };
