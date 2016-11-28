@@ -341,20 +341,30 @@ void State_MainMenu::load()
 
 void State_MainMenu::update()
 {
+	static float amount = degToRad * 0.05;;
+	static bool ccw = true;
 	timeSinceLastInput += DH::deltaTime;
 
 	if (DH::getKey('g'))
 		playButton.addToRotation(0.0f, 5.0f, 0.0f);
 
-	//printf("%f, %f, %f\n", menuCameraPos.x, menuCameraPos.y, menuCameraPos.z);
+	printf("%f, %f, %f\n", menuCameraPos.x, menuCameraPos.y, menuCameraPos.z);
 	//Set up the camera
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	//glOrtho(-60.0f, 60.0f, -60.0f, 60.0f, 0.1f, 1000.0f);
 	
+	//glm::vec3(54.0f, 25.0f, 60.0f); is starting point, end point should be (-54.0f, 25.0f, -60.0f)
+
 	gluPerspective(75.0f, DH::getAspectRatio(), 0.1f, 10000.0f);
 	gluLookAt(menuCameraPos.x, menuCameraPos.y, menuCameraPos.z, 0, 1, 0, 0, 1, 0);
-	menuCameraPos = glm::rotate(menuCameraPos, degToRad * 0.05f, glm::vec3(0, 1, 0));
+	menuCameraPos = glm::rotate(menuCameraPos, amount, glm::vec3(0, 1, 0));
+
+	if ((menuCameraPos.x <= -55.0f && menuCameraPos.z >= -70.0f && ccw) || (menuCameraPos.x <= 59.0f && menuCameraPos.z >= 50.0f && !ccw))
+	{
+		amount = amount * -1.0f;
+		ccw = !ccw;
+	}
 
 	//Moves the bus targets based on steering behaviors
 	for (int i = 0; i < 4; i++)
