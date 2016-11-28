@@ -377,9 +377,40 @@ void State_Gameplay::load()
 	skyBox.setScale(150.0f, 150.0f, 150.0f);
 	skyBox.update(DH::deltaTime);
 
+	//set up sprites for the intro
+	levelname = Sprite(TEX_GAMEPLAY_LEVELNAME, 1, 1);
+	levelname.setScale(1.0f, 1.0f, 1.0f);
+	levelname.setPositionZ(5.0f);
+	levelname.update(DH::getDeltaTime());
+
+	countdown[0] = Sprite(TEX_GAMEPLAY_COUNTDOWN_3, 1, 1);
+	countdown[0].setScale(1.0f, 1.0f, 1.0f);
+	countdown[0].setPositionZ(5.0f);
+	countdown[0].update(DH::getDeltaTime());
+
+	countdown[1] = Sprite(TEX_GAMEPLAY_COUNTDOWN_2, 1, 1);
+	countdown[1].setScale(1.0f, 1.0f, 1.0f);
+	countdown[1].setPositionZ(5.0f);
+	countdown[1].update(DH::getDeltaTime());
+
+	countdown[2] = Sprite(TEX_GAMEPLAY_COUNTDOWN_1, 1, 1);
+	countdown[2].setScale(1.0f, 1.0f, 1.0f);
+	countdown[2].setPositionZ(5.0f);
+	countdown[2].update(DH::getDeltaTime());
+
+	countdown[3] = Sprite(TEX_GAMEPLAY_COUNTDOWN_GO, 1, 1);
+	countdown[3].setScale(1.0f, 1.0f, 1.0f);
+	countdown[3].setPositionZ(5.0f);
+	countdown[3].update(DH::getDeltaTime());
+
+	bufferTime = 4.0f;
+	
 	//Initialize the data & analytics
 	DBG::debug()->addData(getTimeOnState(), buses);
 	DBG::debug()->addScoreData(getTimeOnState(), buses);
+
+	//play the vroom
+	AE::sounds()->playSound("./res/sound/select.wav", glm::vec3(0.0f), 3.0f);
 
 	//summonCar();
 
@@ -442,7 +473,10 @@ void State_Gameplay::update()
 		if (abs(cameraPos.x - gameplayCameraPos.x) < 0.1f)
 			if (abs(cameraPos.y - gameplayCameraPos.y) < 0.1f)
 				if (abs(cameraPos.z - gameplayCameraPos.z) < 0.1f)
+				{
 					inIntro = false;
+					inBuffer = true;
+				}
 	}
 	else if(!firstPerson)
 	{
@@ -452,7 +486,7 @@ void State_Gameplay::update()
 	}
 
 	glm::vec3 targetDirection;
-	if(!inIntro)
+	if(!inIntro && !inBuffer)
 	{
 	//Moves the bus targets based on the controller inputs
 	for (int i = 0; i < 4; i++)
@@ -800,6 +834,13 @@ void State_Gameplay::update()
 			clock[1].draw();
 			clock[2].draw();
 
+			if (clockRot_T <= 0.25f)
+			{
+				//Make the clock blink red if the time is almost up
+				if ((int)(clockRot_T * 100) % 2 == 0)
+					glColor3f(0.99f, 0.24f, 0.051f);
+			}
+
 			clock2[0].draw();
 			glColor3f(1.0f, 1.0f, 1.0f);
 
@@ -1092,6 +1133,9 @@ void State_Gameplay::update()
 
 	//Draw the ui
 	drawUI();
+
+	if (inIntro || inBuffer)
+		drawIntroSprite();
 
 	//Bind a NULL texture at the end of the frame for cleanliness
 	glBindTexture(GL_TEXTURE_2D, NULL);
@@ -1623,4 +1667,35 @@ void State_Gameplay::launchSpecialPassengers()
 	}
 }
 
+void State_Gameplay::drawIntroSprite()
+{
+	int i = 3;
+	if (inBuffer)
+	{
+		bufferTime -= DH::getDeltaTime();
+		if (bufferTime > 3.0f)
+			i = 0;
+		else if (bufferTime > 2.0f)
+			i = 1;
+		else if (bufferTime > 1.0f)
+			i = 2;
+		else if (bufferTime < 0.0f)
+			inBuffer = false;
+		else
+			i = 3;
 
+	}
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	glOrtho(-1.0f, 1.0f, -1.0f, 1.0f, -5.0f, 5.0f);
+
+	glViewport(0, 0, DH::windowWidth, DH::windowHeight);
+
+	if (inBuffer)
+		countdown[i].draw();
+	else
+		levelname.draw();
+
+	glPopMatrix();
+}

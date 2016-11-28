@@ -398,8 +398,6 @@ void State_MainMenu::update()
 	{
 		if (currentSelection == 0)
 		{
-			
-			AE::sounds()->playSound("./res/sound/select.wav", glm::vec3(0.0f), 3.0f);
 			AE::sounds()->unLoadSound("./res/sound/gourmet_bork.mp3");
 			//AE::sounds()->unLoadSound("./res/sound/select.wav");
 			AE::sounds()->unLoadSound("./res/sound/click.mp3");

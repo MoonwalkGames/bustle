@@ -38,6 +38,7 @@ public:
 	void excecute();
 	void summonCar();
 	void launchSpecialPassengers();
+	void drawIntroSprite();
 
 private:
 	GameObject levelPlay;
@@ -109,6 +110,8 @@ private:
 	bool debugDrawing;
 	float timeSinceLastDataPush;
 	bool inIntro = true;
+	bool inBuffer = false;
+	float bufferTime;
 	bool firstPerson = false;
 	float rotation;
 	bool aButtonEnabled;
@@ -124,6 +127,10 @@ private:
 	Sprite billboardlight[4];
 	Sprite clock[3];
 	Sprite clock2[3];
+	//for the intro sequence
+	Sprite levelname;
+	Sprite countdown[4];
+
 	std::vector<glm::vec3> clockHandPositions;
 	std::vector<glm::vec3> clockHand2Positions;
 	bool carOnScreen = false; //if the car is on screen, then we should update & draw it
