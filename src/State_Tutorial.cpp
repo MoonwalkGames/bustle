@@ -16,8 +16,27 @@ void State_Tutorial::load()
 	skybox.update(DH::deltaTime);
 
 	//Init the level mesh
-	levelMesh = GameObject(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_LEVELPLAY, TEX_LEVELPLAY);
-	levelMesh.update(DH::deltaTime);
+	tutorialGround = GameObject(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_LEVELPLAY, TEX_TUT_GROUND);
+	tutorialGroundL = GameObject(glm::vec3(0.0f, 0.0f, 82.5f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_LEVELBACKGROUND, TEX_TUT_GROUNDBACK);
+	tutorialGroundM = GameObject(glm::vec3(-82.5f, 0.0f, 82.5f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_LEVELBACKGROUNDM, TEX_TUT_GROUND);
+	tutorialGroundR = GameObject(glm::vec3(-82.5f, 0.0f, 0.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_LEVELBACKGROUND, TEX_TUT_GROUNDBACK);
+	undergroundL = GameObject(glm::vec3(55.0f, -20.0f, 27.5f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_LEVELUNDERGROUND, TEX_LEVELUNDERGROUND);
+	undergroundR = GameObject(glm::vec3(-27.5f, -20.0f, -55.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(1.0f), MESH_LEVELUNDERGROUND, TEX_LEVELUNDERGROUND);
+	garageLeft = GameObject(glm::vec3(0.0f, 3.0f, 60.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_GARAGE_LEFT, TEX_GARAGE_LEFT);
+	garageRight = GameObject(glm::vec3(-60.0f, 3.0f, 0.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_GARAGE_RIGHT, TEX_GARAGE_RIGHT);
+	billboardLeft = GameObject(glm::vec3(0.0f, 26.0f, 55.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_TUTORIALBILLBOARD, TEX_TUT_BILLBOARD1);
+	billboardRight = GameObject(glm::vec3(-55.0f, 26.0f, 0.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_TUTORIALBILLBOARD, TEX_TUT_BILLBOARD2);
+
+	tutorialGround.update(DH::deltaTime);
+	tutorialGroundL.update(DH::deltaTime);
+	tutorialGroundM.update(DH::deltaTime);
+	tutorialGroundR.update(DH::deltaTime);
+	undergroundL.update(DH::deltaTime);
+	undergroundR.update(DH::deltaTime);
+	garageLeft.update(DH::deltaTime);
+	garageRight.update(DH::deltaTime);
+	billboardLeft.update(DH::deltaTime);
+	billboardRight.update(DH::deltaTime);
 
 	// ----- Set up the tutorial stuff ----- //
 	//Init controls and enabled players
@@ -64,18 +83,6 @@ void State_Tutorial::load()
 	startIndicator.setScale(1.0f, 1.0f, 1.0f);
 	startIndicator.setPositionZ(5.0f);
 	startIndicator.update(DH::deltaTime);
-
-	staticBillboard1 = Sprite(TEX_TUT_BILLBOARD1, 1, 1);
-	staticBillboard1.setPosition(0.0f, 20.0f, 50.0f);
-	staticBillboard1.setRotationY(180.0f);
-	staticBillboard1.setScale(50.0f, 30.0f, 30.0f);
-	staticBillboard1.update(DH::deltaTime);
-
-	staticBillboard2 = Sprite(TEX_TUT_BILLBOARD2, 1, 1);
-	staticBillboard2.setPosition(-50.0f, 20.0f, 0.0f);
-	staticBillboard2.setRotationY(90.0f);
-	staticBillboard2.setScale(50.0f, 30.0f, 30.0f);
-	staticBillboard2.update(DH::deltaTime);
 
 	billboardPlayerIndicators[0] = Sprite(TEX_TUT_PLAYER_INDICATOR, 4, 1);
 	billboardPlayerIndicators[1] = Sprite(TEX_TUT_PLAYER_INDICATOR, 4, 1);
@@ -129,12 +136,33 @@ void State_Tutorial::update()
 	AM::assets()->bindTexture(TEX_SKYBOX);
 	skybox.draw();
 
-	AM::assets()->bindTexture(TEX_LEVELPLAY);
-	levelMesh.draw();
+	AM::assets()->bindTexture(TEX_TUT_GROUND);
+	tutorialGround.draw();
+	tutorialGroundM.draw();
+
+	AM::assets()->bindTexture(TEX_TUT_GROUNDBACK);
+	tutorialGroundL.draw();
+	tutorialGroundR.draw();
+
+	AM::assets()->bindTexture(TEX_LEVELUNDERGROUND);
+	undergroundL.draw();
+	undergroundR.draw();
+
+	AM::assets()->bindTexture(TEX_GARAGE_LEFT);
+	garageLeft.draw();
+
+	AM::assets()->bindTexture(TEX_GARAGE_RIGHT);
+	garageRight.draw();
+
+	AM::assets()->bindTexture(TEX_TUT_BILLBOARD1);
+	billboardLeft.draw();
+
+	AM::assets()->bindTexture(TEX_TUT_BILLBOARD2);
+	billboardRight.draw();
 
 	// ----- Draw the static level sprites ----- //
-	staticBillboard1.draw();
-	staticBillboard2.draw();
+	/*staticBillboard1.draw();
+	staticBillboard2.draw();*/
 
 	// ----- Check the inputs ----- //
 	//Reset the number of enabled players to check again this frame

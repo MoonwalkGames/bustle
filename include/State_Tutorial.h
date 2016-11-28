@@ -18,7 +18,16 @@ public:
 private:
 	// --- Level Objects --- //
 	GameObject skybox;
-	GameObject levelMesh;
+	GameObject tutorialGround;
+	GameObject tutorialGroundL;
+	GameObject tutorialGroundM;
+	GameObject tutorialGroundR;
+	GameObject undergroundL;
+	GameObject undergroundR;
+	GameObject garageLeft;
+	GameObject garageRight;
+	GameObject billboardLeft;
+	GameObject billboardRight;
 
 	// --- Tutorial Stuff --- //
 	MController controllers[4];
