@@ -341,7 +341,7 @@ void State_MainMenu::load()
 
 void State_MainMenu::update()
 {
-	static float amount = degToRad * 0.05;;
+	static float amount = degToRad * 0.05;
 	static bool ccw = true;
 	timeSinceLastInput += DH::deltaTime;
 

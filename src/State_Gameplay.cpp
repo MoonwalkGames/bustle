@@ -234,7 +234,7 @@ void State_Gameplay::load()
 
 	// ----- Set up the UI ------ ///
 	//set up the timer
-	timeStart = 10.0f;
+	timeStart = 120.0f;
 	timeLeft = timeStart;
 	timer = Sprite::createTextVector(TEX_FONT, -5.0f, -10.0f, 5.0f, 5.0f, "0:00");
 
@@ -801,7 +801,7 @@ void State_Gameplay::update()
 			car.update(DH::getDeltaTime());
 			car.draw();
 			
-			if (((car.getPosition().x < 0.0f) && car.getPosition().z < 0.0f) && !carLaunched)
+			if (((car.getPosition().x > 0.0f) && car.getPosition().z < 0.0f) && !carLaunched)
 			{
 				carLaunched = true;
 				launchSpecialPassengers();
