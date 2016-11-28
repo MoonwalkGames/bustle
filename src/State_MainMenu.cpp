@@ -139,7 +139,7 @@ void State_MainMenu::load()
 	roadblock6.update(DH::deltaTime);
 
 	//Init the clock tower
-	clockTower = GameObject(glm::vec3(-60.0f, 20.0f, 60.0f), glm::vec3(0.0f, 45.0f, 0.0f), glm::vec3(5.0f), MESH_CLOCKTOWER, TEX_CLOCKTOWER);
+	clockTower = GameObject(glm::vec3(-65.0f, 20.0f, 65.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(4.0f), MESH_CLOCKTOWER, TEX_CLOCKTOWER);
 	clockTower.update(DH::deltaTime);
 
 	//Init the buses
