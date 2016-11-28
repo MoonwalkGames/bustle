@@ -106,6 +106,8 @@ void State_Tutorial::load()
 	billboardPlayerIndicators[1].update(DH::deltaTime);
 	billboardPlayerIndicators[2].update(DH::deltaTime);
 	billboardPlayerIndicators[3].update(DH::deltaTime);
+
+	AE::sounds()->loadSound("./res/sound/select.wav", true, false, false);
 }
 
 void State_Tutorial::update()
@@ -147,8 +149,11 @@ void State_Tutorial::update()
 		{
 			controllers[i].getInputs();
 
-			if (controllers[i].checkButton(BUTTON_A))
+			if (controllers[i].checkButton(BUTTON_A) && !playerEnabled[i])
+			{
 				playerEnabled[i] = true;
+				AE::sounds()->playSound("./res/sound/select.wav", glm::vec3(0.0f), 1.0f);
+			}
 			else if (controllers[i].checkButton(BUTTON_B))
 				playerEnabled[i] = false;
 		}
@@ -272,6 +277,7 @@ void State_Tutorial::update()
 		{
 			if (controllers[i].checkButton(BUTTON_START))
 			{
+				AE::sounds()->unLoadSound("./res/sound/select.wav");
 				GM::game()->setActivePlayers(playerEnabled[0], playerEnabled[1], playerEnabled[2], playerEnabled[3]);
 				GM::game()->setActiveState(STATE_GAMEPLAY);
 			}

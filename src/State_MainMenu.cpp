@@ -12,10 +12,11 @@ void State_MainMenu::load()
 	srand(time(0));
 
 	//load sounds
+	AE::sounds()->unLoadSound("./res/sound/menu_music.mp3");
 	AE::sounds()->loadSound("./res/sound/menu_music.mp3", true, true, false);
 	AE::sounds()->loadSound("./res/sound/click.wav", true, false, false);
 	AE::sounds()->loadSound("./res/sound/select.wav", true, false, false);
-	AE::sounds()->playSound("./res/sound/menu_music.mp3", glm::vec3(0.0f), 3.0f);
+	AE::sounds()->playSound("./res/sound/menu_music.mp3", glm::vec3(0.0f), 0.5f);
 	
 	//Init the level mesh
 	levelPlay = GameObject(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_LEVELPLAY, TEX_LEVELPLAY);
@@ -400,7 +401,7 @@ void State_MainMenu::update()
 	{
 		if (currentSelection == 0)
 		{
-			AE::sounds()->unLoadSound("./res/sound/menu_music.mp3");
+			//AE::sounds()->unLoadSound("./res/sound/menu_music.mp3");
 			AE::sounds()->unLoadSound("./res/sound/select.wav");
 			AE::sounds()->unLoadSound("./res/sound/click.wav");
 			GameManager::game()->setActiveState(STATE_TUTORIAL);

@@ -136,5 +136,7 @@ private:
 	bool ticking; //if the ticking sound effect has been started or not
 	bool carOnScreen = false; //if the car is on screen, then we should update & draw it
 	bool carLaunched = false; //if the car's already launched passengers, then we shouldn't do it again
+	float lastCollisionSound; //the timeleft value when the last collision sound played. used so that sound isn't being played every frame
+	float dings;
 };
 #endif

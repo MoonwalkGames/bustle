@@ -423,10 +423,13 @@ void State_Gameplay::load()
 	AE::sounds()->loadSound("./res/sound/bus_ignition.wav", true, false, false);
 
 	ticking = false;
+	lastCollisionSound = 0.0f;
 	//play the vroom
 	AE::sounds()->playSound("./res/sound/bus_ignition.wav", glm::vec3(0.0f), 0.25f);
 	AE::sounds()->playSound("./res/sound/ambient.wav", glm::vec3(0.0f), 1.0f);
 	AE::sounds()->playSound("./res/sound/idle.wav", glm::vec3(0.0f), 0.25f);
+
+	dings = 0;
 
 	//summonCar();
 
@@ -1002,6 +1005,11 @@ void State_Gameplay::update()
 				//Star trumps all other powerups, it means that the player with the star always wins the collision.
 				if (res)
 				{
+					if (lastCollisionSound == 0.0f || lastCollisionSound - timeLeft > 1.0f)
+					{
+						AE::sounds()->playSound("./res/sound/crash.wav", glm::vec3(0.0f), 0.25f);
+						lastCollisionSound = timeLeft;
+					}
 					if (res.outcome == full_loss)
 					{
 						
@@ -1012,7 +1020,7 @@ void State_Gameplay::update()
 						{
 							launchPassengers(j, 2);
 						}
-						else if (buses[j].powerup = star)
+						else if (buses[j].powerup == star)
 						{
 							launchPassengers(i, 2);
 						}
@@ -1162,7 +1170,20 @@ void State_Gameplay::update()
 	if (DH::getKey('r') || controllers[0].checkButton(BUTTON_START) || controllers[1].checkButton(BUTTON_START) || controllers[2].checkButton(BUTTON_START) || controllers[3].checkButton(BUTTON_START))
 	{
 		AE::sounds()->stopAllChannels();
+		specialPassengers.clear();
 		passengers.clear();
+		//unload gameplay sounds
+		AE::sounds()->unLoadSound("./res/sound/star.wav");
+		AE::sounds()->unLoadSound("./res/sound/crash.wav");
+		AE::sounds()->unLoadSound("./res/sound/ding.wav");
+		AE::sounds()->unLoadSound("./res/sound/flies.wav");
+		AE::sounds()->unLoadSound("./res/sound/magnet.wav");
+		AE::sounds()->unLoadSound("./res/sound/car.wav");
+		AE::sounds()->unLoadSound("./res/sound/idle.wav");
+		AE::sounds()->unLoadSound("./res/sound/ambient.wav");
+		AE::sounds()->unLoadSound("./res/sound/tick-tock.wav");
+		AE::sounds()->unLoadSound("./res/sound/frozen.wav");
+		AE::sounds()->unLoadSound("./res/sound/bus_ignition.wav");
 		load();
 		inIntro = true;
 	}
@@ -1676,7 +1697,7 @@ void State_Gameplay::drawBuses()
 
 glm::vec3 State_Gameplay::getClockHandEndPosition(float angle)
 {
-	cout << angle << endl;
+	//cout << angle << endl;
 
 	glm::vec3 handPosition = glm::vec3(0.0f);
 	glm::vec3 handBaseEndPosition = glm::vec3(1, 0, 0);
@@ -1734,23 +1755,45 @@ void State_Gameplay::launchSpecialPassengers()
 void State_Gameplay::drawIntroSprite()
 {
 	int i = 3;
+	
 	if (inBuffer)
 	{
 		bufferTime -= DH::getDeltaTime();
 		if (bufferTime > 3.0f)
+		{
 			i = 0;
+			if (dings == 0)
+			{
+				AE::sounds()->playSound("./res/sound/ding.wav", glm::vec3(0.0f), 0.25f);
+				dings++;
+			}
+
+		}
 		else if (bufferTime > 2.0f)
+		{
 			i = 1;
+			if (dings == 1)
+			{
+				AE::sounds()->playSound("./res/sound/ding.wav", glm::vec3(0.0f), 0.25f);
+				dings++;
+			}
+		}
 		else if (bufferTime > 1.0f)
+		{
 			i = 2;
-		else if (bufferTime < 0.0f)
-			inBuffer = false;
-		else
+			if (dings == 2)
+			{
+				AE::sounds()->playSound("./res/sound/ding.wav", glm::vec3(0.0f), 0.25f);
+				dings++;
+			}
+		}
+		else if (bufferTime > 0.0f)
 		{
 			AE::sounds()->playSound("./res/sound/ding.wav", glm::vec3(0.0f), 0.25f);
 			i = 3;
 		}
-
+		else if (bufferTime < 0.0f)
+			inBuffer = false;
 	}
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
@@ -1761,7 +1804,7 @@ void State_Gameplay::drawIntroSprite()
 
 	if (inBuffer)
 		countdown[i].draw();
-	else
+	else if (inIntro)
 		levelname.draw();
 
 	glPopMatrix();
