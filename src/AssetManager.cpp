@@ -107,6 +107,7 @@ void AssetManager::loadAssets()
 	loadedTextures.push_back(Texture2D("./res/img/tex_Gameplay_Countdown_2.png"));	
 	loadedTextures.push_back(Texture2D("./res/img/tex_Gameplay_Countdown_1.png"));	
 	loadedTextures.push_back(Texture2D("./res/img/tex_Gameplay_Countdown_Go.png"));	
+	loadedTextures.push_back(Texture2D("./res/img/tex_LightOverlay.png"));
 }
 
 void AssetManager::bindTexture(TEXTURE_NAME textureName)

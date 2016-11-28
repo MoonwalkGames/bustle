@@ -306,7 +306,7 @@ void GameObject::draw()
 	}*/
 		
 	//Checks if there is a mesh assigned before tyring to draw it
-	glColor4f(colour.x, colour.y, colour.z, colour.w);
+	glColor4f(colour.x * DH::lightingMultiplier, colour.y * DH::lightingMultiplier, colour.z * DH::lightingMultiplier, colour.w);
 	if (mesh != 0)
 	{
 		//Checks if there is a texture, if there is draws the mesh with texture coordinates too

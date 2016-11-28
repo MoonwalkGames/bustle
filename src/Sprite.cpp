@@ -123,7 +123,7 @@ void Sprite::draw()
 	}
 	glEnd();
 
-	//glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHTING);
 	glEnable(GL_CULL_FACE);
 
 	if (DBG::debug()->getVisualDebugEnabled())

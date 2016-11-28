@@ -33,7 +33,6 @@ public:
 	void drawUI();
 	void drawBuses();
 	glm::vec3 getClockHandEndPosition(float angle);
-	void enableLighting();
 	void checkMatrixStackStatus();
 	void excecute();
 	void summonCar();
@@ -135,5 +134,13 @@ private:
 	std::vector<glm::vec3> clockHand2Positions;
 	bool carOnScreen = false; //if the car is on screen, then we should update & draw it
 	bool carLaunched = false; //if the car's already launched passengers, then we shouldn't do it again
+
+	//Day/Night Cycle
+	glm::vec3 skyboxMultiplier;
+	void initLighting();
+	void updateLighting();
+	glm::vec3 startLightingColour;
+	glm::vec3 finalLightingColour;
+	std::vector<Sprite> lightOverlays; //0-3 are billboard lights, 4-7 are bus lights
 };
 #endif

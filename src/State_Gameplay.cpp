@@ -234,7 +234,7 @@ void State_Gameplay::load()
 
 	// ----- Set up the UI ------ ///
 	//set up the timer
-	timeStart = 120.0f;
+	timeStart = 30.0f;
 	timeLeft = timeStart;
 	timer = Sprite::createTextVector(TEX_FONT, -5.0f, -10.0f, 5.0f, 5.0f, "0:00");
 
@@ -414,7 +414,51 @@ void State_Gameplay::load()
 
 	//summonCar();
 
-	//enableLighting();
+	//Enable the lighting
+	startLightingColour = glm::vec3(1.0f, 252.0f / 255.0f, 236.0f / 255.0f);
+	finalLightingColour = glm::vec3(96.0f / 255.0f, 103.0f / 255.0f, 168.0f / 255.0f);
+	initLighting();
+
+	//Set up the light overlays ----
+	//Billboard overlays
+	for (int i = 0; i < 8; i++)
+	{
+		Sprite temp(TEX_LIGHTOVERLAY, 1, 1);
+
+		if (i == 0)
+		{
+			temp.setPosition(billboard1.getPosition().x, billboard1.getPosition().y + 1.5f, billboard1.getPosition().z - 5.5f);
+			temp.setRotationY(180.0f);
+			temp.setScale(25.0f, 17.5f, 25.0f);
+		}
+		else if (i == 1)
+		{
+			temp.setPosition(billboard2.getPosition().x, billboard2.getPosition().y + 1.5f, billboard2.getPosition().z - 5.5f);
+			temp.setRotationY(180.0f);
+			temp.setScale(25.0f, 17.5f, 25.0f);
+		}
+		else if (i == 2)
+		{
+			temp.setPosition(billboard3.getPosition().x + 5.5f, billboard3.getPosition().y + 1.5f, billboard3.getPosition().z);
+			temp.setRotationY(90.0f);
+			temp.setScale(25.0f, 17.5f, 25.0f);
+		}
+		else if (i == 3)
+		{
+			temp.setPosition(billboard4.getPosition().x + 5.5f, billboard4.getPosition().y + 1.5f, billboard4.getPosition().z);
+			temp.setRotationY(90.0f);
+			temp.setScale(25.0f, 17.5f, 25.0f);
+		}
+		else //Bus lights
+		{
+			temp.setPositionY(1.5f);
+			temp.setRotationX(90.0f);
+			temp.setScale(4.5f, 7.5f, 1.0f);
+		}
+
+		temp.update(DH::deltaTime);
+		lightOverlays.push_back(temp);
+	}
 }
 
 void State_Gameplay::update()
@@ -656,9 +700,16 @@ void State_Gameplay::update()
 			glViewport(0, 0, DH::windowWidth, DH::windowHeight);
 		}
 
-		//Draw the skybox
+		//Draw the skybox ----
+		//Disable the lighting since the skybox is far away and instead uses multiplier to darken the scene
+		glDisable(GL_LIGHTING);
+		skyboxMultiplier = MathHelper::LERP(glm::vec3(1.0f), glm::vec3(0.33f), 1 - (timeLeft / timeStart));
+
+		skyBox.setColour(glm::vec4(skyboxMultiplier.x, skyboxMultiplier.y, skyboxMultiplier.z, 1.0f));
 		AM::assets()->bindTexture(TEX_SKYBOX);
 		skyBox.draw();
+
+		glEnable(GL_LIGHTING);
 
 		//Draw the level mmesh
 		AM::assets()->bindTexture(TEX_LEVELPLAY);
@@ -891,7 +942,10 @@ void State_Gameplay::update()
 			//avoidence behaviour
 			//passengers[i].addImpulse(SteeringBehaviour::avoidence(passengers, i, 3.0f, 3.0f));
 			passengers[i].update(DH::getDeltaTime());
+
+			glDisable(GL_LIGHTING);
 			passengers[i].draw();
+			glEnable(GL_LIGHTING);
 
 			if (passengers[i].getPosition().x > 50.0f)
 				passengers[i].setPositionX(50.0f);
@@ -1131,9 +1185,13 @@ void State_Gameplay::update()
 	//Draw debug text
 	DBG::debug()->displayDebugText(buses, DH::getDeltaTime());
 
+	//Update the lighting
+	updateLighting();
+
 	//Draw the ui
 	drawUI();
 
+	//Draw the countdowns
 	if (inIntro || inBuffer)
 		drawIntroSprite();
 
@@ -1284,6 +1342,8 @@ void State_Gameplay::updatePowerups()
 
 void State_Gameplay::drawCrown()
 {
+	glDisable(GL_LIGHTING);
+
 	for (int i = 0; i < 4; i++)
 	{
 		if (buses[i].isLeading())
@@ -1298,6 +1358,8 @@ void State_Gameplay::drawCrown()
 			glPopMatrix();
 		}
 	}
+
+	glEnable(GL_LIGHTING);
 }
 
 void State_Gameplay::drawUI()
@@ -1456,6 +1518,8 @@ void State_Gameplay::checkMatrixStackStatus()
 
 void State_Gameplay::drawBuses()
 {
+	glDisable(GL_LIGHTING);
+
 	//Bind correct texture for Player 1
 	if(buses[0].getStage() == firstStage)
 		AM::assets()->bindTexture(TEX_BUS0_RED); 
@@ -1556,26 +1620,6 @@ void State_Gameplay::drawBuses()
 	else if (buses[3].getPosition().z < -50.0f)
 		buses[3].setPositionZ(-50.0f);
 
-	//Update the light
-	static float lightPosX = 0.0f;
-	static float lightPosY = 0.0f;
-	static float lightPosZ = 0.0f;
-	static GameObject light = GameObject();
-
-	if (DH::getKey('j'))
-		lightPosX++;
-	else if (DH::getKey('l'))
-		lightPosX--;
-
-	if (DH::getKey('i'))
-		lightPosZ++;
-	else if (DH::getKey('k'))
-		lightPosZ--;
-
-	if (DH::getKey('o'))
-		lightPosY++;
-	else if (DH::getKey('u'))
-		lightPosY--;
 	//attractive, freeze, freeze, star
 	if (DH::getKey('1'))
 		buses[0].powerup = smelly_dude;
@@ -1594,55 +1638,17 @@ void State_Gameplay::drawBuses()
 		buses[0].timePowerupStarted = timeLeft;
 	}
 
-	glm::vec3 lightPointA = glm::vec3(0.0f, 2.5f, -250.0f);
-	glm::vec3 lightPointB = glm::vec3(0.0f, 35.0f, -100.0f);
-	glm::vec3 lightPointC = glm::vec3(0.0f, 35.0f, 100.0f);
-	glm::vec3 lightPointD = glm::vec3(0.0f, 2.5f, 250.0f);
-	glm::vec3 currentLightLocation = MathHelper::catmull(lightPointA, lightPointB, lightPointC, lightPointD, timeLeft / timeStart);
-	GLfloat lightPosition[] = { currentLightLocation.x, currentLightLocation.y, currentLightLocation.z, 1.0f };
-	glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
-
-	glm::vec3 lightColourA = glm::vec3(0.98f, 0.945f, 0.5f);
-	glm::vec3 lightColourB = glm::vec3(0.17f, 0.19f, 0.46f);
-	glm::vec3 currentLightColour = MathHelper::LERP(lightColourA, lightColourB, 1 - timeLeft / timeStart);
-	GLfloat mat_diffuse[] = { currentLightColour.x, currentLightColour.y, currentLightColour.z, 1.0f };
-	//glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, mat_diffuse);
+	glEnable(GL_LIGHTING);
 }
 
 glm::vec3 State_Gameplay::getClockHandEndPosition(float angle)
 {
-	cout << angle << endl;
-
 	glm::vec3 handPosition = glm::vec3(0.0f);
 	glm::vec3 handBaseEndPosition = glm::vec3(1, 0, 0);
 
 	glm::vec3 transformedEndPosition = clock[1].getLocalToWorldMatrix() * glm::vec4(handBaseEndPosition, 1.0f);
 
 	return transformedEndPosition;
-}
-
-void State_Gameplay::enableLighting()
-{
-	GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-	GLfloat mat_shininess[] = { 50.0 };
-	GLfloat mat_diffuse[] = { 1.0, 1.0, 1.0, 1.0 };
-	GLfloat mat_ambient[] = { 1.0, 1.0, 1.0, 1.0 };
-
-	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
-	glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
-
-	GLfloat light_position[] = { -250.0f, 10.0f, 0.0f, 1.0 };
-	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-
-	glShadeModel(GL_SMOOTH);
-
-	glEnable(GL_COLOR_MATERIAL); // final polygon color will be based on glColor and glMaterial
 }
 
 void State_Gameplay::launchSpecialPassengers()
@@ -1698,4 +1704,124 @@ void State_Gameplay::drawIntroSprite()
 		levelname.draw();
 
 	glPopMatrix();
+}
+
+/*
+	Lighting
+*/
+void State_Gameplay::initLighting()
+{
+	//Init lighting states in GL
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_LIGHT1);
+	glEnable(GL_COLOR_MATERIAL);
+	glShadeModel(GL_SMOOTH);
+
+	//Init ligting parameters for light 0 (the directional light from the side)
+	GLfloat light_position[] = { 50.0f, 20.0f, -50.0f, 0.0f }; //0 makes it a directional light
+	GLfloat light_colour[] = { 1.0f, 1.0f, 1.0f, 1.0f }; //Set the colour to the starting colour
+	GLfloat light_cutoff[] = { 180.0f };
+	GLfloat light_direction[] = { -light_position[0], -light_position[1], -light_position[2], 1.0f }; //Point the light towards (0,0,0)
+	
+	//Attach lighting parameters to light 0
+	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, light_colour);
+	glLightfv(GL_LIGHT0, GL_SPOT_CUTOFF, light_cutoff);
+	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, light_direction);
+
+	//Init lghting parameters for light 1 (the spotlight facing down onto the map)
+	GLfloat light_position2[] = { 0.0f, 15.0f, 0.0f, 1.0f }; //1.0f makes it a point light
+	GLfloat light_direction2[] = { 0.0f, -1.0f, 0.0f, 1.0f };
+
+	//Attach light parameters to light 1
+	glLightfv(GL_LIGHT1, GL_POSITION, light_position2);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, light_colour);
+	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, light_direction2);
+
+	//Init material parameters
+	GLfloat mat_diffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	GLfloat mat_shininess[] = { 0.0f };
+
+	//Attach material parameters to all objects
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+}
+
+void State_Gameplay::updateLighting()
+{
+	//Change the colour of the scene lighting
+	DH::lightingMultiplier = MathHelper::LERP(1.0f, 0.825f, 1 - (timeLeft / timeStart));
+	glm::vec3 currentLightColour = MathHelper::LERP(startLightingColour, finalLightingColour, 1 - (timeLeft / timeStart));
+
+	GLfloat light_colour[] = { currentLightColour.x, currentLightColour.y, currentLightColour.z, 1.0f };
+
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, light_colour);
+	glLightfv(GL_LIGHT1, GL_DIFFUSE, light_colour);
+
+	//Draw the light overlays if past halfway through the round
+	if (1 - (timeLeft / timeStart) > 0.5f)
+	{
+		for (unsigned int i = 0; i < lightOverlays.size(); i++)
+		{
+			if (i > 3)
+			{
+				lightOverlays[i].setPosition(buses[i - 4].getPosition() + (buses[i - 4].getVelocity() * 0.33f));
+				lightOverlays[i].setRotationZ(buses[i - 4].getRotation().y);
+				lightOverlays[i].update(DH::deltaTime);
+			}
+			
+			lightOverlays[i].draw();
+		}
+	}
+
+	/*GameObject lightingQuadParent = GameObject(glm::vec3(0.0f), glm::vec3(0.0f, 135.0f, 0.0f), glm::vec3(30.0f), MESH_QUAD, TEX_BUS0_GREEN);
+	lightingQuadParent.update(DH::deltaTime);
+	
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	lightingQuadParent.draw();
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(glm::value_ptr(lightingQuadParent.getLocalToWorldMatrix()));
+
+	glBegin(GL_QUADS);
+	{
+		glVertex3f(-1.0f, -1.0f, 1.0f);
+		glVertex3f(1.0f, -1.0f, 1.0f);
+		glVertex3f(1.0f, 1.0f, 1.0f);
+		glVertex3f(-1.0f, 1.0f, 1.0f);
+	}
+	glEnd();*/
+
+	/*glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	glTranslatef(0.0f, 0.0f, 1.0f);
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	glBegin(GL_QUADS);
+	{
+		glVertex3f(-1.0f, -1.0f, 1.0f);
+		glVertex3f(1.0f, -1.0f, 1.0f);
+		glVertex3f(1.0f, 1.0f, 1.0f);
+		glVertex3f(-1.0f, 1.0f, 1.0f);
+	}
+	glEnd();*/
+
+	////Calculate the new lighting parameters
+	//float t = 1 - (timeLeft / timeStart);
+	//glm::vec3 newLightPosition = MathHelper::catmull(lightPath[0], lightPath[1], lightPath[2], lightPath[3], t);
+	//glm::vec3 newLightColour = MathHelper::catmull(lightColours[0], lightColours[1], lightColours[2], lightColours[3], t);
+	//glm::vec3 newLightDirection = -newLightPosition;
+
+	////Update ligting parameters
+	//GLfloat light_position[] = { newLightPosition.x, newLightPosition.y, newLightPosition.z, 0.0f }; //0 makes it a directional light
+	//GLfloat light_colour[] = { newLightColour.x, newLightColour.y, newLightColour.z, 1.0f }; //Set the colour to the starting colour
+	//GLfloat light_direction[] = { newLightDirection.x, newLightDirection.y, newLightDirection.z, 1.0f }; //Point the light towards (0,0,0)
+
+	////Re-Attach lighting parameters to 'sun'
+	//glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+	//glLightfv(GL_LIGHT0, GL_DIFFUSE, light_colour);
+	//glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, light_direction);
 }
