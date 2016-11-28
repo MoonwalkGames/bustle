@@ -85,7 +85,7 @@ void CAudioEngine::loadSound(const std::string& strSoundName, bool b3d, bool blo
 	CAudioEngine::ErrorCheck(sgpImplementation->mpSystem->createSound(strSoundName.c_str(), eMode, nullptr, &pSound));
 	if (pSound)
 	{
-		sgpImplementation->mSounds[strSoundName] = pSound;
+		sgpImplementation->mSounds[strSoundName].first = pSound;
 	}
 }
 /*
@@ -97,7 +97,7 @@ void CAudioEngine::unLoadSound(const std::string& strSoundName)
 	if (tFoundIt == sgpImplementation->mSounds.end())
 		return;
 
-	CAudioEngine::ErrorCheck(tFoundIt->second->release());
+	CAudioEngine::ErrorCheck(tFoundIt->second.first->release());
 	sgpImplementation->mSounds.erase(tFoundIt);
 }
 
@@ -120,20 +120,38 @@ int CAudioEngine::playSound(const std::string& strSoundName, const glm::vec3 vpo
 		}
 	}
 	FMOD::Channel* pChannel = nullptr;
-	CAudioEngine::ErrorCheck(sgpImplementation->mpSystem->playSound(tFoundIt->second, nullptr, true, &pChannel));
+	CAudioEngine::ErrorCheck(sgpImplementation->mpSystem->playSound(tFoundIt->second.first, nullptr, true, &pChannel));
 	if (pChannel)
 	{
 		FMOD_MODE currMode;
-		tFoundIt->second->getMode(&currMode);
+		tFoundIt->second.first->getMode(&currMode);
 		if (currMode & FMOD_3D) {
 			FMOD_VECTOR position = vectorToFmod(vpos);
 			CAudioEngine::ErrorCheck(pChannel->set3DAttributes(&position, nullptr));
 		}
-		CAudioEngine::ErrorCheck(pChannel->setVolume(dBtoVolume(fVolumedB)));
+		CAudioEngine::ErrorCheck(pChannel->setVolume(fVolumedB));//dBtoVolume(fVolumedB)));
 		CAudioEngine::ErrorCheck(pChannel->setPaused(false));
 		sgpImplementation->mChannels[nChannelId] = pChannel;
+		tFoundIt->second.second = pChannel;
 	}
 	return nChannelId;
+}
+
+void CAudioEngine::stopSound(const std::string & strSoundName)
+{
+	auto tFoundIt = sgpImplementation->mSounds.find(strSoundName);
+	if (tFoundIt == sgpImplementation->mSounds.end())
+	{
+		printf("couldn't find that channel to stop it! \n");
+		return;
+	}
+	FMOD::Channel* channelToStop = tFoundIt->second.second;
+	if (channelToStop != nullptr)
+		channelToStop->stop();
+	else
+		printf("couldn't find that channel to stop it! \n");
+	
+	
 }
 
 /*

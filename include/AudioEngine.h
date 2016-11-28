@@ -35,7 +35,7 @@ struct Implementation
 
 	int mnNextChannelID;
 
-	typedef std::map<std::string, FMOD::Sound*> SoundMap;
+	typedef std::map<std::string, std::pair<FMOD::Sound*, FMOD::Channel*>> SoundMap;
 	typedef std::map<int, FMOD::Channel*> ChannelMap;
 	typedef std::map<std::string, FMOD::Studio::EventInstance*> EventMap;
 	typedef std::map<std::string, FMOD::Studio::Bank*> BankMap;
@@ -65,6 +65,7 @@ public:
 	void unLoadSound(const std::string& strSoundName);
 	void set3dListenerAndOrientation(const glm::vec3& vpos = glm::vec3(0.0f), float fVolumedB = 0.0f);
 	int playSound(const std::string& strSoundName, const glm::vec3 vpos = glm::vec3(0.0f), float fVolumedB = 0.0f);
+	void stopSound(const std::string& strSoundName);
 	void playEvent(const std::string& strEventName);
 	void stopChannel(int nChannelID);
 	void stopEvent(const std::string& strEventName, bool bImmediate = false);

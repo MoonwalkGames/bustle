@@ -12,11 +12,10 @@ void State_MainMenu::load()
 	srand(time(0));
 
 	//load sounds
-	AE::sounds()->loadSound("./res/sound/gourmet_bork.mp3", true, true, false);
-	AE::sounds()->loadSound("./res/sound/bork.mp3", true, false, false);
-	AE::sounds()->loadSound("./res/sound/click.mp3", true, false, false);
+	AE::sounds()->loadSound("./res/sound/menu_music.mp3", true, true, false);
+	AE::sounds()->loadSound("./res/sound/click.wav", true, false, false);
 	AE::sounds()->loadSound("./res/sound/select.wav", true, false, false);
-	AE::sounds()->playSound("./res/sound/gourmet_bork.mp3", glm::vec3(0.0f), 3.0f);
+	AE::sounds()->playSound("./res/sound/menu_music.mp3", glm::vec3(0.0f), 3.0f);
 	
 	//Init the level mesh
 	levelPlay = GameObject(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_LEVELPLAY, TEX_LEVELPLAY);
@@ -394,13 +393,16 @@ void State_MainMenu::update()
 	//Continues past the main menu if you press space
 	controller.getInputs();
 
+	if (DH::getKey('k'))
+		AE::sounds()->stopSound("./res/sound/menu_music.mp3");
+
 	if (DH::getKey(32) || (controller.isConnected() && controller.checkButton(BUTTON_A)))
 	{
 		if (currentSelection == 0)
 		{
-			AE::sounds()->unLoadSound("./res/sound/gourmet_bork.mp3");
-			//AE::sounds()->unLoadSound("./res/sound/select.wav");
-			AE::sounds()->unLoadSound("./res/sound/click.mp3");
+			AE::sounds()->unLoadSound("./res/sound/menu_music.mp3");
+			AE::sounds()->unLoadSound("./res/sound/select.wav");
+			AE::sounds()->unLoadSound("./res/sound/click.wav");
 			GameManager::game()->setActiveState(STATE_TUTORIAL);
 		}
 		else

@@ -167,6 +167,9 @@ void State_EndRound::load()
 		remainingPassengers[i] = finalScores[i];
 	}
 
+	//load sound effects
+	AE::sounds()->loadSound("./res/sound/cheering.wav", true, true, false);
+
 	//Decide who won
 	decideWinners();
 }
@@ -325,7 +328,10 @@ void State_EndRound::update()
 
 	//Switch to the crown stage when all the passengers have despawned
 	if (currentStage == END_STAGE::FOUNTAIN_STAGE && activePassengers.size() == 0)
+	{
 		currentStage = END_STAGE::CROWN_STAGE;
+		AE::sounds()->playSound("./res/sound/cheering.wav", glm::vec3(0.0f), 5.0f);
+	}
 
 	//Draw the graph
 	drawEndGraph();
@@ -335,6 +341,7 @@ void State_EndRound::update()
 		renderedGraphData.clear();
 		//load();
 		GM::game()->setActiveState(STATE_GAMEPLAY);
+		AE::sounds()->unLoadSound("./res/sound/cheering.wav");
 	}
 }
 
