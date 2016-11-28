@@ -160,12 +160,51 @@ void State_EndRound::load()
 	viewPortTopCornerT = 0.0f;
 	graphDataNumber = 1;
 
-	//Save the final scores
+	//Save the final scores and init the billboard counts to 0
 	for (int i = 0; i < 4; i++)
 	{
 		finalScores[i] = allGraphData[allGraphData.size() - 1].score[i];
 		remainingPassengers[i] = finalScores[i];
+		billboardCounts[i] = 0;
 	}
+
+	//Init the billboard texts
+	for (int i = 0; i < 4; i++)
+	{
+		std::vector<Sprite> temp;
+
+		temp.push_back(Sprite(TEX_FONT, 16, 8));
+		temp.push_back(Sprite(TEX_FONT, 16, 8));
+
+		billboardText.push_back(temp);
+	}
+
+	billboardText[0][0].setPosition(billboard1.getPosition().x + 7.5f, billboard1.getPosition().y, billboard1.getPosition().z - 10.0f);
+	billboardText[0][1].setPosition(billboard1.getPosition().x - 7.5f, billboard1.getPosition().y, billboard1.getPosition().z - 10.0f);
+
+	billboardText[1][0].setPosition(billboard2.getPosition().x + 7.5f, billboard2.getPosition().y, billboard2.getPosition().z - 10.0f);
+	billboardText[1][1].setPosition(billboard2.getPosition().x - 7.5f, billboard2.getPosition().y, billboard2.getPosition().z - 10.0f);
+
+	billboardText[2][0].setPosition(billboard3.getPosition().x + 10.0f, billboard3.getPosition().y, billboard3.getPosition().z + 7.5f);
+	billboardText[2][1].setPosition(billboard3.getPosition().x + 10.0f, billboard3.getPosition().y, billboard3.getPosition().z - 7.5f);
+
+	billboardText[3][0].setPosition(billboard4.getPosition().x + 10.0f, billboard4.getPosition().y, billboard4.getPosition().z + 7.5f);
+	billboardText[3][1].setPosition(billboard4.getPosition().x + 10.0f, billboard4.getPosition().y, billboard4.getPosition().z - 7.5f);
+
+	for (int i = 0; i < 4; i++)
+	{
+		for (unsigned int j = 0; j < billboardText[i].size(); j++)
+		{
+			if (i == 2 || i == 3)
+				billboardText[i][j].setRotationY(90.0f);
+			else
+				billboardText[i][j].setRotationY(180.0f);
+
+			billboardText[i][j].setScale(15.0f, 15.0f, 15.0f);
+		}
+	}
+
+	fountainCounter = 0;
 
 	//Decide who won
 	decideWinners();
@@ -173,6 +212,9 @@ void State_EndRound::load()
 
 void State_EndRound::update()
 {
+	if (DH::getKey('g'))
+		billboardCounts[0]++;
+
 	//Init the camera
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -184,6 +226,9 @@ void State_EndRound::update()
 
 	//Draw the main viewport
 	glViewport(0, 0, DH::windowWidth, DH::windowHeight);
+
+	//Draw the billboard counts
+	drawBillboardCounters();
 
 	//Draw the skybox
 	AM::assets()->bindTexture(TEX_SKYBOX);
@@ -226,8 +271,8 @@ void State_EndRound::update()
 
 	//Draw the base buildings
 	AM::assets()->bindTexture(TEX_BASEBUILDING1);
-	baseBuilding3.draw();
-	baseBuilding4.draw();
+	baseBuilding1.draw();
+	baseBuilding2.draw();
 
 	AM::assets()->bindTexture(TEX_BASEBUILDING2);
 	baseBuilding3.draw();
@@ -309,8 +354,23 @@ void State_EndRound::update()
 		activePassengers[i].update(DH::deltaTime);
 		activePassengers[i].draw();
 
-		if (activePassengers[i].getPosition().x < -45.0f || activePassengers[i].getPosition().z > 45.0f)
+		if (activePassengers[i].getPosition().z > 45.0f)
 		{
+			if (activePassengers[i].getPosition().x > 0.0f)
+				billboardCounts[0]++;
+			else
+				billboardCounts[1]++;
+
+			activePassengers.erase(activePassengers.begin() + i);
+			i--;
+		}
+		else if (activePassengers[i].getPosition().x < -45.0f)
+		{
+			if (activePassengers[i].getPosition().z > 0.0f)
+				billboardCounts[2]++;
+			else
+				billboardCounts[3]++;
+
 			activePassengers.erase(activePassengers.begin() + i);
 			i--;
 		}
@@ -324,7 +384,7 @@ void State_EndRound::update()
 		showWinners();
 
 	//Switch to the crown stage when all the passengers have despawned
-	if (currentStage == END_STAGE::FOUNTAIN_STAGE && activePassengers.size() == 0)
+	if (currentStage == END_STAGE::FOUNTAIN_STAGE && remainingPassengers[0] == 0 && remainingPassengers[1] == 0 && remainingPassengers[2] == 0 && remainingPassengers[3] == 0 && activePassengers.size() == 0)
 		currentStage = END_STAGE::CROWN_STAGE;
 
 	//Draw the graph
@@ -535,20 +595,25 @@ void State_EndRound::showWinners()
 
 void State_EndRound::fountainPassengers()
 {
-	for (int i = 0; i < 4; i++)
+	fountainCounter++;
+
+	if (fountainCounter % 3 == 0)
 	{
-		if (remainingPassengers[i] > 0)
+		for (int i = 0; i < 4; i++)
 		{
-			launchPassenger(buses[i]);
-			remainingPassengers[i]--;
+			if (remainingPassengers[i] > 0)
+			{
+				launchPassenger(i);
+				remainingPassengers[i]--;
+			}
 		}
 	}
 }
 
-void State_EndRound::launchPassenger(GameObject bus)
+void State_EndRound::launchPassenger(int busNumber)
 {
 	//Set up the initial passenger params
-	glm::vec3 startPosition = bus.getPosition();
+	glm::vec3 startPosition = buses[busNumber].getPosition();
 	startPosition.y += 3.0f;
 	glm::vec3 startRotation;
 	glm::vec3 startScale;
@@ -557,17 +622,51 @@ void State_EndRound::launchPassenger(GameObject bus)
 	glm::vec3 launchVel;
 
 	startRotation = MathHelper::randomVec3(0.0f, 360.0f);
-	startScale = MathHelper::randomVec3(0.5f, 1.75f);
+	startScale = glm::vec3(1.2f);
 
 	launchVel.x = -1.0f;
 	launchVel.y = 3.0f;
 
-	launchVel = glm::rotate(launchVel, DH::degToRad(bus.getRotation().y), glm::vec3(0.0f, 1.0f, 0.0f));
-
+	launchVel = glm::rotate(launchVel, DH::degToRad(buses[busNumber].getRotation().y), glm::vec3(0.0f, 1.0f, 0.0f));
 	launchVel = glm::normalize(launchVel);
 	launchVel *= launchSpeed;
+
+	if (busNumber == 1 || busNumber == 2)
+	{
+		launchVel.x *= 1.3f;
+		launchVel.z *= 1.3f;
+	}
 
 	//Create and push back the new passenger
 	Passenger newPassenger = Passenger(startPosition, startRotation, startScale, true, glm::vec3(0.0f, -9.81f, 0.0f), launchVel, 1.0f, MESH_PASSENGER_A, MESH_PASSENGER_B, MESH_PASSENGER_C, TEX_PASSENGER);
 	activePassengers.push_back(newPassenger);
+}
+
+void State_EndRound::drawBillboardCounters()
+{
+	for (int i = 0; i < 4; i++)
+	{
+		string countAsText = std::to_string(billboardCounts[i]);
+		char tensPlace, onesPlace;
+
+		if (countAsText.size() == 1)
+		{
+			tensPlace = '0';
+			onesPlace = countAsText[0];
+		}
+		else
+		{
+			tensPlace = countAsText[0];
+			onesPlace = countAsText[1];
+		}
+
+		billboardText[i][0].setActiveFrame(tensPlace);
+		billboardText[i][1].setActiveFrame(onesPlace);
+
+		billboardText[i][0].update(DH::deltaTime);
+		billboardText[i][1].update(DH::deltaTime);
+
+		billboardText[i][0].draw();
+		billboardText[i][1].draw();
+	}
 }

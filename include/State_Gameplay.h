@@ -113,10 +113,11 @@ private:
 	float rotation;
 	bool aButtonEnabled;
 	bool pressedLastFrame;
+
 	//UI
 	float timeStart;
 	float timeLeft;
-	std::vector<Sprite> timer;
+	//std::vector<Sprite> timer;
 	Sprite billboards[4];
 	Sprite fillbar[4];
 	Sprite fillbarshade[4];

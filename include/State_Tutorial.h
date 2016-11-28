@@ -6,6 +6,7 @@
 #include "m_controller.h"
 #include "Player.h"
 #include "Sprite.h"
+#include "Particle.h"
 
 class State_Tutorial : public GameState
 {

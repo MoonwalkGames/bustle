@@ -143,8 +143,8 @@ void State_Gameplay::load()
 	//Init the buses
 	buses[0] = Player(glm::vec3(-25.0f, 1.75f, -25.0f), glm::vec3(0.0f, -45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_RED);
 	buses[1] = Player(glm::vec3(-25.0f, 1.75f, 25.0f), glm::vec3(0.0f, 45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_BLUE);
-	buses[2] = Player(glm::vec3(30.0f, 1.75f, 25.0f), glm::vec3(0.0f, 135.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_GREEN);
-	buses[3] = Player(glm::vec3(30.0f, 1.75f, -25.0f), glm::vec3(0.0f, 225.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_YELLOW);
+	buses[2] = Player(glm::vec3(25.0f, 1.75f, 25.0f), glm::vec3(0.0f, 135.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_GREEN);
+	buses[3] = Player(glm::vec3(25.0f, 1.75f, -25.0f), glm::vec3(0.0f, 225.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_YELLOW);
 
 	busTargets[0] = buses[0].getPosition();
 	busTargets[1] = buses[1].getPosition();
@@ -202,16 +202,16 @@ void State_Gameplay::load()
 	glOrtho(-75.0f, 75.0f, -75.0f, 75.0f, 0.1f, 10000.0f);
 	gluLookAt(cameraPos.x, cameraPos.y, cameraPos.z, 0, 0, 0, 0, 1, 0);
 	
-	//Enable visual debug mode
+	//Enable debug mode
 	DBG::debug()->setDebugEnabled(true);
 	DBG::debug()->setVisualDebugEnabled(false);
 	timeSinceLastDataPush = 0;
 
 	// ----- Set up the UI ------ ///
 	//set up the timer
-	timeStart = 120.0f;
+	timeStart = 1200.0f;
 	timeLeft = timeStart;
-	timer = Sprite::createTextVector(TEX_FONT, -5.0f, -10.0f, 5.0f, 5.0f, "0:00");
+	//timer = Sprite::createTextVector(TEX_FONT, -5.0f, -10.0f, 1.0f, 5.0f, 5.0f, "0:00");
 
 	//Set up the billboards
 	//billboard one/////////////////////////////////////////////////////////////////////////////////////////
@@ -388,8 +388,15 @@ void State_Gameplay::update()
 		}
 		else
 		{
+			//Output the data to the files
 			DBG::debug()->outputAnalytics();
 			DBG::debug()->outputRoundScores();
+
+			//Clear the data in the vectors to prevent multiple rounds being overlaid
+			DBG::debug()->clearAnalytics();
+			DBG::debug()->clearRoundScores();
+
+			//Switch the state
 			GM::game()->setActiveState(STATE_ENDROUND);
 		}
 	}
@@ -1164,9 +1171,9 @@ void State_Gameplay::updateStages()
 		else if (points >= 50)
 		{
 			buses[i].setStage(fifthStage);
-			buses[i].setMesh(MESH_BUS4);
+			buses[i].setMesh(MESH_BUS3);
 			buses[i].setMovementSpeed(25.0f);
-			buses[i].setTurningSpeed(0.1f);
+			buses[i].setTurningSpeed(0.5f);
 			fillbar[i].setActiveFrame(9);
 		}
 	}
@@ -1276,7 +1283,7 @@ void State_Gameplay::drawUI()
 	else
 		timerString = std::to_string(int(timeLeft) / 60) + ":" + std::to_string(int(timeLeft) % 60);
 
-	timer = Sprite::changeTextVector(TEX_FONT, timer, timerString);
+	//timer = Sprite::changeTextVector(TEX_FONT, timer, timerString);
 	//Sprite::drawTextVector(timer, DH::getDeltaTime());
 }
 
@@ -1384,7 +1391,7 @@ void State_Gameplay::drawBuses()
 	if (buses[0].getStage() == fourthStage)
 		AM::assets()->bindTexture(TEX_BUS3_RED); 
 	if (buses[0].getStage() == fifthStage)
-		AM::assets()->bindTexture(TEX_BUS4_RED); 
+		AM::assets()->bindTexture(TEX_BUS3_RED);
 
 	buses[0].update(DH::getDeltaTime());
 	buses[0].draw();
@@ -1426,15 +1433,15 @@ void State_Gameplay::drawBuses()
 
 	//Bind correct texture for Player 3
 	if (buses[2].getStage() == firstStage)
-		AM::assets()->bindTexture(TEX_BUS0_YELLOW);
+		AM::assets()->bindTexture(TEX_BUS0_GREEN);
 	else if (buses[2].getStage() == secondStage)
-		AM::assets()->bindTexture(TEX_BUS1_YELLOW);
+		AM::assets()->bindTexture(TEX_BUS1_GREEN);
 	else if (buses[2].getStage() == thirdStage)
-		AM::assets()->bindTexture(TEX_BUS2_YELLOW);
+		AM::assets()->bindTexture(TEX_BUS2_GREEN);
 	if (buses[2].getStage() == fourthStage)
-		AM::assets()->bindTexture(TEX_BUS3_YELLOW);
+		AM::assets()->bindTexture(TEX_BUS3_GREEN);
 	if (buses[2].getStage() == fifthStage)
-		AM::assets()->bindTexture(TEX_BUS4_YELLOW);
+		AM::assets()->bindTexture(TEX_BUS4_GREEN);
 	
 	buses[2].update(DH::getDeltaTime());
 	buses[2].draw();
@@ -1451,15 +1458,15 @@ void State_Gameplay::drawBuses()
 
 	//Bind correct texture for Player 4
 	if (buses[3].getStage() == firstStage)
-		AM::assets()->bindTexture(TEX_BUS0_GREEN);
+		AM::assets()->bindTexture(TEX_BUS0_YELLOW);
 	else if (buses[3].getStage() == secondStage)
-		AM::assets()->bindTexture(TEX_BUS1_GREEN);
+		AM::assets()->bindTexture(TEX_BUS1_YELLOW);
 	else if (buses[3].getStage() == thirdStage)
-		AM::assets()->bindTexture(TEX_BUS2_GREEN);
+		AM::assets()->bindTexture(TEX_BUS2_YELLOW);
 	if (buses[3].getStage() == fourthStage)
-		AM::assets()->bindTexture(TEX_BUS3_GREEN);
+		AM::assets()->bindTexture(TEX_BUS3_YELLOW);
 	if (buses[3].getStage() == fifthStage)
-		AM::assets()->bindTexture(TEX_BUS4_GREEN);
+		AM::assets()->bindTexture(TEX_BUS4_YELLOW);
 
 	buses[3].update(DH::getDeltaTime());
 	buses[3].draw();

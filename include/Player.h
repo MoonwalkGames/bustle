@@ -45,13 +45,20 @@ public:
 	int powerup; //enumerated powerup this player has
 	bool attractive; //the attractive powerup, if this is true the passengers will seek to this bus
 
+	//For the fifth stage IK
+	void updateRearBus(float dt);
+
 private:
-	int points = 25;
+	int points = 50; //25
 	int stage = thirdStage;
 	bool inTheLead = false;
 	float busMovementSpeed = 35.0f;
 	float busTurnSpeed = 0.75f;
 	
+	//5th Stage IK
+	GameObject rearBus;
+	int maxNumOffsets = 30;
+	int currentNumOffsets = 0;
 };
 
 #endif

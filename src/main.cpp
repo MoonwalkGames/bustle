@@ -40,6 +40,7 @@ int main(int argc, char **argv)
 	
 	//Perform initialization on the display and the assets themselves
 	DisplayHandler::init();
+	
 	GM::game()->setActiveState(STATE_LOAD);
 
 	//Start the event handler

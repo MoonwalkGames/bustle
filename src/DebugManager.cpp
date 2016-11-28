@@ -1,5 +1,6 @@
 #include "DebugManager.h"
 #include "DisplayHandler.h"
+#include <stdio.h>
 
 //Sets the maximum number of excel files in the debug folder
 const int MAX_FILE_NUMBER = 100;
@@ -167,7 +168,7 @@ void DebugManager::outputAnalytics()
 		fileNumber = 0;
 
 	//Open the file for output
-	std::ofstream outFile("./res/debug/roundData_" + std::to_string(fileNumber) + ".csv");
+	std::ofstream outFile("./res/debug/roundData_" + std::to_string(fileNumber) + ".csv", std::ofstream::trunc);
 
 	//If there is an error in opening the file, abort
 	if (!outFile)
@@ -235,7 +236,7 @@ void DebugManager::addScoreData(float time, Player players[4])
 void DebugManager::outputRoundScores()
 {
 	//Open file
-	std::ofstream outFile("./res/debug/lastRoundScore.txt", std::ostream::out | std::ofstream::trunc);
+	std::ofstream outFile("./res/debug/lastRoundScore.txt", std::ofstream::trunc);
 
 	//Error check
 	if (!outFile)
@@ -250,6 +251,11 @@ void DebugManager::outputRoundScores()
 
 	//Close the file
 	outFile.close();
+}
+
+void DebugManager::clearRoundScores()
+{
+	tbl_RoundScores.clear();
 }
 
 /* Singleton Pattern */

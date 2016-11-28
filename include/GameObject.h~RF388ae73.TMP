@@ -76,8 +76,6 @@ public:
 	//Forward kinematics
 	void addChild(GameObject* child);
 	void clearChildren();
-	void updateChildren(float dt);
-	virtual void update(float dt, glm::mat4 parentTransform, bool isRoot);
 
 protected:
 	glm::vec3 position; //The position stored as an x,y,z
@@ -90,9 +88,5 @@ protected:
 	glm::mat4 localToWorld; //Matrix that will be used to convert the object's transformations to the world so it is positioned properly
 
 	friend std::ostream& operator << (std::ostream& os, const GameObject& gameObject); //Overloaded stream insertion operator, allows us to easily output properties of this object
-
-	//Forward kinematics
-	std::vector<GameObject*> children;
-	bool hasParent;
 };
 #endif

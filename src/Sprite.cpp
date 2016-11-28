@@ -168,7 +168,7 @@ void Sprite::setCameraPos(glm::vec3 cameraPos, glm::vec3 cameraLookAtPos)
 	cameraLookAtPosition = cameraLookAtPos;
 }
 
-std::vector<Sprite> Sprite::createTextVector(TEXTURE_NAME fontSheet, float posX, float posY, float scaleX, float scaleY, std::string text)
+std::vector<Sprite> Sprite::createTextVector(TEXTURE_NAME fontSheet, float posX, float posY, float posz, float scaleX, float scaleY, std::string text)
 {
 	std::vector<Sprite> textVector;
 
@@ -176,7 +176,7 @@ std::vector<Sprite> Sprite::createTextVector(TEXTURE_NAME fontSheet, float posX,
 	{
 		Sprite spr = Sprite(fontSheet, 16, 8);
 		spr.setActiveFrame(text.at(i));
-		spr.setPosition(glm::vec3(posX + (4 * spr.getScale().x * i), posY, 1.0f));
+		spr.setPosition(glm::vec3(posX + (10 * spr.getScale().x * i), posY, posz));
 		spr.setScale(scaleX, scaleY, 1.0f);
 		textVector.push_back(spr);
 	}
@@ -184,7 +184,7 @@ std::vector<Sprite> Sprite::createTextVector(TEXTURE_NAME fontSheet, float posX,
 	return textVector;
 }
 
-std::vector<Sprite> Sprite::createTextVector(TEXTURE_NAME fontSheet, float posX, float posY, float scaleX, float scaleY, std::string text, glm::vec3 cameraPos, glm::vec3 cameraLookAtPos)
+std::vector<Sprite> Sprite::createTextVector(TEXTURE_NAME fontSheet, float posX, float posY, float posz, float scaleX, float scaleY, std::string text, glm::vec3 cameraPos, glm::vec3 cameraLookAtPos)
 {
 	std::vector<Sprite> textVector;
 
