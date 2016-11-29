@@ -135,6 +135,9 @@ private:
 	std::vector<glm::vec3> clockHand2Positions;
 	bool ticking; //if the ticking sound effect has been started or not
 	bool carOnScreen = false; //if the car is on screen, then we should update & draw it
+	bool soundPlayed = false;
+	bool warning = false;
+	float timewarning;
 	bool carLaunched = false; //if the car's already launched passengers, then we shouldn't do it again
 	float lastCollisionSound; //the timeleft value when the last collision sound played. used so that sound isn't being played every frame
 	float dings;
