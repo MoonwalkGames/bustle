@@ -159,6 +159,8 @@ void ParticleEmitter::update(float deltaTime)
 	{
 		for (unsigned int i = 0; i < particles.size(); i++)
 		{
+			particles[i].parentEmitterPosition = emitterPosition;
+
 			if (particles[i].timeAlive > particles[i].maxLifetime)
 			{
 				if (continuous)

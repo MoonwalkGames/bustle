@@ -119,7 +119,7 @@ private:
 	//UI
 	float timeStart;
 	float timeLeft;
-	std::vector<Sprite> timer;
+	//std::vector<Sprite> timer;
 	Sprite billboards[4];
 	Sprite fillbar[4];
 	Sprite fillbarshade[4];
@@ -138,5 +138,13 @@ private:
 	bool carLaunched = false; //if the car's already launched passengers, then we shouldn't do it again
 	float lastCollisionSound; //the timeleft value when the last collision sound played. used so that sound isn't being played every frame
 	float dings;
+
+	//Day/Night Cycle
+	glm::vec3 skyboxMultiplier;
+	void initLighting();
+	void updateLighting();
+	glm::vec3 startLightingColour;
+	glm::vec3 finalLightingColour;
+	std::vector<Sprite> lightOverlays; //0-3 are billboard lights, 4-7 are bus lights
 };
 #endif

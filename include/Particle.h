@@ -3,6 +3,7 @@
 
 #include "Kinematic.h"
 #include "AssetManager.h"
+#include "Gameobject.h"
 
 /*
 	Simple particle struct
@@ -71,7 +72,7 @@ struct Particle : public Kinematic
 		..
 		It was easier to do it this way than have: colourXRange, colourYRange, colourZRange, and colourWRange all stored as individual vec2's
 */
-class ParticleEmitter
+class ParticleEmitter : public GameObject
 {
 public:
 	ParticleEmitter();

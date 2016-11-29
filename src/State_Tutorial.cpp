@@ -16,8 +16,27 @@ void State_Tutorial::load()
 	skybox.update(DH::deltaTime);
 
 	//Init the level mesh
-	levelMesh = GameObject(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_LEVELPLAY, TEX_LEVELPLAY);
-	levelMesh.update(DH::deltaTime);
+	tutorialGround = GameObject(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_LEVELPLAY, TEX_TUT_GROUND);
+	tutorialGroundL = GameObject(glm::vec3(0.0f, 0.0f, 82.5f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_LEVELBACKGROUND, TEX_TUT_GROUNDBACK);
+	tutorialGroundM = GameObject(glm::vec3(-82.5f, 0.0f, 82.5f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_LEVELBACKGROUNDM, TEX_TUT_GROUND);
+	tutorialGroundR = GameObject(glm::vec3(-82.5f, 0.0f, 0.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_LEVELBACKGROUND, TEX_TUT_GROUNDBACK);
+	undergroundL = GameObject(glm::vec3(55.0f, -20.0f, 27.5f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_LEVELUNDERGROUND, TEX_LEVELUNDERGROUND);
+	undergroundR = GameObject(glm::vec3(-27.5f, -20.0f, -55.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(1.0f), MESH_LEVELUNDERGROUND, TEX_LEVELUNDERGROUND);
+	garageLeft = GameObject(glm::vec3(0.0f, 3.0f, 60.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_GARAGE_LEFT, TEX_GARAGE_LEFT);
+	garageRight = GameObject(glm::vec3(-60.0f, 3.0f, 0.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_GARAGE_RIGHT, TEX_GARAGE_RIGHT);
+	billboardLeft = GameObject(glm::vec3(0.0f, 26.0f, 55.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_TUTORIALBILLBOARD, TEX_TUT_BILLBOARD1);
+	billboardRight = GameObject(glm::vec3(-55.0f, 26.0f, 0.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_TUTORIALBILLBOARD, TEX_TUT_BILLBOARD2);
+
+	tutorialGround.update(DH::deltaTime);
+	tutorialGroundL.update(DH::deltaTime);
+	tutorialGroundM.update(DH::deltaTime);
+	tutorialGroundR.update(DH::deltaTime);
+	undergroundL.update(DH::deltaTime);
+	undergroundR.update(DH::deltaTime);
+	garageLeft.update(DH::deltaTime);
+	garageRight.update(DH::deltaTime);
+	billboardLeft.update(DH::deltaTime);
+	billboardRight.update(DH::deltaTime);
 
 	// ----- Set up the tutorial stuff ----- //
 	//Init controls and enabled players
@@ -31,8 +50,8 @@ void State_Tutorial::load()
 	// ----- Set up the player stuff ----- //
 	buses[0] = Player(glm::vec3(-25.0f, 1.75f, -25.0f), glm::vec3(0.0f, -45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_RED);
 	buses[1] = Player(glm::vec3(-25.0f, 1.75f, 25.0f), glm::vec3(0.0f, 45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_BLUE);
-	buses[2] = Player(glm::vec3(30.0f, 1.75f, 25.0f), glm::vec3(0.0f, 135.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_GREEN);
-	buses[3] = Player(glm::vec3(30.0f, 1.75f, -25.0f), glm::vec3(0.0f, 225.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_YELLOW);
+	buses[2] = Player(glm::vec3(25.0f, 1.75f, 25.0f), glm::vec3(0.0f, 135.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_GREEN);
+	buses[3] = Player(glm::vec3(25.0f, 1.75f, -25.0f), glm::vec3(0.0f, 225.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_YELLOW);
 
 	busTargets[0] = buses[0].getPosition();
 	busTargets[1] = buses[1].getPosition();
@@ -87,15 +106,15 @@ void State_Tutorial::load()
 	billboardPlayerIndicators[2].setActiveFrame(2);
 	billboardPlayerIndicators[3].setActiveFrame(3);
 
-	billboardPlayerIndicators[0].setScale(10.0f, 10.0f, 10.0f);
-	billboardPlayerIndicators[1].setScale(10.0f, 10.0f, 10.0f);
-	billboardPlayerIndicators[2].setScale(10.0f, 10.0f, 10.0f);
-	billboardPlayerIndicators[3].setScale(10.0f, 10.0f, 10.0f);
+	billboardPlayerIndicators[0].setScale(6.5f, 6.5f, 6.5f);
+	billboardPlayerIndicators[1].setScale(6.5f, 6.5f, 6.5f);
+	billboardPlayerIndicators[2].setScale(6.5f, 6.5f, 6.5f);
+	billboardPlayerIndicators[3].setScale(6.5f, 6.5f, 6.5f);
 
-	billboardPlayerIndicators[0].setPosition(20.0f, 25.0f, 49.98f);
-	billboardPlayerIndicators[1].setPosition(7.5f, 25.0f, 49.98f);
-	billboardPlayerIndicators[2].setPosition(-7.5f, 25.0f, 49.98f);
-	billboardPlayerIndicators[3].setPosition(-20.0f, 25.0f, 49.98f);
+	billboardPlayerIndicators[0].setPosition(42.5f, 32.5f, 49.98f);
+	billboardPlayerIndicators[1].setPosition(17.5f, 32.5f, 49.98f);
+	billboardPlayerIndicators[2].setPosition(-7.5f, 32.5f, 49.98f);
+	billboardPlayerIndicators[3].setPosition(-32.5f, 32.5f, 49.98f);
 
 	billboardPlayerIndicators[0].setRotationY(180.0f);
 	billboardPlayerIndicators[1].setRotationY(180.0f);
@@ -119,8 +138,6 @@ void State_Tutorial::update()
 
 	startIndicator.update(DH::deltaTime);
 
-	cout << startIndicator.getPosition().z << endl;
-
 	//Set up the camera
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -131,12 +148,29 @@ void State_Tutorial::update()
 	AM::assets()->bindTexture(TEX_SKYBOX);
 	skybox.draw();
 
-	AM::assets()->bindTexture(TEX_LEVELPLAY);
-	levelMesh.draw();
+	AM::assets()->bindTexture(TEX_TUT_GROUND);
+	tutorialGround.draw();
+	tutorialGroundM.draw();
 
-	// ----- Draw the static level sprites ----- //
-	staticBillboard1.draw();
-	staticBillboard2.draw();
+	AM::assets()->bindTexture(TEX_TUT_GROUNDBACK);
+	tutorialGroundL.draw();
+	tutorialGroundR.draw();
+
+	AM::assets()->bindTexture(TEX_LEVELUNDERGROUND);
+	undergroundL.draw();
+	undergroundR.draw();
+
+	AM::assets()->bindTexture(TEX_GARAGE_LEFT);
+	garageLeft.draw();
+
+	AM::assets()->bindTexture(TEX_GARAGE_RIGHT);
+	garageRight.draw();
+
+	AM::assets()->bindTexture(TEX_TUT_BILLBOARD1);
+	billboardLeft.draw();
+
+	AM::assets()->bindTexture(TEX_TUT_BILLBOARD2);
+	billboardRight.draw();
 
 	// ----- Check the inputs ----- //
 	//Reset the number of enabled players to check again this frame
@@ -239,6 +273,16 @@ void State_Tutorial::update()
 			//Update the bus
 			buses[i].update(DH::deltaTime);
 
+			if (buses[i].getPosition().x > 50.0f)
+				buses[i].setPositionX(50.0f);
+			else if (buses[i].getPosition().x < -45.0f)
+				buses[i].setPositionX(-45.0f);
+
+			if (buses[i].getPosition().z > 45.0f)
+				buses[i].setPositionZ(45.0f);
+			else if (buses[i].getPosition().z < -50.0f)
+				buses[i].setPositionZ(-50.0f);
+
 			//Set the correct texture
 			if (i == 0)
 				AM::assets()->bindTexture(TEX_BUS2_RED);
@@ -284,7 +328,6 @@ void State_Tutorial::update()
 		}
 	}
 
-
 	//DELETE LATER ----- Simply allows you to skip to the game if you hit 'g'
 	if (DH::getKey('g'))
 		GM::game()->setActiveState(STATE_GAMEPLAY);
@@ -298,7 +341,7 @@ void State_Tutorial::drawStartIndicator()
 	glOrtho(-1.0f, 1.0f, -1.0f, 1.0f, -5.0f, 5.0f);
 
 	glViewport(0, 0, DH::windowWidth, DH::windowHeight);
-	startIndicator.draw();
+	//startIndicator.draw();
 
 	glPopMatrix();
 }

@@ -7,6 +7,7 @@ float DisplayHandler::aspectRatio = 1.0f;
 int DisplayHandler::mousePosX = 0;
 int DisplayHandler::mousePosY = 0;
 bool DisplayHandler::keyDown[256];
+float DisplayHandler::lightingMultiplier = 1.0f;
 
 //Sets up all of the OpenGL states
 void DisplayHandler::init()

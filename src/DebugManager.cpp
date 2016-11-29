@@ -252,6 +252,11 @@ void DebugManager::outputRoundScores()
 	outFile.close();
 }
 
+void DebugManager::clearRoundScores()
+{
+	tbl_RoundScores.clear();
+}
+
 /* Singleton Pattern */
 DebugManager* DebugManager::debug()
 {

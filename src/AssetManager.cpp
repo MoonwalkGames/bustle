@@ -44,6 +44,9 @@ void AssetManager::loadAssets()
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Car.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Quad.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_ClockTower.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_TutorialBillboard.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Garage_Left.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Garage_Right.obj"));
 	
 	/* ========== TEXTURES (Naming: tex_XXXXXX.png) ========== */
 	loadedTextures.push_back(Texture2D("./res/img/tex_Bus0_Red.png"));
@@ -107,6 +110,11 @@ void AssetManager::loadAssets()
 	loadedTextures.push_back(Texture2D("./res/img/tex_Gameplay_Countdown_2.png"));	
 	loadedTextures.push_back(Texture2D("./res/img/tex_Gameplay_Countdown_1.png"));	
 	loadedTextures.push_back(Texture2D("./res/img/tex_Gameplay_Countdown_Go.png"));	
+	loadedTextures.push_back(Texture2D("./res/img/tex_LightOverlay.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Garage_Left.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Garage_Right.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Tutorial_Ground.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Tutorial_Ground_Back.png"));
 }
 
 void AssetManager::bindTexture(TEXTURE_NAME textureName)

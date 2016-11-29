@@ -59,6 +59,7 @@ public:
 	//Outputs the round scores (does this EVERY game, even if disabled...couldn't find a better place for this...maybe move to game manager later???)
 	void addScoreData(float time, Player players[4]);
 	void outputRoundScores();
+	void clearRoundScores();
 
 	static DebugManager* debug(); //Singleton pattern
 

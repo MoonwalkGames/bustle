@@ -5,6 +5,7 @@
 #include "GameObject.h"
 #include "Passenger.h"
 #include "m_controller.h"
+#include "Sprite.h"
 
 struct GraphData
 {
@@ -34,7 +35,8 @@ public:
 	void showWinners();
 	void decideWinners();
 	void fountainPassengers();
-	void launchPassenger(GameObject bus);
+	void launchPassenger(int busNumber);
+	void drawBillboardCounters();
 
 private:
 	GameObject levelPlay;
@@ -100,10 +102,15 @@ private:
 	std::vector<bool> winners;
 	int finalScores[4];
 
+	int billboardCounts[4];
+	std::vector<std::vector<Sprite>> billboardText;
+
 	std::vector<Passenger> activePassengers;
 	int remainingPassengers[4];
 	float viewPortTopCornerT;
 	int graphDataNumber;
+
+	int fountainCounter;
 
 	END_STAGE currentStage;
 };

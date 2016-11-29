@@ -18,6 +18,9 @@ GameObject::GameObject()
 	localToWorld = glm::mat4(0.0f);
 	colour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	forwardVector = glm::vec3(1.0f, 0.0f, 0.0f);
+
+	//Forward Kinematics
+	hasParent = false;
 }
 
 GameObject::GameObject(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl)
@@ -31,6 +34,9 @@ GameObject::GameObject(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl)
 	colour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	forwardVector = glm::vec3(1.0f, 0.0f, 0.0f);
 	recalculateForwardVector(); //Recalculating the forward vector because the object has an initial rotation
+
+	//Forward Kinematics
+	hasParent = false;
 }
 
 GameObject::GameObject(MESH_NAME meshName, TEXTURE_NAME texName)
@@ -43,6 +49,9 @@ GameObject::GameObject(MESH_NAME meshName, TEXTURE_NAME texName)
 	localToWorld = glm::mat4(0.0f);
 	colour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	forwardVector = glm::vec3(1.0f, 0.0f, 0.0f);
+
+	//Forward Kinematics
+	hasParent = false;
 }
 
 GameObject::GameObject(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, MESH_NAME meshName, TEXTURE_NAME texName)
@@ -56,6 +65,9 @@ GameObject::GameObject(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, MESH_NAME me
 	colour = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	forwardVector = glm::vec3(1.0f, 0.0f, 0.0f);
 	recalculateForwardVector(); //Recalculating the forward vector because the object has an initial rotation
+	
+	//Forward Kinematics
+	hasParent = false;
 }
 
 GameObject::~GameObject()
@@ -306,7 +318,7 @@ void GameObject::draw()
 	}*/
 		
 	//Checks if there is a mesh assigned before tyring to draw it
-	glColor4f(colour.x, colour.y, colour.z, colour.w);
+	glColor4f(colour.x * DH::lightingMultiplier, colour.y * DH::lightingMultiplier, colour.z * DH::lightingMultiplier, colour.w);
 	if (mesh != 0)
 	{
 		//Checks if there is a texture, if there is draws the mesh with texture coordinates too
@@ -381,6 +393,44 @@ void GameObject::drawDebug()
 	glEnable(GL_TEXTURE_2D);
 
 	glLoadIdentity();
+}
+
+/*
+Forward Kinematics
+*/
+void GameObject::addChild(GameObject* child) {
+	children.push_back(child);
+}
+
+void GameObject::clearChildren() {
+	children.clear();
+}
+
+void GameObject::updateChildren(float deltaTime)
+{
+	//Update child nodes
+	for (unsigned int i = 0; i < children.size(); i++)
+		children[i]->update(deltaTime, localToWorld, false);
+}
+
+void GameObject::update(float deltaTime, glm::mat4 parentTransform, bool isRoot)
+{
+	//Sets the right matrix mode
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	//Check if this object has a parent
+	hasParent = !isRoot;
+
+	//Update this node
+	GameObject::update(deltaTime);
+
+	//Apply the parent transformations
+	localToWorld = parentTransform * localToWorld;
+
+	//Update child nodes
+	for (unsigned int i = 0; i < children.size(); i++)
+		children[i]->update(deltaTime, localToWorld, false);
 }
 
 /*
