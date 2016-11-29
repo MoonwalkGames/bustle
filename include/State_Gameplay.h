@@ -119,12 +119,6 @@ private:
 	//UI
 	float timeStart;
 	float timeLeft;
-	//std::vector<Sprite> timer;
-	Sprite billboards[4];
-	Sprite fillbar[4];
-	Sprite fillbarshade[4];
-	Sprite fillbarbackground[4];
-	Sprite billboardlight[4];
 	Sprite clock[3];
 	Sprite clock2[3];
 	//for the intro sequence
@@ -149,5 +143,6 @@ private:
 	glm::vec3 startLightingColour;
 	glm::vec3 finalLightingColour;
 	std::vector<Sprite> lightOverlays; //0-3 are billboard lights, 4-7 are bus lights
+	std::vector<bool> playerActive;
 };
 #endif

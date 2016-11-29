@@ -330,7 +330,10 @@ void State_Tutorial::update()
 
 	//DELETE LATER ----- Simply allows you to skip to the game if you hit 'g'
 	if (DH::getKey('g'))
+	{
+		GM::game()->setActivePlayers(true, true, true, true);
 		GM::game()->setActiveState(STATE_GAMEPLAY);
+	}
 }
 
 void State_Tutorial::drawStartIndicator()

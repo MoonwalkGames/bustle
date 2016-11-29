@@ -208,6 +208,24 @@ void State_EndRound::load()
 	}
 
 	fountainCounter = 0;
+	currentStage = END_STAGE::START_STAGE;
+	timeOnMoonwalkStage = 0.0f;
+
+	buttonPrompt = Sprite(TEX_BUTTONPROMPT, 1, 1);
+	buttonPrompt.setRotation(-90.0f, 0.0f, 135.0f);
+	buttonPrompt.setPosition(28.0f, 0.55f, -28.0f);
+	buttonPrompt.setScale(7.5f, 5.0f, 5.0f);
+	buttonPrompt.update(DH::deltaTime);
+	promptVisible = true;
+
+	//Get who is actually active
+	playerActive = GM::game()->getActivePlayers();
+
+	//Disable the previous scene's lighting
+	glDisable(GL_LIGHT0);
+	glDisable(GL_LIGHT1);
+	glDisable(GL_LIGHTING);
+	DH::lightingMultiplier = 1.0f;
 
 	//Decide who won
 	decideWinners();
@@ -224,179 +242,236 @@ void State_EndRound::update()
 	//Update the controller
 	controller.getInputs();
 
-	//Draw the main viewport
-	glViewport(0, 0, DH::windowWidth, DH::windowHeight);
-
-	//Draw the billboard counts
-	drawBillboardCounters();
-
-	//Draw the skybox
-	AM::assets()->bindTexture(TEX_SKYBOX);
-	skybox.draw();
-
-	//Draw the level mmesh
-	AM::assets()->bindTexture(TEX_LEVELPLAY);
-	levelPlay.draw();
-
-	//Draw the level sidewalk
-	AM::assets()->bindTexture(TEX_SIDEWALK);
-	levelSidewalk1.draw();
-	levelSidewalk2.draw();
-	levelSidewalk3.draw();
-	levelSidewalk4.draw();
-
-	//Draw the level background
-	AM::assets()->bindTexture(TEX_LEVELBACKGROUND);
-	levelBackgroundL.draw();
-	levelBackgroundR.draw();
-
-	//Draw the level background middle
-	AM::assets()->bindTexture(TEX_LEVELBACKGROUNDM);
-	levelBackgroundM.draw();
-
-	//Draw the level underground
-	AM::assets()->bindTexture(TEX_LEVELUNDERGROUND);
-	levelUnderground1.draw();
-	levelUnderground2.draw();
-	levelUnderground3.draw();
-	levelUnderground4.draw();
-
-	//Draw the level background sidewalk
-	AM::assets()->bindTexture(TEX_BACKGROUNDSIDEWALK);
-	backgroundSidewalk1.draw();
-	backgroundSidewalk2.draw();
-	backgroundSidewalk3.draw();
-	backgroundSidewalk4.draw();
-	backgroundSidewalk5.draw();
-
-	//Draw the base buildings
-	AM::assets()->bindTexture(TEX_BASEBUILDING1);
-	baseBuilding1.draw();
-	baseBuilding2.draw();
-
-	AM::assets()->bindTexture(TEX_BASEBUILDING2);
-	baseBuilding3.draw();
-	baseBuilding4.draw();
-
-	AM::assets()->bindTexture(TEX_BASEBUILDING3);
-	baseBuilding5.draw();
-	baseBuilding6.draw();
-
-	AM::assets()->bindTexture(TEX_BASEBUILDING4);
-	baseBuilding7.draw();
-	baseBuilding8.draw();
-	baseBuilding9.draw();
-	baseBuilding10.draw();
-	baseBuilding11.draw();
-	baseBuilding12.draw();
-	baseBuilding13.draw();
-	baseBuilding14.draw();
-	baseBuilding15.draw();
-	baseBuilding16.draw();
-	baseBuilding17.draw();
-	baseBuilding18.draw();
-	baseBuilding19.draw();
-	baseBuilding20.draw();
-
-	//Draw the board buildings
-	AM::assets()->bindTexture(TEX_BOARDBUILDING1);
-	boardBuilding1.draw();
-
-	AM::assets()->bindTexture(TEX_BOARDBUILDING2);
-	boardBuilding2.draw();
-
-	AM::assets()->bindTexture(TEX_BOARDBUILDING3);
-	boardBuilding3.draw();
-
-	AM::assets()->bindTexture(TEX_BOARDBUILDING4);
-	boardBuilding4.draw();
-
-	//Draw the billboards
-	AM::assets()->bindTexture(TEX_BILLBOARD1);
-	billboard1.draw();
-
-	AM::assets()->bindTexture(TEX_BILLBOARD2);
-	billboard2.draw();
-
-	AM::assets()->bindTexture(TEX_BILLBOARD3);
-	billboard3.draw();
-
-	AM::assets()->bindTexture(TEX_BILLBOARD4);
-	billboard4.draw();
-
-	//Draw the buses
-	AM::assets()->bindTexture(TEX_BUS2_RED); //Red bus
-	buses[0].draw();
-
-	AM::assets()->bindTexture(TEX_BUS2_BLUE); //Blue bus
-	buses[1].draw();
-
-	AM::assets()->bindTexture(TEX_BUS2_GREEN); //Green bus
-	buses[2].draw();
-
-	AM::assets()->bindTexture(TEX_BUS2_YELLOW); //Yellow bus
-	buses[3].draw();
-
-	//Draw the roadblocks
-	AM::assets()->bindTexture(TEX_ROADBLOCK);
-	roadblock1.draw();
-	roadblock2.draw();
-	roadblock3.draw();
-	roadblock4.draw();
-	roadblock5.draw();
-	roadblock6.draw();
-
-	//Draw the passengers and remove the ones that hit the ground
-	AM::assets()->bindTexture(TEX_PASSENGER);
-
-	for (unsigned int i = 0; i < activePassengers.size(); i++)
+	if (currentStage == END_STAGE::MOONWALK_LOGO_STAGE)
 	{
-		activePassengers[i].update(DH::deltaTime);
-		activePassengers[i].draw();
+		drawMoonwalkScreen();
 
-		if (activePassengers[i].getPosition().z > 45.0f)
+		timeOnMoonwalkStage += DH::deltaTime;
+
+		if (timeOnMoonwalkStage >= 3.0f)
 		{
-			if (activePassengers[i].getPosition().x > 0.0f)
-				billboardCounts[0]++;
-			else
-				billboardCounts[1]++;
+			promptVisible = true;
 
-			activePassengers.erase(activePassengers.begin() + i);
-			i--;
-		}
-		else if (activePassengers[i].getPosition().x < -45.0f)
-		{
-			if (activePassengers[i].getPosition().z > 0.0f)
-				billboardCounts[2]++;
-			else
-				billboardCounts[3]++;
-
-			activePassengers.erase(activePassengers.begin() + i);
-			i--;
+			if (controller.checkButton(BUTTON_A) || DH::getKey(32))
+				GM::game()->setActiveState(STATE_MAINMENU);
 		}
 	}
-
-	//Draw the other effects
-	if (currentStage == END_STAGE::FOUNTAIN_STAGE)
-		fountainPassengers();
-
-	if (currentStage == END_STAGE::CROWN_STAGE)
-		showWinners();
-
-	//Switch to the crown stage when all the passengers have despawned
-	if (currentStage == END_STAGE::FOUNTAIN_STAGE && remainingPassengers[0] == 0 && remainingPassengers[1] == 0 && remainingPassengers[2] == 0 && remainingPassengers[3] == 0 && activePassengers.size() == 0)
+	else
 	{
-		currentStage = END_STAGE::CROWN_STAGE;
-		AE::sounds()->playSound("./res/sound/cheering.wav", glm::vec3(0.0f), 1.0f);
+		//Draw the main viewport
+		glViewport(0, 0, DH::windowWidth, DH::windowHeight);
+
+		//Start the end sequence by pressing A or space
+		if (currentStage == END_STAGE::START_STAGE)
+		{
+			if (controller.checkButton(BUTTON_A) || DH::getKey(32))
+			{
+				promptVisible = false;
+				currentStage = FOUNTAIN_STAGE;
+			}
+		}
+
+		//Switch to the graph stage by pressing A or space from the crown sta
+		if (currentStage == END_STAGE::CROWN_STAGE)
+		{
+			if (controller.checkButton(BUTTON_A) || DH::getKey(32))
+			{
+				promptVisible = false;
+				currentStage = AXES_STAGE;
+			}
+		}
+
+		//Draw the billboard counts
+		drawBillboardCounters();
+
+		//Draw the button prompt
+		if (promptVisible)
+		{
+			AM::assets()->bindTexture(TEX_BUTTONPROMPT);
+			buttonPrompt.draw();
+		}
+
+		//Draw the skybox
+		AM::assets()->bindTexture(TEX_SKYBOX);
+		skybox.draw();
+
+		//Draw the level mmesh
+		AM::assets()->bindTexture(TEX_LEVELPLAY);
+		levelPlay.draw();
+
+		//Draw the level sidewalk
+		AM::assets()->bindTexture(TEX_SIDEWALK);
+		levelSidewalk1.draw();
+		levelSidewalk2.draw();
+		levelSidewalk3.draw();
+		levelSidewalk4.draw();
+
+		//Draw the level background
+		AM::assets()->bindTexture(TEX_LEVELBACKGROUND);
+		levelBackgroundL.draw();
+		levelBackgroundR.draw();
+
+		//Draw the level background middle
+		AM::assets()->bindTexture(TEX_LEVELBACKGROUNDM);
+		levelBackgroundM.draw();
+
+		//Draw the level underground
+		AM::assets()->bindTexture(TEX_LEVELUNDERGROUND);
+		levelUnderground1.draw();
+		levelUnderground2.draw();
+		levelUnderground3.draw();
+		levelUnderground4.draw();
+
+		//Draw the level background sidewalk
+		AM::assets()->bindTexture(TEX_BACKGROUNDSIDEWALK);
+		backgroundSidewalk1.draw();
+		backgroundSidewalk2.draw();
+		backgroundSidewalk3.draw();
+		backgroundSidewalk4.draw();
+		backgroundSidewalk5.draw();
+
+		//Draw the base buildings
+		AM::assets()->bindTexture(TEX_BASEBUILDING1);
+		baseBuilding1.draw();
+		baseBuilding2.draw();
+
+		AM::assets()->bindTexture(TEX_BASEBUILDING2);
+		baseBuilding3.draw();
+		baseBuilding4.draw();
+
+		AM::assets()->bindTexture(TEX_BASEBUILDING3);
+		baseBuilding5.draw();
+		baseBuilding6.draw();
+
+		AM::assets()->bindTexture(TEX_BASEBUILDING4);
+		baseBuilding7.draw();
+		baseBuilding8.draw();
+		baseBuilding9.draw();
+		baseBuilding10.draw();
+		baseBuilding11.draw();
+		baseBuilding12.draw();
+		baseBuilding13.draw();
+		baseBuilding14.draw();
+		baseBuilding15.draw();
+		baseBuilding16.draw();
+		baseBuilding17.draw();
+		baseBuilding18.draw();
+		baseBuilding19.draw();
+		baseBuilding20.draw();
+
+		//Draw the board buildings
+		AM::assets()->bindTexture(TEX_BOARDBUILDING1);
+		boardBuilding1.draw();
+
+		AM::assets()->bindTexture(TEX_BOARDBUILDING2);
+		boardBuilding2.draw();
+
+		AM::assets()->bindTexture(TEX_BOARDBUILDING3);
+		boardBuilding3.draw();
+
+		AM::assets()->bindTexture(TEX_BOARDBUILDING4);
+		boardBuilding4.draw();
+
+		//Draw the billboards
+		AM::assets()->bindTexture(TEX_BILLBOARD1);
+		billboard1.draw();
+
+		AM::assets()->bindTexture(TEX_BILLBOARD2);
+		billboard2.draw();
+
+		AM::assets()->bindTexture(TEX_BILLBOARD3);
+		billboard3.draw();
+
+		AM::assets()->bindTexture(TEX_BILLBOARD4);
+		billboard4.draw();
+
+		//Draw the buses
+		if (playerActive[0])
+		{
+			AM::assets()->bindTexture(TEX_BUS2_RED); //Red bus
+			buses[0].draw();
+		}
+
+		if (playerActive[1])
+		{
+			AM::assets()->bindTexture(TEX_BUS2_BLUE); //Blue bus
+			buses[1].draw();
+		}
+
+		if (playerActive[2])
+		{
+			AM::assets()->bindTexture(TEX_BUS2_GREEN); //Green bus
+			buses[2].draw();
+		}
+
+		if (playerActive[3])
+		{
+			AM::assets()->bindTexture(TEX_BUS2_YELLOW); //Yellow bus
+			buses[3].draw();
+		}
+
+		//Draw the roadblocks
+		AM::assets()->bindTexture(TEX_ROADBLOCK);
+		roadblock1.draw();
+		roadblock2.draw();
+		roadblock3.draw();
+		roadblock4.draw();
+		roadblock5.draw();
+		roadblock6.draw();
+
+		//Draw the passengers and remove the ones that hit the ground
+		AM::assets()->bindTexture(TEX_PASSENGER);
+
+		for (unsigned int i = 0; i < activePassengers.size(); i++)
+		{
+			activePassengers[i].update(DH::deltaTime);
+			activePassengers[i].draw();
+
+			if (activePassengers[i].getPosition().z > 45.0f)
+			{
+				if (activePassengers[i].getPosition().x > 0.0f)
+					billboardCounts[0]++;
+				else
+					billboardCounts[1]++;
+
+				activePassengers.erase(activePassengers.begin() + i);
+				i--;
+			}
+			else if (activePassengers[i].getPosition().x < -45.0f)
+			{
+				if (activePassengers[i].getPosition().z > 0.0f)
+					billboardCounts[2]++;
+				else
+					billboardCounts[3]++;
+
+				activePassengers.erase(activePassengers.begin() + i);
+				i--;
+			}
+		}
+
+		//Draw the other effects
+		if (currentStage == END_STAGE::FOUNTAIN_STAGE)
+			fountainPassengers();
+
+		if (currentStage == END_STAGE::CROWN_STAGE)
+			showWinners();
+
+		//Switch to the crown stage when all the passengers have despawned
+		if (currentStage == END_STAGE::FOUNTAIN_STAGE && remainingPassengers[0] == 0 && remainingPassengers[1] == 0 && remainingPassengers[2] == 0 && remainingPassengers[3] == 0 && activePassengers.size() == 0)
+		{
+			currentStage = END_STAGE::CROWN_STAGE;
+			promptVisible = true;
+			AE::sounds()->playSound("./res/sound/cheering.wav", glm::vec3(0.0f), 1.0f);
+		}
+
+		//Draw the graph
+		if (currentStage >= END_STAGE::AXES_STAGE)
+			drawEndGraph();
 	}
-
-	//Draw the graph
-	drawEndGraph();
-
+	
 	if (DH::getKey('r'))
 	{
 		renderedGraphData.clear();
-		//load();
 		GM::game()->setActiveState(STATE_GAMEPLAY);
 		AE::sounds()->unLoadSound("./res/sound/cheering.wav");
 	}
@@ -411,22 +486,23 @@ void State_EndRound::drawEndGraph()
 		renderedGraphData.push_back(allGraphData[graphDataNumber]);
 		graphDataNumber++;
 	}
-	else if (currentStage == END_STAGE::GRAPH_STAGE && (controller.checkButton(BUTTON_A) || DH::getKey(32)))
-		currentStage = END_STAGE::GRAPH_LERP_STAGE;
+	else if (currentStage == END_STAGE::GRAPH_STAGE)
+	{
+		promptVisible = true;
+
+		if (controller.checkButton(BUTTON_A) || DH::getKey(32))
+		{
+			promptVisible = false;
+			currentStage = END_STAGE::MOONWALK_LOGO_STAGE;
+		}
+	}
 
 	//Reset the view to make drawing the graph easier
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-
-	if (currentStage == END_STAGE::GRAPH_LERP_STAGE)
-		viewPortTopCornerT += DH::deltaTime;
-
-	float windowSizeX = MathHelper::LERP(float(DH::windowWidth), 320.0f, viewPortTopCornerT / 1.5f);
-	float windowSizeY = MathHelper::LERP(float(DH::windowHeight), 180.0f, viewPortTopCornerT / 1.5f);
-
-	glViewport(0, 0, windowSizeX, windowSizeY);
+	glViewport(0, 0, DH::windowWidth, DH::windowHeight);
 
 	//Draw the graph background
 	glDisable(GL_TEXTURE_2D);
@@ -441,17 +517,6 @@ void State_EndRound::drawEndGraph()
 	glEnd();
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	glEnable(GL_TEXTURE_2D);
-
-	if (viewPortTopCornerT > 1.5f && currentStage == END_STAGE::GRAPH_LERP_STAGE)
-		currentStage = END_STAGE::FOUNTAIN_STAGE;
-
-	//Draw the graph axes labels
-	if (currentStage < END_STAGE::GRAPH_LERP_STAGE)
-	{
-		DH::drawText2D("END OF DAY REPORT", glm::vec4(1.0f), DH::windowWidth / 2 - 100, DH::windowHeight / 2 + 275);
-		DH::drawText2D("TIME", glm::vec4(1.0f), DH::windowWidth / 2 - 40, DH::windowHeight / 2 - 350);
-		DH::drawText2D("SCORE", glm::vec4(1.0f), DH::windowWidth / 2 - 575, DH::windowHeight / 2);
-	}
 
 	//Draw the graph axes
 	glDisable(GL_TEXTURE_2D);
@@ -564,7 +629,7 @@ void State_EndRound::showWinners()
 {
 	for (int i = 0; i < 4; i++)
 	{
-		if (winners[i])
+		if (winners[i] && playerActive[i])
 		{
 			glMatrixMode(GL_MODELVIEW);
 			glLoadIdentity();
@@ -673,5 +738,39 @@ void State_EndRound::drawBillboardCounters()
 
 		billboardText[i][0].draw();
 		billboardText[i][1].draw();
+	}
+}
+
+void State_EndRound::drawMoonwalkScreen()
+{
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(-1, 1, -1, 1, -1, 5);
+	glViewport(0, 0, DH::windowWidth, DH::windowHeight);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	AM::assets()->bindTexture(TEX_MOONWALK);
+	glBegin(GL_QUADS);
+	{
+		glTexCoord2f(0.0f, 0.0f);  glVertex3f(-1.0f, -1.0f, -4.0f);
+		glTexCoord2f(1.0f, 0.0f);  glVertex3f(1.0f, -1.0f, -4.0f);
+		glTexCoord2f(1.0f, 1.0f);  glVertex3f(1.0f, 1.0f, -4.0f);
+		glTexCoord2f(0.0f, 1.0f);  glVertex3f(-1.0f, 1.0f, -4.0f);
+	}
+	glEnd();
+
+	if (promptVisible)
+	{
+		AM::assets()->bindTexture(TEX_BUTTONPROMPT);
+		glBegin(GL_QUADS);
+		{
+			glTexCoord2f(0.0f, 0.0f);  glVertex3f(-0.5f, -0.8f, 0.8f);
+			glTexCoord2f(1.0f, 0.0f);  glVertex3f(0.5f, -0.8f, 0.8f);
+			glTexCoord2f(1.0f, 1.0f);  glVertex3f(0.5f, -0.3f, 0.8f);
+			glTexCoord2f(0.0f, 1.0f);  glVertex3f(-0.5f, -0.3f, 0.8f);
+		}
+		glEnd();
 	}
 }

@@ -15,11 +15,12 @@ struct GraphData
 
 enum END_STAGE
 {
+	START_STAGE,
+	FOUNTAIN_STAGE,
+	CROWN_STAGE,
 	AXES_STAGE,
 	GRAPH_STAGE,
-	GRAPH_LERP_STAGE,
-	FOUNTAIN_STAGE,
-	CROWN_STAGE
+	MOONWALK_LOGO_STAGE,
 };
 
 class State_EndRound : public GameState
@@ -37,6 +38,7 @@ public:
 	void fountainPassengers();
 	void launchPassenger(int busNumber);
 	void drawBillboardCounters();
+	void drawMoonwalkScreen();
 
 private:
 	GameObject levelPlay;
@@ -95,24 +97,25 @@ private:
 	Mesh* crown;
 
 	MController controller;
-
 	std::vector<GraphData> allGraphData;
 	std::vector<GraphData> renderedGraphData;
-
 	std::vector<bool> winners;
 	int finalScores[4];
-
 	int billboardCounts[4];
 	std::vector<std::vector<Sprite>> billboardText;
-
 	std::vector<Passenger> activePassengers;
 	int remainingPassengers[4];
 	float viewPortTopCornerT;
 	int graphDataNumber;
-
 	int fountainCounter;
-
 	END_STAGE currentStage;
+	float timeOnMoonwalkStage;
+	
+	Sprite buttonPrompt;
+	bool promptVisible;
+
+	//Active players
+	std::vector<bool> playerActive;
 };
 
 #endif

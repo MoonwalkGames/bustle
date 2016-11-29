@@ -1,6 +1,7 @@
 #pragma once
 #include "Sprite.h"
 #include "DebugManager.h"
+#include "DisplayHandler.h"
 
 Sprite::Sprite()
 	: Kinematic()
@@ -123,7 +124,9 @@ void Sprite::draw()
 	}
 	glEnd();
 
-	//glEnable(GL_LIGHTING);
+	if (DH::lightingEnabled)
+		glEnable(GL_LIGHTING);
+
 	glEnable(GL_CULL_FACE);
 
 	if (DBG::debug()->getVisualDebugEnabled())

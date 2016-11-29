@@ -415,6 +415,8 @@ void GameObject::updateChildren(float deltaTime)
 
 void GameObject::update(float deltaTime, glm::mat4 parentTransform, bool isRoot)
 {
+	update(deltaTime);
+
 	//Sets the right matrix mode
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
