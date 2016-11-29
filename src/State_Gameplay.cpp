@@ -1704,6 +1704,7 @@ void State_Gameplay::drawBuses()
 		lightPosY++;
 	else if (DH::getKey('u'))
 		lightPosY--;
+	if (DH::getKey('o'))
 	{
 		buses[0].powerup = star;
 		buses[0].timePowerupStarted = timeLeft;
