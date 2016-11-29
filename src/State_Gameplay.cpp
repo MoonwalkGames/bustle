@@ -206,7 +206,6 @@ void State_Gameplay::load()
 	clock2[1].update(DH::deltaTime);
 	clock2[2].update(DH::deltaTime);
 
-	
 	//Init the crown
 	crown = &AM::assets()->getMesh(MESH_CROWN);
 
@@ -238,139 +237,6 @@ void State_Gameplay::load()
 	timeLeft = timeStart;
 	//timer = Sprite::createTextVector(TEX_FONT, -5.0f, -10.0f, 5.0f, 5.0f, "0:00");
 
-	//Set up the billboards
-	//billboard one/////////////////////////////////////////////////////////////////////////////////////////
-	billboards[0] = Sprite(TEX_BILLBOARD, 1, 1);
-	billboards[0].setPosition(29.0f, 23.0f, 51.5f);
-	billboards[0].setRotation(0.0f, 180.0f, 0.0f);
-	billboards[0].setScale(30.0f, 15.0f, 1.0f);
-	billboards[0].update(DH::deltaTime);
-
-	//fillbar background
-	fillbarbackground[0] = Sprite(TEX_FILLBAR, 1, 10);
-	fillbarbackground[0].setActiveFrame(1);
-	fillbarbackground[0].setPosition(29.0f, 19.7f, 51.49f);
-	fillbarbackground[0].setRotation(0.0f, 180.0f, 0.0f);
-	fillbarbackground[0].setScale(27.5f, 7.5f, 1.0f);
-	fillbarbackground[0].update(DH::deltaTime);
-
-	//fillbar progress
-	fillbar[0] = Sprite(TEX_FILLBAR, 1, 10);
-	fillbar[0].setActiveFrame(5);				//change the progress here 2 to 9, 9 is 80% - 100%
-	fillbar[0].setPosition(29.0f, 19.7f, 51.48f);
-	fillbar[0].setRotation(0.0f, 180.0f, 0.0f);
-	fillbar[0].setScale(27.5f, 7.5f, 1.0f);
-	fillbar[0].update(DH::deltaTime);
-
-	//fillbar shading
-	fillbarshade[0] = Sprite(TEX_FILLBAR, 1, 10);
-	fillbarshade[0].setActiveFrame(0);
-	fillbarshade[0].setPosition(29.0f, 19.7f, 51.47f);
-	fillbarshade[0].setRotation(0.0f, 180.0f, 0.0f);
-	fillbarshade[0].setScale(27.5f, 7.5f, 1.0f);
-	fillbarshade[0].update(DH::deltaTime);
-
-	//billboardlighting
-	billboardlight[0] = Sprite(TEX_BILLBOARDLIGHTS, 1, 2);
-	billboardlight[0].setActiveFrame(1);
-	billboardlight[0].setPosition(29.0f, 24.0f, 51.46f);
-	billboardlight[0].setRotation(0.0f, 180.0f, 0.0f);
-	billboardlight[0].setScale(42.0f, 24.0f, 1.0f);
-	billboardlight[0].update(DH::deltaTime);
-
-	//billboard two///////////////////////////////////////////////////////////////////////////////////
-	billboards[1] = Sprite(TEX_BILLBOARD, 1, 1);
-	billboards[1].setPosition(-21.0f, 23.0f, 51.5f);
-	billboards[1].setRotation(0.0f, 180.0f, 0.0f);
-	billboards[1].setScale(30.0f, 15.0f, 1.0f);
-	billboards[1].update(DH::deltaTime);
-
-	//fillbar background
-	fillbarbackground[1] = Sprite(TEX_FILLBAR, 1, 10);
-	fillbarbackground[1].setActiveFrame(1);
-	fillbarbackground[1].setPosition(-21.0f, 19.7f, 51.49f);
-	fillbarbackground[1].setRotation(0.0f, 180.0f, 0.0f);
-	fillbarbackground[1].setScale(27.5f, 7.5f, 1.0f);
-	fillbarbackground[1].update(DH::deltaTime);
-
-	//fillbar progress
-	fillbar[1] = Sprite(TEX_FILLBAR, 1, 10);
-	fillbar[1].setActiveFrame(5);
-	fillbar[1].setPosition(-21.0f, 19.7f, 51.48f);
-	fillbar[1].setRotation(0.0f, 180.0f, 0.0f);
-	fillbar[1].setScale(27.5f, 7.5f, 1.0f);
-	fillbar[1].update(DH::deltaTime);
-
-	//fillbar shade
-	fillbarshade[1] = Sprite(TEX_FILLBAR, 1, 10);
-	fillbarshade[1].setActiveFrame(0);
-	fillbarshade[1].setPosition(-21.0f, 19.7f, 51.47f);
-	fillbarshade[1].setRotation(0.0f, 180.0f, 0.0f);
-	fillbarshade[1].setScale(19.0f, 5.0f, 1.0f);
-	fillbarshade[1].update(DH::deltaTime);
-
-	//billboard three//////////////////////////////////////////////////////////
-	billboards[2] = Sprite(TEX_BILLBOARD, 1, 1);
-	billboards[2].setPosition(-52.6f, 23.0f, -29.5f);
-	billboards[2].setRotation(0.0f, 90.0f, 0.0f);
-	billboards[2].setScale(30.0f, 15.0f, 1.0f);
-	billboards[2].update(DH::deltaTime);
-
-	//fillbar background
-	fillbarbackground[2] = Sprite(TEX_FILLBAR, 1, 10);
-	fillbarbackground[2].setActiveFrame(1);
-	fillbarbackground[2].setPosition(-52.59f, 19.7f, -28.0f);
-	fillbarbackground[2].setRotation(0.0f, 90.0f, 0.0f);
-	fillbarbackground[2].setScale(27.5f, 7.5f, 1.0f);
-	fillbarbackground[2].update(DH::deltaTime);
-
-	//fillbar progress
-	fillbar[2] = Sprite(TEX_FILLBAR, 1, 10);
-	fillbar[2].setActiveFrame(5);
-	fillbar[2].setPosition(-52.58f, 19.7f, -28.0f);
-	fillbar[2].setRotation(0.0f, 90.0f, 0.0f);
-	fillbar[2].setScale(27.5f, 7.5f, 1.0f);
-	fillbar[2].update(DH::deltaTime);
-
-	//fillbar shade
-	fillbarshade[2] = Sprite(TEX_FILLBAR, 1, 10);
-	fillbarshade[2].setActiveFrame(0);
-	fillbarshade[2].setPosition(-52.57f, 19.7f, -28.0f);
-	fillbarshade[2].setRotation(0.0f, 90.0f, 0.0f);
-	fillbarshade[2].setScale(27.5f, 7.5f, 1.0f);
-	fillbarshade[2].update(DH::deltaTime);
-
-	//billboard four///////////////////////////////////////////////////////////////
-	billboards[3] = Sprite(TEX_BILLBOARD, 1, 1);
-	billboards[3].setPosition(-51.0f, 23.0f, 20.5);
-	billboards[3].setRotation(0.0f, 90.0f, 0.0f);
-	billboards[3].setScale(30.0f, 15.0f, 1.0f);
-	billboards[3].update(DH::deltaTime);
-
-	//fillbar background
-	fillbarbackground[3] = Sprite(TEX_FILLBAR, 1, 10);
-	fillbarbackground[3].setActiveFrame(1);
-	fillbarbackground[3].setPosition(-50.99f, 19.7f, 20.5);
-	fillbarbackground[3].setRotation(0.0f, 90.0f, 0.0f);
-	fillbarbackground[3].setScale(27.5f, 7.5f, 1.0f);
-	fillbarbackground[3].update(DH::deltaTime);
-
-	//fillbar progress
-	fillbar[3] = Sprite(TEX_FILLBAR, 1, 10);
-	fillbar[3].setActiveFrame(5);
-	fillbar[3].setPosition(-50.98f, 19.7f, 20.5f);
-	fillbar[3].setRotation(0.0f, 90.0f, 0.0f);
-	fillbar[3].setScale(27.5f, 7.5f, 1.0f);
-	fillbar[3].update(DH::deltaTime);
-
-	//fillbar shade
-	fillbarshade[3] = Sprite(TEX_FILLBAR, 1, 10);
-	fillbarshade[3].setActiveFrame(0);
-	fillbarshade[3].setPosition(-50.97f, 19.7f, 20.5f);
-	fillbarshade[3].setRotation(0.0f, 90.0f, 0.0f);
-	fillbarshade[3].setScale(19.0f, 5.0f, 1.0f);
-	fillbarshade[3].update(DH::deltaTime);
-
 	//Set up the skybox
 	skyBox = GameObject(MESH_SKYBOX, TEX_SKYBOX);
 	skyBox.setRotationY(90.0f);
@@ -378,29 +244,34 @@ void State_Gameplay::load()
 	skyBox.update(DH::deltaTime);
 
 	//set up sprites for the intro
-	levelname = Sprite(TEX_GAMEPLAY_LEVELNAME, 1, 1);
+	levelname = Sprite(TEX_ROUND_SEQUENCE, 4, 2);
 	levelname.setScale(1.0f, 1.0f, 1.0f);
 	levelname.setPositionZ(5.0f);
+	levelname.setActiveFrame(0);
 	levelname.update(DH::getDeltaTime());
 
-	countdown[0] = Sprite(TEX_GAMEPLAY_COUNTDOWN_3, 1, 1);
+	countdown[0] = Sprite(TEX_ROUND_SEQUENCE, 4, 2);
 	countdown[0].setScale(1.0f, 1.0f, 1.0f);
 	countdown[0].setPositionZ(5.0f);
+	countdown[0].setActiveFrame(4);
 	countdown[0].update(DH::getDeltaTime());
 
-	countdown[1] = Sprite(TEX_GAMEPLAY_COUNTDOWN_2, 1, 1);
+	countdown[1] = Sprite(TEX_ROUND_SEQUENCE, 4, 2);
 	countdown[1].setScale(1.0f, 1.0f, 1.0f);
 	countdown[1].setPositionZ(5.0f);
+	countdown[1].setActiveFrame(5);
 	countdown[1].update(DH::getDeltaTime());
 
-	countdown[2] = Sprite(TEX_GAMEPLAY_COUNTDOWN_1, 1, 1);
+	countdown[2] = Sprite(TEX_ROUND_SEQUENCE, 4, 2);
 	countdown[2].setScale(1.0f, 1.0f, 1.0f);
 	countdown[2].setPositionZ(5.0f);
+	countdown[2].setActiveFrame(6);
 	countdown[2].update(DH::getDeltaTime());
 
-	countdown[3] = Sprite(TEX_GAMEPLAY_COUNTDOWN_GO, 1, 1);
+	countdown[3] = Sprite(TEX_ROUND_SEQUENCE, 4, 2);
 	countdown[3].setScale(1.0f, 1.0f, 1.0f);
 	countdown[3].setPositionZ(5.0f);
+	countdown[3].setActiveFrame(7);
 	countdown[3].update(DH::getDeltaTime());
 
 	bufferTime = 4.0f;
@@ -441,7 +312,7 @@ void State_Gameplay::load()
 
 	//Set up the light overlays ----
 	//Billboard overlays
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < 9; i++)
 	{
 		Sprite temp(TEX_LIGHTOVERLAY, 1, 1);
 
@@ -469,15 +340,41 @@ void State_Gameplay::load()
 			temp.setRotationY(90.0f);
 			temp.setScale(25.0f, 17.5f, 25.0f);
 		}
-		else //Bus lights
+		else if (i > 3 && i < 8)	//Bus lights
 		{
-			temp.setPositionY(1.5f);
+			temp.setTexture(TEX_HEADLIGHT);
+			temp.setPosition(13.5f, -1.6f, 0.0f);
 			temp.setRotationX(90.0f);
-			temp.setScale(4.5f, 7.5f, 1.0f);
+			temp.setRotationZ(90.0f);
+			temp.setScale(6.5f, 10.5f, 1.0f);
+		}
+		else //Car lights
+		{
+			temp.setTexture(TEX_HEADLIGHT);
+			temp.setPosition(6.0f, -0.5f, 0.0f);
+			temp.setRotationX(90.0f);
+			temp.setRotationZ(90.0f);
+			temp.setScale(4.5f, 6.5f, 1.0f);
 		}
 
 		temp.update(DH::deltaTime);
 		lightOverlays.push_back(temp);
+	}
+
+	//Make the headlights children of the buses using FK
+	for (int i = 0; i < 4; i++)
+		buses[i].addChild(&lightOverlays[i + 4]);
+
+	car.addChild(&lightOverlays[8]);
+	
+	//Detect which players are actually playing the game
+	playerActive = GM::game()->getActivePlayers();
+
+	//Zeroes out the player score if they're not active
+	for (int i = 0; i < 4; i++)
+	{
+		if (!playerActive[i])
+			buses[i].setPoints(0);
 	}
 }
 
@@ -572,112 +469,111 @@ void State_Gameplay::update()
 	glm::vec3 targetDirection;
 	if(!inIntro && !inBuffer)
 	{
-	//Moves the bus targets based on the controller inputs
-	for (int i = 0; i < 4; i++)
-	{
-		controllers[i].getInputs();
-		if (!firstPerson)
+		//Moves the bus targets based on the controller inputs
+		for (int i = 0; i < 4; i++)
 		{
-			//Need to rotate this by the rotation of the world VS the camera since up is actually up right(ish) (angle is 45)
-			glm::vec3 worldRotatedController = glm::rotate(glm::vec3(-controllers[i].lX, 0.0f, controllers[i].lY), DH::degToRad(-45.0f + rotation), glm::vec3(0.0f, 1.0f, 0.0f));
-
-			//Calculates the vector between the bus and the target
-			glm::vec3 desired = busTargets[i] - buses[i].getPosition();
-
-			//******restrain target movement from going too far away
-			if (!((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z) > 90.0f))
-				busTargets[i] += worldRotatedController;
-			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			if (busTargets[i].x > 55.0f)
-				busTargets[i].x = 55.0f;
-			else if (busTargets[i].x < -55.0f)
-				busTargets[i].x = -55.0f;
-			if (busTargets[i].z > 55.0f)
-				busTargets[i].z = 55.0f;
-			else if (busTargets[i].z < -55.0f)
-				busTargets[i].z = -55.0f;
-			//Set forward vector to face the target
-			glm::vec3 currentForwardVector = buses[i].getForwardVector();
-			desired = busTargets[i] - buses[i].getPosition(); //Calculates the new desired vector since we moved the target
-
-			if (controllers[i].lX != 0 && controllers[i].lY != 0 && (currentForwardVector != desired)) {
-				currentForwardVector = MathHelper::LERP(currentForwardVector, desired, DH::getDeltaTime() * buses[i].getTurningSpeed());
-			}
-			if (desired.x != 0.0f || desired.y != 0.0f || desired.z != 0.0f)
-				buses[i].setForwardVector(currentForwardVector);
-
-			// --- Move the bus --- //
-			//Check if the bus has reached the target. If so, zero out velocity. Only does this if no input on controller
-			if ((controllers[i].lX == 0 && controllers[i].lY == 0))
-				buses[i].setVelocity(0.0f, 0.0f, 0.0f);
-
-
-
-			else//Otherwise, move forward
+			if (playerActive[i])
 			{
-				float Maxspeed = (((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z)) / 90.0f);
-				if (Maxspeed > 1.0f)
-					Maxspeed = 1.0f;
-				buses[i].setVelocity(glm::normalize(buses[i].getForwardVector()) * (buses[i].getMovementSpeed()*Maxspeed));
-			}
-			//Draw the bus target
-			if (DBG::debug()->getVisualDebugEnabled())
-			{
-				if (i == 0)
-					glColor3f(1.0f, 0.0f, 0.0f);
-				else if (i == 1)
-					glColor3f(0.0f, 0.0f, 1.0f);
-				else if (i == 2)
-					glColor3f(0.0f, 1.0f, 0.0f);
-				else if (i == 3)
-					glColor3f(1.0f, 1.0f, 0.0f);
+				controllers[i].getInputs();
+				if (!firstPerson)
+				{
+					//Need to rotate this by the rotation of the world VS the camera since up is actually up right(ish) (angle is 45)
+					glm::vec3 worldRotatedController = glm::rotate(glm::vec3(-controllers[i].lX, 0.0f, controllers[i].lY), DH::degToRad(-45.0f + rotation), glm::vec3(0.0f, 1.0f, 0.0f));
 
-				glPointSize(10.0f);
-				glBegin(GL_POINTS);
-				glVertex3f(busTargets[i].x, 1.0f, busTargets[i].z);
-				glEnd();
+					//Calculates the vector between the bus and the target
+					glm::vec3 desired = busTargets[i] - buses[i].getPosition();
 
-				glColor3f(1.0f, 1.0f, 1.0f);
+					//******restrain target movement from going too far away
+					if (!((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z) > 90.0f))
+						busTargets[i] += worldRotatedController;
+					//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					if (busTargets[i].x > 55.0f)
+						busTargets[i].x = 55.0f;
+					else if (busTargets[i].x < -55.0f)
+						busTargets[i].x = -55.0f;
+					if (busTargets[i].z > 55.0f)
+						busTargets[i].z = 55.0f;
+					else if (busTargets[i].z < -55.0f)
+						busTargets[i].z = -55.0f;
+					//Set forward vector to face the target
+					glm::vec3 currentForwardVector = buses[i].getForwardVector();
+					desired = busTargets[i] - buses[i].getPosition(); //Calculates the new desired vector since we moved the target
+
+					if (controllers[i].lX != 0 && controllers[i].lY != 0 && (currentForwardVector != desired)) {
+						currentForwardVector = MathHelper::LERP(currentForwardVector, desired, DH::getDeltaTime() * buses[i].getTurningSpeed());
+					}
+					if (desired.x != 0.0f || desired.y != 0.0f || desired.z != 0.0f)
+						buses[i].setForwardVector(currentForwardVector);
+
+					// --- Move the bus --- //
+					//Check if the bus has reached the target. If so, zero out velocity. Only does this if no input on controller
+					if ((controllers[i].lX == 0 && controllers[i].lY == 0))
+						buses[i].setVelocity(0.0f, 0.0f, 0.0f);
+					else//Otherwise, move forward
+					{
+						float Maxspeed = (((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z)) / 90.0f);
+						if (Maxspeed > 1.0f)
+							Maxspeed = 1.0f;
+						buses[i].setVelocity(glm::normalize(buses[i].getForwardVector()) * (buses[i].getMovementSpeed()*Maxspeed));
+					}
+					//Draw the bus target
+					if (DBG::debug()->getVisualDebugEnabled())
+					{
+						if (i == 0)
+							glColor3f(1.0f, 0.0f, 0.0f);
+						else if (i == 1)
+							glColor3f(0.0f, 0.0f, 1.0f);
+						else if (i == 2)
+							glColor3f(0.0f, 1.0f, 0.0f);
+						else if (i == 3)
+							glColor3f(1.0f, 1.0f, 0.0f);
+
+						glPointSize(10.0f);
+						glBegin(GL_POINTS);
+						glVertex3f(busTargets[i].x, 1.0f, busTargets[i].z);
+						glEnd();
+
+						glColor3f(1.0f, 1.0f, 1.0f);
+					}
+				}
+				else
+				{
+					if (controllers[i].rT > 0.0f)
+					{
+						//move forward
+						buses[i].setVelocity(glm::normalize(buses[i].getForwardVector()) *	buses[i].getMovementSpeed() * controllers[i].rT);
+					}
+					else if (controllers[i].lT > 0.0f)
+					{
+						//move backwards
+						buses[i].setVelocity(-glm::normalize(buses[i].getForwardVector()) * buses[i].getMovementSpeed() * controllers[i].lT);
+					}
+					else
+					{
+						buses[i].setVelocity(glm::vec3(0.0f));
+					}
+					if (buses[i].getVelocity() != glm::vec3(0.0f))
+					{
+						if (controllers[i].lX > 0)
+						{
+							//turn right
+							glm::vec3 forwardVector = buses[i].getForwardVector();
+							buses[i].setForwardVector(glm::rotate(glm::vec3(forwardVector.x, forwardVector.y, forwardVector.z), degToRad * -buses[i].getTurningSpeed() * 2.0f * controllers[i].lX * controllers[i].rT, glm::vec3(0, 1, 0)));
+						}
+						else if (controllers[i].lX < 0)
+						{
+							//turn left
+							glm::vec3 forwardVector = buses[i].getForwardVector();
+							buses[i].setForwardVector(glm::rotate(glm::vec3(forwardVector.x, forwardVector.y, forwardVector.z), degToRad * -buses[i].getTurningSpeed() * 2.0f * controllers[i].lX* controllers[i].rT, glm::vec3(0, 1, 0)));
+						}
+					}
+				}
+
+				//Spawn passenger
+				if (aButtonEnabled && controllers[i].checkButton(BUTTON_A) && controllers[i].isConnected())
+					launchPassengers(i, 1);
 			}
 		}
-		else
-		{
-			if (controllers[i].rT > 0.0f)
-			{
-				//move forward
-				buses[i].setVelocity(glm::normalize(buses[i].getForwardVector()) *	buses[i].getMovementSpeed() * controllers[i].rT);
-			}
-			else if (controllers[i].lT > 0.0f)
-			{
-				//move backwards
-				buses[i].setVelocity(-glm::normalize(buses[i].getForwardVector()) * buses[i].getMovementSpeed() * controllers[i].lT);
-			}
-			else
-			{
-				buses[i].setVelocity(glm::vec3(0.0f));
-			}
-			if (buses[i].getVelocity() != glm::vec3(0.0f))
-			{
-				if (controllers[i].lX > 0)
-				{
-					//turn right
-					glm::vec3 forwardVector = buses[i].getForwardVector();
-					buses[i].setForwardVector(glm::rotate(glm::vec3(forwardVector.x, forwardVector.y, forwardVector.z), degToRad * -buses[i].getTurningSpeed() * 2.0f * controllers[i].lX * controllers[i].rT, glm::vec3(0, 1, 0)));
-				}
-				else if (controllers[i].lX < 0)
-				{
-					//turn left
-					glm::vec3 forwardVector = buses[i].getForwardVector();
-					buses[i].setForwardVector(glm::rotate(glm::vec3(forwardVector.x, forwardVector.y, forwardVector.z), degToRad * -buses[i].getTurningSpeed() * 2.0f * controllers[i].lX* controllers[i].rT, glm::vec3(0, 1, 0)));
-				}
-			}
-		}
-
-		//Spawn passenger
-		if (aButtonEnabled && controllers[i].checkButton(BUTTON_A) && controllers[i].isConnected())
-			launchPassengers(i, 1);
-		
-	}
 	}
 
 	//Move the camera around
@@ -858,6 +754,7 @@ void State_Gameplay::update()
 		{
 			AM::assets()->bindTexture(TEX_CAR);
 			car.update(DH::getDeltaTime());
+			car.updateChildren(DH::deltaTime);
 			car.draw();
 			
 			if (((car.getPosition().x > -10.0f) && car.getPosition().z < 10.0f) && !carLaunched)
@@ -1062,166 +959,185 @@ void State_Gameplay::update()
 	Collision res(false, glm::vec3(0));
 	for (int i = 0; i < 4; i++)
 	{
-		for (int j = 0; j < 4; j++)
+		if (!playerActive[i])
 		{
-			if (i != j)
+			continue;
+		}
+		else
+		{
+			for (int j = 0; j < 4; j++)
 			{
-				res = CollisionHandler::PLAYERvPLAYER(buses[i], buses[j]);
-				//Star trumps all other powerups, it means that the player with the star always wins the collision.
-				if (res)
+				if (!playerActive[j])
 				{
-					if (lastCollisionSound == 0.0f || lastCollisionSound - timeLeft > 1.0f)
+					continue;
+				}
+				else if (i != j)
+				{
+					res = CollisionHandler::PLAYERvPLAYER(buses[i], buses[j]);
+					//Star trumps all other powerups, it means that the player with the star always wins the collision.
+					if (res)
 					{
-						AE::sounds()->playSound("./res/sound/crash.wav", glm::vec3(0.0f), 0.25f);
-						lastCollisionSound = timeLeft;
-					}
-					if (res.outcome == full_loss)
-					{
-						
-					}
-					else if (res.outcome == partial_loss)
-					{
-						if (buses[i].powerup == star)
+						if (lastCollisionSound == 0.0f || lastCollisionSound - timeLeft > 1.0f)
 						{
-							launchPassengers(j, 2);
+							AE::sounds()->playSound("./res/sound/crash.wav", glm::vec3(0.0f), 0.25f);
+							lastCollisionSound = timeLeft;
 						}
-						else if (buses[j].powerup == star)
+						if (res.outcome == full_loss)
 						{
-							launchPassengers(i, 2);
+
+						}
+						else if (res.outcome == partial_loss)
+						{
+							if (buses[i].powerup == star)
+							{
+								launchPassengers(j, 2);
+							}
+							else if (buses[j].powerup == star)
+							{
+								launchPassengers(i, 2);
+							}
+							else
+							{
+								launchPassengers(i, 1);
+								launchPassengers(j, 1);
+								if (buses[i].powerup == smelly_dude)
+								{
+									launchPassengers(j, buses[j].getPoints() / 3);
+									buses[i].powerup = no_powerup;
+								}
+								else if (buses[j].powerup == smelly_dude)
+								{
+									launchPassengers(i, buses[i].getPoints() / 3);
+									buses[j].powerup = no_powerup;
+								}
+							}
+						}
+						else if (res.outcome == win)
+						{
+							if (buses[j].powerup != star)
+							{
+								launchPassengers(j, 2);
+								if (buses[i].powerup == smelly_dude)
+								{
+									launchPassengers(j, buses[j].getPoints() / 3);
+									buses[i].powerup = no_powerup;
+								}
+							}
+							else
+							{
+								launchPassengers(i, 2);
+							}
 						}
 						else
 						{
-							launchPassengers(i, 1);
-							launchPassengers(j, 1);
-							if (buses[i].powerup == smelly_dude)
-							{
-								launchPassengers(j, buses[j].getPoints() / 3);
-								buses[i].powerup = no_powerup;
-							}
-							else if (buses[j].powerup == smelly_dude)
-							{
-								launchPassengers(i, buses[i].getPoints() / 3);
-								buses[j].powerup = no_powerup;
-							}
+							printf("Something weird happened! Collision returned an invalid outcome\n");
 						}
-					}
-					else if (res.outcome == win)
-					{
-						if (buses[j].powerup != star)
+						if (abs(res.penetration.x) > abs(res.penetration.z))
 						{
-							launchPassengers(j, 2);
-							if (buses[i].powerup == smelly_dude)
-							{
-								launchPassengers(j, buses[j].getPoints() / 3);
-								buses[i].powerup = no_powerup;
-							}
+							buses[i].addToPosition(res.penetration.x * 0.5, 0.0f, 0.0f);
+							buses[j].addToPosition(-res.penetration.x * 0.5, 0.0f, 0.0f);
+							//buses[j].addImpulse(-res.penetration * 1000.0f);					
 						}
 						else
 						{
-							launchPassengers(i, 2);
+							buses[i].addToPosition(0.0f, 0.0f, res.penetration.z);
+							buses[j].addToPosition(0.0f, 0.0f, -res.penetration.z);
+							//buses[i].addImpulse(-res.penetration * 1000.0f);
 						}
-					}
-					else
-					{
-						printf("Something weird happened! Collision returned an invalid outcome\n");
-					}
-					if (abs(res.penetration.x) > abs(res.penetration.z))
-					{
-						buses[i].addToPosition(res.penetration.x * 0.5, 0.0f, 0.0f);
-						buses[j].addToPosition(-res.penetration.x * 0.5, 0.0f, 0.0f);
-						//buses[j].addImpulse(-res.penetration * 1000.0f);					
-					}
-					else
-					{
-						buses[i].addToPosition(0.0f, 0.0f, res.penetration.z);
-						buses[j].addToPosition(0.0f, 0.0f, -res.penetration.z);
-						//buses[i].addImpulse(-res.penetration * 1000.0f);
 					}
 				}
-			}			
+			}
+			//Adding drag
+			//if (buses[i].getVelocity().x != 0.0f && buses[i].getVelocity().y != 0.0f && buses[i].getVelocity().z != 0.0f)
+			//buses[i].addImpulse(-(glm::normalize(buses[i].getVelocity()) * 500.0f));
 		}
-		//Adding drag
-		//if (buses[i].getVelocity().x != 0.0f && buses[i].getVelocity().y != 0.0f && buses[i].getVelocity().z != 0.0f)
-		//buses[i].addImpulse(-(glm::normalize(buses[i].getVelocity()) * 500.0f));
+		
 	}
 
 	//player vs passenger collisions
 	for (int i = 0; i < 4; i++)
 	{
-		for (unsigned int j = 0; j < passengers.size(); j++)
+		if (!playerActive[i])
 		{
-			if (CollisionHandler::PLAYERvPASSENGER(buses[i], passengers[j]))
-			{
-				if (passengers[j].getState() != PASSENGER_STATE::VACUUM)
-				{
-					passengers[j].setState(PASSENGER_STATE::VACUUM);
-					AE::sounds()->playSound("./res/sound/suck.wav", glm::vec3(0.0f), 0.15f);
-					passengers[j].setTargetBusPosition(buses[i].getPosition());
-					passengers[j].setBusTargetNumber(i);
-					buses[i].addPoints(1);
-					buses[i].addMass(1.0f);
-				}
-			}
-			else
-			{
-				if (passengers[j].getState() == PASSENGER_STATE::VACUUM)
-				{
-					passengers[j].setTargetBusPosition(buses[passengers[j].getBusTargetNumber()].getPosition());
-				}
-			}
-
-			if (!passengers[j].getAlive())
-			{
-				passengers.erase(passengers.begin() + j);
-				j--;
-			}
+			continue;
 		}
-
-		for (unsigned int j = 0; j < specialPassengers.size(); j++)
+		else
 		{
-			if (CollisionHandler::PLAYERvPASSENGER(buses[i], specialPassengers[j]))
+			for (unsigned int j = 0; j < passengers.size(); j++)
 			{
-				if (specialPassengers[j].getState() != PASSENGER_STATE::VACUUM)
+				if (CollisionHandler::PLAYERvPASSENGER(buses[i], passengers[j]))
 				{
-					specialPassengers[j].setState(PASSENGER_STATE::VACUUM);
-					AE::sounds()->playSound("./res/sound/suck.wav", glm::vec3(0.0f), 0.15f);
-					specialPassengers[j].setTargetBusPosition(buses[i].getPosition());
-					specialPassengers[j].setBusTargetNumber(i);
-					
+					if (passengers[j].getState() != PASSENGER_STATE::VACUUM)
+					{
+						passengers[j].setState(PASSENGER_STATE::VACUUM);
+						AE::sounds()->playSound("./res/sound/suck.wav", glm::vec3(0.0f), 0.15f);
+						passengers[j].setTargetBusPosition(buses[i].getPosition());
+						passengers[j].setBusTargetNumber(i);
+						buses[i].addPoints(1);
+						buses[i].addMass(1.0f);
+					}
 				}
-			}
-			else
-			{
-				if (specialPassengers[j].getState() == PASSENGER_STATE::VACUUM)
+				else
 				{
-					specialPassengers[j].setTargetBusPosition(buses[specialPassengers[j].getBusTargetNumber()].getPosition());
+					if (passengers[j].getState() == PASSENGER_STATE::VACUUM)
+					{
+						passengers[j].setTargetBusPosition(buses[passengers[j].getBusTargetNumber()].getPosition());
+					}
+				}
+
+				if (!passengers[j].getAlive())
+				{
+					passengers.erase(passengers.begin() + j);
+					j--;
 				}
 			}
 
-			if (!specialPassengers[j].getAlive())
+			for (unsigned int j = 0; j < specialPassengers.size(); j++)
 			{
-				buses[i].powerup = specialPassengers[j].powerup;
-				buses[i].timePowerupStarted = timeLeft;
-				switch (buses[i].powerup)
+				if (CollisionHandler::PLAYERvPASSENGER(buses[i], specialPassengers[j]))
 				{
-				case smelly_dude:
-					AE::sounds()->playSound("./res/sound/flies.wav", glm::vec3(0.0f), 1.0f);
-					break;
-				case attractive_person:
-					AE::sounds()->playSound("./res/sound/magnet.wav", glm::vec3(0.0f), 1.0f);
-					break;
-				case freeze_buses:
-					AE::sounds()->playSound("./res/sound/frozen.wav", glm::vec3(0.0f), 1.0f);
-					break;
-				case freeze_passengers:
-					AE::sounds()->playSound("./res/sound/frozen.wav", glm::vec3(0.0f), 1.0f);
-					break;
-				case star:
-					AE::sounds()->playSound("./res/sound/star.wav", glm::vec3(0.0f), 1.0f);
-					break;
+					if (specialPassengers[j].getState() != PASSENGER_STATE::VACUUM)
+					{
+						specialPassengers[j].setState(PASSENGER_STATE::VACUUM);
+						AE::sounds()->playSound("./res/sound/suck.wav", glm::vec3(0.0f), 0.15f);
+						specialPassengers[j].setTargetBusPosition(buses[i].getPosition());
+						specialPassengers[j].setBusTargetNumber(i);
+
+					}
 				}
-				specialPassengers.erase(specialPassengers.begin() + j);
-				j--;
+				else
+				{
+					if (specialPassengers[j].getState() == PASSENGER_STATE::VACUUM)
+					{
+						specialPassengers[j].setTargetBusPosition(buses[specialPassengers[j].getBusTargetNumber()].getPosition());
+					}
+				}
+
+				if (!specialPassengers[j].getAlive())
+				{
+					buses[i].powerup = specialPassengers[j].powerup;
+					buses[i].timePowerupStarted = timeLeft;
+					switch (buses[i].powerup)
+					{
+					case smelly_dude:
+						AE::sounds()->playSound("./res/sound/flies.wav", glm::vec3(0.0f), 1.0f);
+						break;
+					case attractive_person:
+						AE::sounds()->playSound("./res/sound/magnet.wav", glm::vec3(0.0f), 1.0f);
+						break;
+					case freeze_buses:
+						AE::sounds()->playSound("./res/sound/frozen.wav", glm::vec3(0.0f), 1.0f);
+						break;
+					case freeze_passengers:
+						AE::sounds()->playSound("./res/sound/frozen.wav", glm::vec3(0.0f), 1.0f);
+						break;
+					case star:
+						AE::sounds()->playSound("./res/sound/star.wav", glm::vec3(0.0f), 1.0f);
+						break;
+					}
+					specialPassengers.erase(specialPassengers.begin() + j);
+					j--;
+				}
 			}
 		}
 	}
@@ -1323,33 +1239,39 @@ void State_Gameplay::launchPassengers(int busNumber, int amount)
 
 void State_Gameplay::updateCrownedPlayer()
 {
-	int score1, score2, score3, score4;
-	score1 = buses[0].getPoints();
-	score2 = buses[1].getPoints();
-	score3 = buses[2].getPoints();
-	score4 = buses[3].getPoints();
+	int score[4];
+
+	for (int i = 0; i < 4; i++)
+	{
+		if (playerActive[i])
+			score[i] = buses[i].getPoints();
+		else
+			score[i] = 0;
+	}
+
 	//set all the crowned statuses to false
 	for (int i = 0; i < 4; i++)
 	{
 		buses[i].setLeading(false);
 	}
+
 	//if a buses score is greater than all the other scores, set it to leading
-	if (score1 > score2 && score1 > score3 && score1 > score4)
+	if (score[0] > score[1] && score[0] > score[2] && score[0] > score[3])
 	{
 		buses[0].setLeading(true);
 	}
 
-	else if (score2 > score1 && score2 > score3 && score2 > score4)
+	else if (score[1] > score[0] && score[1] > score[2] && score[1] > score[3])
 	{
 		buses[1].setLeading(true);
 	}
 
-	else if (score3 > score1 && score3 > score2 && score3 > score4)
+	else if (score[2] > score[0] && score[2] > score[1] && score[2] > score[3])
 	{
 		buses[2].setLeading(true);
 	}
 
-	else if (score4 > score1 && score4 > score2 && score4 > score3)
+	else if (score[3] > score[0] && score[3] > score[1] && score[3] > score[2])
 	{
 		buses[3].setLeading(true);
 	}
@@ -1360,46 +1282,44 @@ void State_Gameplay::updateStages()
 	int points;
 	for (int i = 0; i < 4; i++)
 	{
-		points = buses[i].getPoints();
-		if (points < 10)
+		if (playerActive[i])
 		{
-			buses[i].setStage(firstStage);
-			buses[i].setMesh(MESH_BUS0);
-			buses[i].setMovementSpeed(55.0f);
-			buses[i].setTurningSpeed(2.0f);
-			fillbar[i].setActiveFrame(2);
-		}
-		else if (points < 25)
-		{
-			buses[i].setStage(secondStage);
-			buses[i].setMesh(MESH_BUS1);
-			buses[i].setMovementSpeed(40.0f);
-			buses[i].setTurningSpeed(0.7f);
-			fillbar[i].setActiveFrame(4);
-		}
-		else if (points < 35)
-		{
-			buses[i].setStage(thirdStage);
-			buses[i].setMesh(MESH_BUS2);
-			buses[i].setMovementSpeed(35.0f);
-			buses[i].setTurningSpeed(0.6f);
-			fillbar[i].setActiveFrame(6);
-		}
-		else if (points < 50)
-		{
-			buses[i].setStage(fourthStage);
-			buses[i].setMesh(MESH_BUS3);
-			buses[i].setMovementSpeed(30.0f);
-			buses[i].setTurningSpeed(0.4f);
-			fillbar[i].setActiveFrame(8);
-		}
-		else if (points >= 50)
-		{
-			buses[i].setStage(fifthStage);
-			buses[i].setMesh(MESH_BUS4);
-			buses[i].setMovementSpeed(25.0f);
-			buses[i].setTurningSpeed(0.5f);
-			fillbar[i].setActiveFrame(9);
+			points = buses[i].getPoints();
+			if (points < 10)
+			{
+				buses[i].setStage(firstStage);
+				buses[i].setMesh(MESH_BUS0);
+				buses[i].setMovementSpeed(55.0f);
+				buses[i].setTurningSpeed(2.0f);
+			}
+			else if (points < 25)
+			{
+				buses[i].setStage(secondStage);
+				buses[i].setMesh(MESH_BUS1);
+				buses[i].setMovementSpeed(40.0f);
+				buses[i].setTurningSpeed(0.7f);
+			}
+			else if (points < 35)
+			{
+				buses[i].setStage(thirdStage);
+				buses[i].setMesh(MESH_BUS2);
+				buses[i].setMovementSpeed(35.0f);
+				buses[i].setTurningSpeed(0.6f);
+			}
+			else if (points < 50)
+			{
+				buses[i].setStage(fourthStage);
+				buses[i].setMesh(MESH_BUS3);
+				buses[i].setMovementSpeed(30.0f);
+				buses[i].setTurningSpeed(0.4f);
+			}
+			else if (points >= 50)
+			{
+				buses[i].setStage(fifthStage);
+				buses[i].setMesh(MESH_BUS4);
+				buses[i].setMovementSpeed(25.0f);
+				buses[i].setTurningSpeed(0.5f);
+			}
 		}
 	}
 }
@@ -1485,44 +1405,6 @@ void State_Gameplay::drawCrown()
 
 void State_Gameplay::drawUI()
 {
-	//Draw billboards in world spcae
-	for (int i = 0; i < 4; i++) {
-		billboards[i].draw();
-		fillbarbackground[i].draw();
-		switch (i) {
-		case 0:
-			//r
-			glColor3f(1.0f, 0.0f, 0.0f);
-			fillbar[0].draw();
-			glColor3f(1.0f, 1.0f, 1.0f);
-			break;
-		case 1:
-			//b
-			glColor3f(0.0f, 0.0f, 1.0f);
-			fillbar[1].draw();
-			glColor3f(1.0f, 1.0f, 1.0f);
-			break;
-		case 2:
-			//g
-			glColor3f(1.0f, 1.0f, 0.0f);
-			fillbar[2].draw();
-			glColor3f(1.0f, 1.0f, 1.0f);
-			break;
-		case 3:
-			//y
-			glColor3f(0.0f, 1.0f, 0.0f);
-			fillbar[3].draw();
-			glColor3f(1.0f, 1.0f, 1.0f);
-			break;
-		default:
-			break;
-		}
-
-		//+fillbarshade[i].update(DH::deltaTime);
-	}
-
-	billboardlight[0].draw();
-
 	//Reset view for HUD in screen space
 	glViewport(0, 0, DH::windowWidth, DH::windowHeight);
 	glMatrixMode(GL_MODELVIEW);
@@ -1531,18 +1413,6 @@ void State_Gameplay::drawUI()
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluOrtho2D(-15.0f, 15.0f, -15.0f, 15.0f);
-
-	//Draw timer
-	string timerString;
-
-	//Has to draw an extra 0 if under 10 seconds on the second half
-	if (int(timeLeft) % 60 < 10)
-		timerString = std::to_string(int(timeLeft) / 60) + ":0" + std::to_string(int(timeLeft) % 60);
-	else
-		timerString = std::to_string(int(timeLeft) / 60) + ":" + std::to_string(int(timeLeft) % 60);
-
-	//timer = Sprite::changeTextVector(TEX_FONT, timer, timerString);
-	//Sprite::drawTextVector(timer, DH::getDeltaTime());
 }
 
 void State_Gameplay::excecute()
@@ -1652,113 +1522,127 @@ void State_Gameplay::drawBuses()
 {
 	glDisable(GL_LIGHTING);
 
-	//Bind correct texture for Player 1
-	if(buses[0].getStage() == firstStage)
-		AM::assets()->bindTexture(TEX_BUS0_RED); 
-	else if (buses[0].getStage() == secondStage)
-		AM::assets()->bindTexture(TEX_BUS1_RED); 
-	else if (buses[0].getStage() == thirdStage)
-		AM::assets()->bindTexture(TEX_BUS2_RED); 
-	if (buses[0].getStage() == fourthStage)
-		AM::assets()->bindTexture(TEX_BUS3_RED); 
-	if (buses[0].getStage() == fifthStage)
-		AM::assets()->bindTexture(TEX_BUS4_RED); 
+	if (playerActive[0])
+	{
+		//Bind correct texture for Player 1
+		if (buses[0].getStage() == firstStage)
+			AM::assets()->bindTexture(TEX_BUS0_RED);
+		else if (buses[0].getStage() == secondStage)
+			AM::assets()->bindTexture(TEX_BUS1_RED);
+		else if (buses[0].getStage() == thirdStage)
+			AM::assets()->bindTexture(TEX_BUS2_RED);
+		if (buses[0].getStage() == fourthStage)
+			AM::assets()->bindTexture(TEX_BUS3_RED);
+		if (buses[0].getStage() == fifthStage)
+			AM::assets()->bindTexture(TEX_BUS4_RED);
 
-	buses[0].update(DH::getDeltaTime());
-	buses[0].draw();
+		buses[0].update(DH::getDeltaTime());
+		buses[0].updateChildren(DH::deltaTime);
+		buses[0].draw();
 
-	if (buses[0].getPosition().x > 50.0f)
-		buses[0].setPositionX(50.0f);
-	else if (buses[0].getPosition().x < -50.0f)
-		buses[0].setPositionX(-50.0f);
+		if (buses[0].getPosition().x > 50.0f)
+			buses[0].setPositionX(50.0f);
+		else if (buses[0].getPosition().x < -50.0f)
+			buses[0].setPositionX(-50.0f);
 
-	if (buses[0].getPosition().z > 50.0f)
-		buses[0].setPositionZ(50.0f);
-	else if (buses[0].getPosition().z < -50.0f)
-		buses[0].setPositionZ(-50.0f);
-
-	//Bind correct texture for Player 2
-	if (buses[1].getStage() == firstStage)
-		AM::assets()->bindTexture(TEX_BUS0_BLUE);
-	else if (buses[1].getStage() == secondStage)
-		AM::assets()->bindTexture(TEX_BUS1_BLUE);
-	else if (buses[1].getStage() == thirdStage)
-		AM::assets()->bindTexture(TEX_BUS2_BLUE);
-	if (buses[1].getStage() == fourthStage)
-		AM::assets()->bindTexture(TEX_BUS3_BLUE);
-	if (buses[1].getStage() == fifthStage)
-		AM::assets()->bindTexture(TEX_BUS4_BLUE);
+		if (buses[0].getPosition().z > 50.0f)
+			buses[0].setPositionZ(50.0f);
+		else if (buses[0].getPosition().z < -50.0f)
+			buses[0].setPositionZ(-50.0f);
+	}
 	
-	buses[1].update(DH::getDeltaTime());
-	buses[1].draw();
+	if (playerActive[1])
+	{
+		//Bind correct texture for Player 2
+		if (buses[1].getStage() == firstStage)
+			AM::assets()->bindTexture(TEX_BUS0_BLUE);
+		else if (buses[1].getStage() == secondStage)
+			AM::assets()->bindTexture(TEX_BUS1_BLUE);
+		else if (buses[1].getStage() == thirdStage)
+			AM::assets()->bindTexture(TEX_BUS2_BLUE);
+		if (buses[1].getStage() == fourthStage)
+			AM::assets()->bindTexture(TEX_BUS3_BLUE);
+		if (buses[1].getStage() == fifthStage)
+			AM::assets()->bindTexture(TEX_BUS4_BLUE);
 
-	if (buses[1].getPosition().x > 50.0f)
-		buses[1].setPositionX(50.0f);
-	else if (buses[1].getPosition().x < -50.0f)
-		buses[1].setPositionX(-50.0f);
+		buses[1].update(DH::getDeltaTime());
+		buses[1].updateChildren(DH::deltaTime);
+		buses[1].draw();
 
-	if (buses[1].getPosition().z > 50.0f)
-		buses[1].setPositionZ(50.0f);
-	else if (buses[1].getPosition().z < -50.0f)
-		buses[1].setPositionZ(-50.0f);
+		if (buses[1].getPosition().x > 50.0f)
+			buses[1].setPositionX(50.0f);
+		else if (buses[1].getPosition().x < -50.0f)
+			buses[1].setPositionX(-50.0f);
 
-	//Bind correct texture for Player 3
-	if (buses[2].getStage() == firstStage)
-		AM::assets()->bindTexture(TEX_BUS0_GREEN);
-	else if (buses[2].getStage() == secondStage)
-		AM::assets()->bindTexture(TEX_BUS1_GREEN);
-	else if (buses[2].getStage() == thirdStage)
-		AM::assets()->bindTexture(TEX_BUS2_GREEN);
-	if (buses[2].getStage() == fourthStage)
-		AM::assets()->bindTexture(TEX_BUS3_GREEN);
-	if (buses[2].getStage() == fifthStage)
-		AM::assets()->bindTexture(TEX_BUS4_GREEN);
+		if (buses[1].getPosition().z > 50.0f)
+			buses[1].setPositionZ(50.0f);
+		else if (buses[1].getPosition().z < -50.0f)
+			buses[1].setPositionZ(-50.0f);
+	}
 
-	buses[2].update(DH::getDeltaTime());
-	buses[2].draw();
+	if (playerActive[2])
+	{
+		//Bind correct texture for Player 3
+		if (buses[2].getStage() == firstStage)
+			AM::assets()->bindTexture(TEX_BUS0_GREEN);
+		else if (buses[2].getStage() == secondStage)
+			AM::assets()->bindTexture(TEX_BUS1_GREEN);
+		else if (buses[2].getStage() == thirdStage)
+			AM::assets()->bindTexture(TEX_BUS2_GREEN);
+		if (buses[2].getStage() == fourthStage)
+			AM::assets()->bindTexture(TEX_BUS3_GREEN);
+		if (buses[2].getStage() == fifthStage)
+			AM::assets()->bindTexture(TEX_BUS4_GREEN);
 
-	if (buses[2].getPosition().x > 50.0f)
-		buses[2].setPositionX(50.0f);
-	else if (buses[2].getPosition().x < -50.0f)
-		buses[2].setPositionX(-50.0f);
+		buses[2].update(DH::getDeltaTime());
+		buses[2].updateChildren(DH::deltaTime);
+		buses[2].draw();
 
-	if (buses[2].getPosition().z > 50.0f)
-		buses[2].setPositionZ(50.0f);
-	else if (buses[2].getPosition().z < -50.0f)
-		buses[2].setPositionZ(-50.0f);
+		if (buses[2].getPosition().x > 50.0f)
+			buses[2].setPositionX(50.0f);
+		else if (buses[2].getPosition().x < -50.0f)
+			buses[2].setPositionX(-50.0f);
 
-	//Bind correct texture for Player 4
-	if (buses[3].getStage() == firstStage)
-		AM::assets()->bindTexture(TEX_BUS0_YELLOW);
-	else if (buses[3].getStage() == secondStage)
-		AM::assets()->bindTexture(TEX_BUS1_YELLOW);
-	else if (buses[3].getStage() == thirdStage)
-		AM::assets()->bindTexture(TEX_BUS2_YELLOW);
-	if (buses[3].getStage() == fourthStage)
-		AM::assets()->bindTexture(TEX_BUS3_YELLOW);
-	if (buses[3].getStage() == fifthStage)
-		AM::assets()->bindTexture(TEX_BUS4_YELLOW);
+		if (buses[2].getPosition().z > 50.0f)
+			buses[2].setPositionZ(50.0f);
+		else if (buses[2].getPosition().z < -50.0f)
+			buses[2].setPositionZ(-50.0f);
+	}
+	
+	if (playerActive[3])
+	{
+		//Bind correct texture for Player 4
+		if (buses[3].getStage() == firstStage)
+			AM::assets()->bindTexture(TEX_BUS0_YELLOW);
+		else if (buses[3].getStage() == secondStage)
+			AM::assets()->bindTexture(TEX_BUS1_YELLOW);
+		else if (buses[3].getStage() == thirdStage)
+			AM::assets()->bindTexture(TEX_BUS2_YELLOW);
+		if (buses[3].getStage() == fourthStage)
+			AM::assets()->bindTexture(TEX_BUS3_YELLOW);
+		if (buses[3].getStage() == fifthStage)
+			AM::assets()->bindTexture(TEX_BUS4_YELLOW);
 
-	buses[3].update(DH::getDeltaTime());
-	buses[3].draw();
+		buses[3].update(DH::getDeltaTime());
+		buses[3].updateChildren(DH::deltaTime);
+		buses[3].draw();
 
-	if (buses[3].getPosition().x > 50.0f)
-		buses[3].setPositionX(50.0f);
-	else if (buses[3].getPosition().x < -50.0f)
-		buses[3].setPositionX(-50.0f);
+		if (buses[3].getPosition().x > 50.0f)
+			buses[3].setPositionX(50.0f);
+		else if (buses[3].getPosition().x < -50.0f)
+			buses[3].setPositionX(-50.0f);
 
-	if (buses[3].getPosition().z > 50.0f)
-		buses[3].setPositionZ(50.0f);
-	else if (buses[3].getPosition().z < -50.0f)
-		buses[3].setPositionZ(-50.0f);
+		if (buses[3].getPosition().z > 50.0f)
+			buses[3].setPositionZ(50.0f);
+		else if (buses[3].getPosition().z < -50.0f)
+			buses[3].setPositionZ(-50.0f);
+	}
 
 	glEnable(GL_LIGHTING);
 }
 
 glm::vec3 State_Gameplay::getClockHandEndPosition(float angle)
 {
-	//cout << angle << endl;
-
 	glm::vec3 handPosition = glm::vec3(0.0f);
 	glm::vec3 handBaseEndPosition = glm::vec3(1, 0, 0);
 
@@ -1903,66 +1787,33 @@ void State_Gameplay::updateLighting()
 	//Draw the light overlays if past halfway through the round
 	if (1 - (timeLeft / timeStart) > 0.5f)
 	{
-		for (unsigned int i = 0; i < lightOverlays.size(); i++)
-		{
-			if (i > 3)
-			{
-				lightOverlays[i].setPosition(buses[i - 4].getPosition() + (buses[i - 4].getVelocity() * 0.33f));
-				lightOverlays[i].setRotationZ(buses[i - 4].getRotation().y);
-				lightOverlays[i].update(DH::deltaTime);
-			}
+		//The billboard lights
+		for (unsigned int i = 0; i < 4; i++)
+			lightOverlays[i].draw();
 
+		//The bus headlights
+		for (unsigned int i = 4; i < 8; i++)
+		{
+			//Position the headlight up and down based on bus stage
+			if (buses[i - 4].getStage() < fourthStage)
+				lightOverlays[i].setPositionY(-1.65f);
+			else
+				lightOverlays[i].setPositionY(-2.5f);
+
+			//Position the headlight in front of the bus based on bus stage
+			if (buses[i - 4].getStage() == firstStage)
+				lightOverlays[i].setPositionX(BUS_WIDTH * 2.5f);
+			else if (buses[i-4].getStage() == fifthStage)
+				lightOverlays[i].setPositionX(BUS_WIDTH * 6.0f);
+			else
+				lightOverlays[i].setPositionX(BUS_WIDTH * 3.5f);
+	
+			//Draw the headlights
 			lightOverlays[i].draw();
 		}
+
+		//The car headlights
+		if (carOnScreen)
+			lightOverlays[8].draw();
 	}
-
-	/*GameObject lightingQuadParent = GameObject(glm::vec3(0.0f), glm::vec3(0.0f, 135.0f, 0.0f), glm::vec3(30.0f), MESH_QUAD, TEX_BUS0_GREEN);
-	lightingQuadParent.update(DH::deltaTime);
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	lightingQuadParent.draw();
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(glm::value_ptr(lightingQuadParent.getLocalToWorldMatrix()));
-
-	glBegin(GL_QUADS);
-	{
-	glVertex3f(-1.0f, -1.0f, 1.0f);
-	glVertex3f(1.0f, -1.0f, 1.0f);
-	glVertex3f(1.0f, 1.0f, 1.0f);
-	glVertex3f(-1.0f, 1.0f, 1.0f);
-	}
-	glEnd();*/
-
-	/*glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	glTranslatef(0.0f, 0.0f, 1.0f);
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	glBegin(GL_QUADS);
-	{
-	glVertex3f(-1.0f, -1.0f, 1.0f);
-	glVertex3f(1.0f, -1.0f, 1.0f);
-	glVertex3f(1.0f, 1.0f, 1.0f);
-	glVertex3f(-1.0f, 1.0f, 1.0f);
-	}
-	glEnd();*/
-
-	////Calculate the new lighting parameters
-	//float t = 1 - (timeLeft / timeStart);
-	//glm::vec3 newLightPosition = MathHelper::catmull(lightPath[0], lightPath[1], lightPath[2], lightPath[3], t);
-	//glm::vec3 newLightColour = MathHelper::catmull(lightColours[0], lightColours[1], lightColours[2], lightColours[3], t);
-	//glm::vec3 newLightDirection = -newLightPosition;
-
-	////Update ligting parameters
-	//GLfloat light_position[] = { newLightPosition.x, newLightPosition.y, newLightPosition.z, 0.0f }; //0 makes it a directional light
-	//GLfloat light_colour[] = { newLightColour.x, newLightColour.y, newLightColour.z, 1.0f }; //Set the colour to the starting colour
-	//GLfloat light_direction[] = { newLightDirection.x, newLightDirection.y, newLightDirection.z, 1.0f }; //Point the light towards (0,0,0)
-
-	////Re-Attach lighting parameters to 'sun'
-	//glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-	//glLightfv(GL_LIGHT0, GL_DIFFUSE, light_colour);
-	//glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, light_direction);
 }

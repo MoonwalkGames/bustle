@@ -105,17 +105,15 @@ void AssetManager::loadAssets()
 	loadedTextures.push_back(Texture2D("./res/img/tex_Tut_Billboard1.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Tut_Billboard2.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Tut_StartIndicator.png"));
-	loadedTextures.push_back(Texture2D("./res/img/tex_Gameplay_Levelname.png"));	
-	loadedTextures.push_back(Texture2D("./res/img/tex_Gameplay_Countdown_3.png"));	
-	loadedTextures.push_back(Texture2D("./res/img/tex_Gameplay_Countdown_2.png"));	
-	loadedTextures.push_back(Texture2D("./res/img/tex_Gameplay_Countdown_1.png"));	
-	loadedTextures.push_back(Texture2D("./res/img/tex_Gameplay_Countdown_Go.png"));	
+	loadedTextures.push_back(Texture2D("./res/img/tex_RoundSequence.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_LightOverlay.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Garage_Left.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Garage_Right.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Tutorial_Ground.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Tutorial_Ground_Back.png"));
-	loadedTextures.push_back(Texture2D("./res/img/tex_Endscreen_ButtonPrompt.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_LoadingScreen.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Headlight.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_AButtonPrompt.png"));
 }
 
 void AssetManager::bindTexture(TEXTURE_NAME textureName)

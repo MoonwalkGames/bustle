@@ -8,6 +8,7 @@ int DisplayHandler::mousePosX = 0;
 int DisplayHandler::mousePosY = 0;
 bool DisplayHandler::keyDown[256];
 float DisplayHandler::lightingMultiplier = 1.0f;
+bool DisplayHandler::lightingEnabled = false;
 
 //Sets up all of the OpenGL states
 void DisplayHandler::init()

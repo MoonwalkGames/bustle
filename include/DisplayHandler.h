@@ -47,7 +47,7 @@ struct DisplayHandler
 	static int mousePosX; //The mouse cursor's X position
 	static int mousePosY; //The mouse cursor's Y position
 	static float lightingMultiplier; //How dark everything is
-
+	static bool lightingEnabled; //Is lighting enabled
 
 	static bool keyDown[256]; //Array of all of the keys, holding if they are down that frame or not
 };
