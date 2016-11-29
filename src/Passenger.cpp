@@ -28,7 +28,7 @@ Passenger::Passenger(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, bool gravityAf
 	textureNumber = rand() % 3;
 }
 
-void Passenger::update(float deltaTime)
+void Passenger::update(float deltaTime, bool frozen)
 {
 	//DELETE LATER - Prevents the object from falling below y = 1
 	if (position.y < 1.5f && this->currentState != FLYING_UP)
@@ -101,6 +101,9 @@ void Passenger::update(float deltaTime)
 			currentMeshNumber = 1;
 		}
 	}
+	if (currentState == PASSENGER_STATE::GROUNDED && frozen)
+		velocity = glm::vec3(0.0f);
+
 	setForwardVector(-velocity);
 
 	Kinematic::update(deltaTime);

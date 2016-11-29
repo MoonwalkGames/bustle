@@ -889,7 +889,7 @@ void State_Gameplay::update()
 
 			//avoidence behaviour
 			//passengers[i].addImpulse(SteeringBehaviour::avoidence(passengers, i, 3.0f, 3.0f));
-			passengers[i].update(DH::getDeltaTime());
+			passengers[i].update(DH::getDeltaTime(), passengersFrozen);
 			
 			glDisable(GL_LIGHTING);
 			passengers[i].draw();
@@ -923,15 +923,15 @@ void State_Gameplay::update()
 
 			for (int j = 0; j < 4; j++)
 			{
-				if (buses[j].powerup == attractive_person)
-					specialPassengers[i].addImpulse(SteeringBehaviour::seek(specialPassengers[i].getPosition(), buses[j].getPosition(), 350.0f));
+				//if (buses[j].powerup == attractive_person)
+					//specialPassengers[i].addImpulse(SteeringBehaviour::seek(specialPassengers[i].getPosition(), buses[j].getPosition(), 350.0f));
 				if (buses[j].powerup == freeze_passengers)
 					passengersFrozen = true;
 			}
 			specialPassengers[i].addImpulse(SteeringBehaviour::wander(specialPassengers[i], 50.0f, 500.0f));
 
 			//	if (!passengersFrozen)
-			specialPassengers[i].update(DH::getDeltaTime());
+			specialPassengers[i].update(DH::getDeltaTime(), passengersFrozen);
 			specialPassengers[i].draw();
 
 			if (specialPassengers[i].getPosition().x > 50.0f)
@@ -977,7 +977,7 @@ void State_Gameplay::update()
 					//Star trumps all other powerups, it means that the player with the star always wins the collision.
 					if (res)
 					{
-						if (lastCollisionSound == 0.0f || lastCollisionSound - timeLeft > 1.0f)
+						if (lastCollisionSound == 0.0f || lastCollisionSound - timeLeft > 0.5f)
 						{
 							AE::sounds()->playSound("./res/sound/crash.wav", glm::vec3(0.0f), 0.25f);
 							lastCollisionSound = timeLeft;

@@ -26,7 +26,7 @@ public:
 	void setTargetBusPosition(glm::vec3 position);
 	void setBusTargetNumber(int targetNumber);
 
-	virtual void update(float deltaTime);
+	virtual void update(float deltaTime, bool frozen);
 	virtual void draw();
 	virtual void drawDebug(); //Polymorphic debug draw function, draws things like local axes, velocity, collision boxes, etc
 
