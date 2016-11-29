@@ -74,33 +74,6 @@ void State_MainMenu::load()
 	baseBuilding7.update(DH::deltaTime);
 	baseBuilding8.update(DH::deltaTime);
 
-	//Init the back buildings
-	baseBuilding9 = GameObject(glm::vec3(40.0f, 8.95f, 70.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(2.0f), MESH_BASEBUILDING, TEX_BASEBUILDING4);
-	baseBuilding10 = GameObject(glm::vec3(30.0f, 8.95f, 70.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(2.0f), MESH_BASEBUILDING, TEX_BASEBUILDING4);
-	baseBuilding11 = GameObject(glm::vec3(20.0f, 8.95f, 70.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(2.0f), MESH_BASEBUILDING, TEX_BASEBUILDING4);
-	baseBuilding12 = GameObject(glm::vec3(10.0f, 8.95f, 70.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(2.0f), MESH_BASEBUILDING, TEX_BASEBUILDING4);
-	baseBuilding13 = GameObject(glm::vec3(40.0f, 8.95f, 80.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(2.0f), MESH_BASEBUILDING, TEX_BASEBUILDING4);
-	baseBuilding14 = GameObject(glm::vec3(30.0f, 8.95f, 80.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(2.0f), MESH_BASEBUILDING, TEX_BASEBUILDING4);
-	baseBuilding15 = GameObject(glm::vec3(20.0f, 8.95f, 80.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(2.0f), MESH_BASEBUILDING, TEX_BASEBUILDING4);
-	baseBuilding16 = GameObject(glm::vec3(10.0f, 8.95f, 80.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(2.0f), MESH_BASEBUILDING, TEX_BASEBUILDING4);
-	baseBuilding17 = GameObject(glm::vec3(40.0f, 8.95f, 90.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(2.0f), MESH_BASEBUILDING, TEX_BASEBUILDING4);
-	baseBuilding18 = GameObject(glm::vec3(30.0f, 8.95f, 90.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(2.0f), MESH_BASEBUILDING, TEX_BASEBUILDING4);
-	baseBuilding19 = GameObject(glm::vec3(20.0f, 8.95f, 90.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(2.0f), MESH_BASEBUILDING, TEX_BASEBUILDING4);
-	baseBuilding20 = GameObject(glm::vec3(10.0f, 8.95f, 90.0f), glm::vec3(0.0f, 90.0f, 0.0f), glm::vec3(2.0f), MESH_BASEBUILDING, TEX_BASEBUILDING4);
-
-	baseBuilding9.update(DH::deltaTime);
-	baseBuilding10.update(DH::deltaTime);
-	baseBuilding11.update(DH::deltaTime);
-	baseBuilding12.update(DH::deltaTime);
-	baseBuilding13.update(DH::deltaTime);
-	baseBuilding14.update(DH::deltaTime);
-	baseBuilding15.update(DH::deltaTime);
-	baseBuilding16.update(DH::deltaTime);
-	baseBuilding17.update(DH::deltaTime);
-	baseBuilding18.update(DH::deltaTime);
-	baseBuilding19.update(DH::deltaTime);
-	baseBuilding20.update(DH::deltaTime);
-
 	//Init the billboard buildings
 	boardBuilding1 = GameObject(glm::vec3(25.0f, 5.5f, 60.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_BOARDBUILDING, TEX_BOARDBUILDING1);
 	boardBuilding2 = GameObject(glm::vec3(-25.0f, 5.5f, 60.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_BOARDBUILDING, TEX_BOARDBUILDING2);
@@ -112,6 +85,52 @@ void State_MainMenu::load()
 	boardBuilding3.update(DH::deltaTime);
 	boardBuilding4.update(DH::deltaTime);
 
+	//Init the background buildings
+	backBuildingRed1 = GameObject(glm::vec3(40.0f, 0.0f, 70.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_BACKBUILDING1, TEX_BACKBUILDING1_RED);
+	backBuildingRed2 = GameObject(glm::vec3(30.0f, 0.0f, 70.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_BACKBUILDING1, TEX_BACKBUILDING1_BLUE);
+	backBuildingRed3 = GameObject(glm::vec3(30.0f, 0.0f, 80.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_BACKBUILDING2, TEX_BACKBUILDING2_BLUE);
+	backBuildingRed4 = GameObject(glm::vec3(20.0f, 0.0f, 90.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_BACKBUILDING2, TEX_BACKBUILDING2_GREEN);
+	backBuildingRed5 = GameObject(glm::vec3(10.0f, 0.0f, 90.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_BACKBUILDING2, TEX_BACKBUILDING2_YELLOW);
+
+	backBuildingBlue1 = GameObject(glm::vec3(-10.0f, 0.0f, 70.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_BACKBUILDING1, TEX_BACKBUILDING1_RED);
+	backBuildingBlue2 = GameObject(glm::vec3(-20.0f, 0.0f, 70.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_BACKBUILDING1, TEX_BACKBUILDING1_BLUE);
+	backBuildingBlue3 = GameObject(glm::vec3(-10.0f, 0.0f, 80.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_BACKBUILDING2, TEX_BACKBUILDING2_RED);
+	backBuildingBlue4 = GameObject(glm::vec3(-30.0f, 0.0f, 80.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_BACKBUILDING2, TEX_BACKBUILDING2_GREEN);
+	backBuildingBlue5 = GameObject(glm::vec3(-40.0f, 0.0f, 80.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_BACKBUILDING2, TEX_BACKBUILDING2_YELLOW);
+	backBuildingBlue6 = GameObject(glm::vec3(-20.0f, 0.0f, 90.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_BACKBUILDING2, TEX_BACKBUILDING2_BLUE);
+	backBuildingBlue7 = GameObject(glm::vec3(-40.0f, 0.0f, 90.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_BACKBUILDING2, TEX_BACKBUILDING2_YELLOW);
+
+	backBuildingGreen1 = GameObject(glm::vec3(-70.0f, 0.0f, 20.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_BACKBUILDING1, TEX_BACKBUILDING1_GREEN);
+	backBuildingGreen2 = GameObject(glm::vec3(-70.0f, 0.0f, 10.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_BACKBUILDING1, TEX_BACKBUILDING1_YELLOW);
+	backBuildingGreen3 = GameObject(glm::vec3(-80.0f, 0.0f, 40.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_BACKBUILDING2, TEX_BACKBUILDING2_RED);
+	backBuildingGreen4 = GameObject(glm::vec3(-80.0f, 0.0f, 20.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_BACKBUILDING2, TEX_BACKBUILDING2_GREEN);
+	backBuildingGreen5 = GameObject(glm::vec3(-90.0f, 0.0f, 40.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_BACKBUILDING2, TEX_BACKBUILDING2_RED);
+	backBuildingGreen6 = GameObject(glm::vec3(-90.0f, 0.0f, 30.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_BACKBUILDING2, TEX_BACKBUILDING2_BLUE);
+	backBuildingGreen7 = GameObject(glm::vec3(-90.0f, 0.0f, 10.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_BACKBUILDING2, TEX_BACKBUILDING2_YELLOW);
+
+	backBuildingYellow1 = GameObject(glm::vec3(-70.0f, 0.0f, -20.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_BACKBUILDING1, TEX_BACKBUILDING1_BLUE);
+	backBuildingYellow2 = GameObject(glm::vec3(-70.0f, 0.0f, -30.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_BACKBUILDING1, TEX_BACKBUILDING1_GREEN);
+	backBuildingYellow3 = GameObject(glm::vec3(-70.0f, 0.0f, -40.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_BACKBUILDING1, TEX_BACKBUILDING1_YELLOW);
+	backBuildingYellow4 = GameObject(glm::vec3(-80.0f, 0.0f, -10.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_BACKBUILDING2, TEX_BACKBUILDING2_RED);
+	backBuildingYellow5 = GameObject(glm::vec3(-80.0f, 0.0f, -30.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_BACKBUILDING2, TEX_BACKBUILDING2_GREEN);
+	backBuildingYellow6 = GameObject(glm::vec3(-90.0f, 0.0f, -20.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_BACKBUILDING2, TEX_BACKBUILDING2_BLUE);
+
+	backBuildingRed1.update(DH::deltaTime);     backBuildingBlue1.update(DH::deltaTime);
+	backBuildingRed2.update(DH::deltaTime);	    backBuildingBlue2.update(DH::deltaTime);
+	backBuildingRed3.update(DH::deltaTime);	    backBuildingBlue3.update(DH::deltaTime);
+	backBuildingRed4.update(DH::deltaTime);	    backBuildingBlue4.update(DH::deltaTime);
+	backBuildingRed5.update(DH::deltaTime);	    backBuildingBlue5.update(DH::deltaTime);
+	backBuildingBlue6.update(DH::deltaTime);
+	backBuildingBlue7.update(DH::deltaTime);
+
+	backBuildingGreen1.update(DH::deltaTime);  	backBuildingYellow1.update(DH::deltaTime);
+	backBuildingGreen2.update(DH::deltaTime);	backBuildingYellow2.update(DH::deltaTime);
+	backBuildingGreen3.update(DH::deltaTime);	backBuildingYellow3.update(DH::deltaTime);
+	backBuildingGreen4.update(DH::deltaTime);	backBuildingYellow4.update(DH::deltaTime);
+	backBuildingGreen5.update(DH::deltaTime);	backBuildingYellow5.update(DH::deltaTime);
+	backBuildingGreen6.update(DH::deltaTime);	backBuildingYellow6.update(DH::deltaTime);
+	backBuildingGreen7.update(DH::deltaTime);
+
 	//Init the billboards
 	billboard1 = GameObject(glm::vec3(25.0f, 19.0f, 60.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_BILLBOARD, TEX_BILLBOARD1);
 	billboard2 = GameObject(glm::vec3(-25.0f, 19.0f, 60.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_BILLBOARD, TEX_BILLBOARD2);
@@ -122,21 +141,6 @@ void State_MainMenu::load()
 	billboard2.update(DH::deltaTime);
 	billboard3.update(DH::deltaTime);
 	billboard4.update(DH::deltaTime);
-
-	//Init the roadblocks
-	roadblock1 = GameObject(glm::vec3(50.5f, 1.0f, 60.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_ROADBLOCK, TEX_ROADBLOCK);
-	roadblock2 = GameObject(glm::vec3(0.0f, 1.0f, 60.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_ROADBLOCK, TEX_ROADBLOCK);
-	roadblock3 = GameObject(glm::vec3(-50.5f, 1.0f, 60.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_ROADBLOCK, TEX_ROADBLOCK);
-	roadblock4 = GameObject(glm::vec3(-60.0f, 1.0f, 50.5f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_ROADBLOCK, TEX_ROADBLOCK);
-	roadblock5 = GameObject(glm::vec3(-60.0f, 1.0f, 0.0f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_ROADBLOCK, TEX_ROADBLOCK);
-	roadblock6 = GameObject(glm::vec3(-60.0f, 1.0f, -50.5f), glm::vec3(0.0f, -90.0f, 0.0f), glm::vec3(1.0f), MESH_ROADBLOCK, TEX_ROADBLOCK);
-
-	roadblock1.update(DH::deltaTime);
-	roadblock2.update(DH::deltaTime);
-	roadblock3.update(DH::deltaTime);
-	roadblock4.update(DH::deltaTime);
-	roadblock5.update(DH::deltaTime);
-	roadblock6.update(DH::deltaTime);
 
 	//Init the clock tower
 	clockTower = GameObject(glm::vec3(-65.0f, 20.0f, 65.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(4.0f), MESH_CLOCKTOWER, TEX_CLOCKTOWER);
@@ -475,19 +479,7 @@ void State_MainMenu::update()
 	AM::assets()->bindTexture(TEX_BASEBUILDING4);
 	baseBuilding7.draw();
 	baseBuilding8.draw();
-	baseBuilding9.draw();
-	baseBuilding10.draw();
-	baseBuilding11.draw();
-	baseBuilding12.draw();
-	baseBuilding13.draw();
-	baseBuilding14.draw();
-	baseBuilding15.draw();
-	baseBuilding16.draw();
-	baseBuilding17.draw();
-	baseBuilding18.draw();
-	baseBuilding19.draw();
-	baseBuilding20.draw();
-
+	
 	//Draw the board buildings
 	AM::assets()->bindTexture(TEX_BOARDBUILDING1);
 	boardBuilding1.draw();
@@ -501,6 +493,48 @@ void State_MainMenu::update()
 	AM::assets()->bindTexture(TEX_BOARDBUILDING4);
 	boardBuilding4.draw();
 
+	//Draw the back buildings
+	AM::assets()->bindTexture(TEX_BACKBUILDING1_RED);
+	backBuildingRed1.draw();
+	backBuildingBlue1.draw();
+
+	AM::assets()->bindTexture(TEX_BACKBUILDING2_RED);
+	backBuildingBlue3.draw();
+	backBuildingGreen3.draw();
+	backBuildingGreen5.draw();
+	backBuildingYellow4.draw();
+
+	AM::assets()->bindTexture(TEX_BACKBUILDING1_BLUE);
+	backBuildingRed2.draw();
+	backBuildingBlue2.draw();
+	backBuildingYellow1.draw();
+
+	AM::assets()->bindTexture(TEX_BACKBUILDING2_BLUE);
+	backBuildingRed3.draw();
+	backBuildingBlue6.draw();
+	backBuildingGreen6.draw();
+	backBuildingYellow6.draw();
+
+	AM::assets()->bindTexture(TEX_BACKBUILDING1_GREEN);
+	backBuildingGreen1.draw();
+	backBuildingYellow2.draw();
+
+	AM::assets()->bindTexture(TEX_BACKBUILDING2_GREEN);
+	backBuildingRed4.draw();
+	backBuildingBlue4.draw();
+	backBuildingGreen4.draw();
+	backBuildingYellow5.draw();
+
+	AM::assets()->bindTexture(TEX_BACKBUILDING1_YELLOW);
+	backBuildingGreen2.draw();
+	backBuildingYellow3.draw();
+
+	AM::assets()->bindTexture(TEX_BACKBUILDING2_YELLOW);
+	backBuildingRed5.draw();
+	backBuildingBlue5.draw();
+	backBuildingBlue7.draw();
+	backBuildingGreen7.draw();
+
 	//Draw the billboards
 	AM::assets()->bindTexture(TEX_BILLBOARD1);
 	billboard1.draw();
@@ -513,15 +547,6 @@ void State_MainMenu::update()
 
 	AM::assets()->bindTexture(TEX_BILLBOARD4);
 	billboard4.draw();
-
-	//Draw the roadblocks
-	AM::assets()->bindTexture(TEX_ROADBLOCK);
-	roadblock1.draw();
-	roadblock2.draw();
-	roadblock3.draw();
-	roadblock4.draw();
-	roadblock5.draw();
-	roadblock6.draw();
 
 	//Draw the clock tower
 	AM::assets()->bindTexture(TEX_CLOCKTOWER);

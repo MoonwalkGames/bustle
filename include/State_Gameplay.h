@@ -41,6 +41,7 @@ public:
 	void drawIntroSprite();
 
 private:
+	//	Level Mesh
 	GameObject levelPlay;
 	GameObject levelSidewalk1;
 	GameObject levelSidewalk2;
@@ -58,6 +59,8 @@ private:
 	GameObject backgroundSidewalk3;
 	GameObject backgroundSidewalk4;
 	GameObject backgroundSidewalk5;
+
+	//	Front Buildings
 	GameObject baseBuilding1;
 	GameObject baseBuilding2;
 	GameObject baseBuilding3;
@@ -66,32 +69,47 @@ private:
 	GameObject baseBuilding6;
 	GameObject baseBuilding7;
 	GameObject baseBuilding8;
-	GameObject baseBuilding9;
-	GameObject baseBuilding10;
-	GameObject baseBuilding11;
-	GameObject baseBuilding12;
-	GameObject baseBuilding13;
-	GameObject baseBuilding14;
-	GameObject baseBuilding15;
-	GameObject baseBuilding16;
-	GameObject baseBuilding17;
-	GameObject baseBuilding18;
-	GameObject baseBuilding19;
-	GameObject baseBuilding20;
 	GameObject boardBuilding1;
 	GameObject boardBuilding2;
 	GameObject boardBuilding3;
 	GameObject boardBuilding4;
+
+	//	Back Buildings
+	GameObject backBuildingRed1;
+	GameObject backBuildingRed2;
+	GameObject backBuildingRed3;
+	GameObject backBuildingRed4;
+	GameObject backBuildingRed5;
+
+	GameObject backBuildingBlue1;
+	GameObject backBuildingBlue2;
+	GameObject backBuildingBlue3;
+	GameObject backBuildingBlue4;
+	GameObject backBuildingBlue5;
+	GameObject backBuildingBlue6;
+	GameObject backBuildingBlue7;
+
+	GameObject backBuildingGreen1;
+	GameObject backBuildingGreen2;
+	GameObject backBuildingGreen3;
+	GameObject backBuildingGreen4;
+	GameObject backBuildingGreen5;
+	GameObject backBuildingGreen6;
+	GameObject backBuildingGreen7;
+
+	GameObject backBuildingYellow1;
+	GameObject backBuildingYellow2;
+	GameObject backBuildingYellow3;
+	GameObject backBuildingYellow4;
+	GameObject backBuildingYellow5;
+	GameObject backBuildingYellow6;
+
+	//	Billboards
 	GameObject billboard1;
 	GameObject billboard2;
 	GameObject billboard3;
 	GameObject billboard4;
-	GameObject roadblock1;
-	GameObject roadblock2;
-	GameObject roadblock3;
-	GameObject roadblock4;
-	GameObject roadblock5;
-	GameObject roadblock6;
+	
 	GameObject clockTower;
 	GameObject skyBox;
 	Kinematic car;
