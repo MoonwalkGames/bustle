@@ -421,6 +421,7 @@ void State_Gameplay::load()
 	AE::sounds()->loadSound("./res/sound/tick-tock.wav", true, true, false);
 	AE::sounds()->loadSound("./res/sound/frozen.wav", true, false, false);
 	AE::sounds()->loadSound("./res/sound/bus_ignition.wav", true, false, false);
+	AE::sounds()->loadSound("./res/sound/suck.wav", true, false, false);
 
 	ticking = false;
 	lastCollisionSound = 0.0f;
@@ -519,6 +520,7 @@ void State_Gameplay::update()
 			AE::sounds()->unLoadSound("./res/sound/tick-tock.wav");
 			AE::sounds()->unLoadSound("./res/sound/frozen.wav");
 			AE::sounds()->unLoadSound("./res/sound/bus_ignition.wav");
+			AE::sounds()->unLoadSound("./res/sound/suck.wav");
 
 			//Output the data to the files
 			DBG::debug()->outputAnalytics();
@@ -858,7 +860,7 @@ void State_Gameplay::update()
 			car.update(DH::getDeltaTime());
 			car.draw();
 			
-			if (((car.getPosition().x > 0.0f) && car.getPosition().z < 0.0f) && !carLaunched)
+			if (((car.getPosition().x > -10.0f) && car.getPosition().z < 10.0f) && !carLaunched)
 			{
 				carLaunched = true;
 				launchSpecialPassengers();
@@ -871,7 +873,10 @@ void State_Gameplay::update()
 			}
 				
 			if (car.getPosition().y < -50.0f)
+			{
 				carOnScreen = false;
+				soundPlayed = false;
+			}
 
 		}
 
@@ -1150,6 +1155,7 @@ void State_Gameplay::update()
 				if (passengers[j].getState() != PASSENGER_STATE::VACUUM)
 				{
 					passengers[j].setState(PASSENGER_STATE::VACUUM);
+					AE::sounds()->playSound("./res/sound/suck.wav", glm::vec3(0.0f), 0.15f);
 					passengers[j].setTargetBusPosition(buses[i].getPosition());
 					passengers[j].setBusTargetNumber(i);
 					buses[i].addPoints(1);
@@ -1178,6 +1184,7 @@ void State_Gameplay::update()
 				if (specialPassengers[j].getState() != PASSENGER_STATE::VACUUM)
 				{
 					specialPassengers[j].setState(PASSENGER_STATE::VACUUM);
+					AE::sounds()->playSound("./res/sound/suck.wav", glm::vec3(0.0f), 0.15f);
 					specialPassengers[j].setTargetBusPosition(buses[i].getPosition());
 					specialPassengers[j].setBusTargetNumber(i);
 					
@@ -1244,6 +1251,7 @@ void State_Gameplay::update()
 		AE::sounds()->unLoadSound("./res/sound/tick-tock.wav");
 		AE::sounds()->unLoadSound("./res/sound/frozen.wav");
 		AE::sounds()->unLoadSound("./res/sound/bus_ignition.wav");
+		AE::sounds()->unLoadSound("./res/sound/suck.wav");
 		load();
 		inIntro = true;
 	}
@@ -1398,12 +1406,14 @@ void State_Gameplay::updateStages()
 
 void State_Gameplay::updatePowerups()
 {
+	static float tick = 0.0f;
 	static float smelly_dudeDuration = 5.0f;
 	static float attractive_personDuration = 3.0f;
 	static float freeze_busesDuration = 1.5f;
 	static float freeze_passengersDuration = 3.0f;
 	static float starDuration = 3.0f;
-	bool smelly = false, attract = false, freeze = false, star = false;
+	bool smelly = false, attract = false, freeze = false, starPresent = false;
+	tick += 0.1f;
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -1427,13 +1437,17 @@ void State_Gameplay::updatePowerups()
 			if (buses[i].timePowerupStarted - timeLeft > starDuration)
 				buses[i].powerup = no_powerup;
 			else
-				star = true;
+				starPresent = true;
 
 		if (buses[i].powerup == smelly_dude)
 		{
 			//launchPassengers(i, (int)buses[i].getPoints() / 3);
 			//buses[i].powerup = no_powerup;
 		}
+		if (buses[i].powerup == star)
+			buses[i].setColour(glm::vec4((float)sin(tick) + 0.5f, (float)cos(tick) + 0.5f, (float)-sin(tick) + 0.5, 1.0f));
+		else
+			buses[i].setColour(glm::vec4(1.0f));
 		//AE::sounds()->stopSound("./res/sound/menu_music.mp3");
 		if (!smelly)
 			AE::sounds()->unLoadSound("./res/sound/flies.wav");
@@ -1441,7 +1455,7 @@ void State_Gameplay::updatePowerups()
 			AE::sounds()->unLoadSound("./res/sound/magnet.wav");
 		if (!freeze)
 			AE::sounds()->unLoadSound("./res/sound/frozen.wav");
-		if (!star)
+		if (!starPresent)
 			AE::sounds()->unLoadSound("./res/sound/star.wav");
 
 	}
@@ -1539,9 +1553,19 @@ void State_Gameplay::excecute()
 void State_Gameplay::summonCar()
 {
 	carLaunched = false; //car just spawned, haven't launched passengers yet
-	static bool warning = true;
+	if (!warning && !carOnScreen)
+	{
+		timewarning = timeLeft;
+		warning = true;
+	}
+	if (!soundPlayed)
+	{
+		AE::sounds()->playSound("./res/sound/car.wav", glm::vec3(0.0f), 0.25f);
+		soundPlayed = true;
+	}
 	//do warning stuff
-	warning = false;
+	if (timewarning - timeLeft > 1.5f)
+		warning = false;
 
 	if (!warning)
 	{
@@ -1552,7 +1576,7 @@ void State_Gameplay::summonCar()
 		//car's on screen, so we should update & draw it
 		carOnScreen = true;
 
-		AE::sounds()->playSound("./res/sound/car.wav", glm::vec3(0.0f), 0.25f);
+
 		//setting the position, rotation & velocity randomly between 6 possibilities
 		switch (MathHelper::randomInt(0, 5))
 		{

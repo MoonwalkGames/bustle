@@ -387,7 +387,7 @@ void State_EndRound::update()
 	if (currentStage == END_STAGE::FOUNTAIN_STAGE && remainingPassengers[0] == 0 && remainingPassengers[1] == 0 && remainingPassengers[2] == 0 && remainingPassengers[3] == 0 && activePassengers.size() == 0)
 	{
 		currentStage = END_STAGE::CROWN_STAGE;
-		AE::sounds()->playSound("./res/sound/cheering.wav", glm::vec3(0.0f), 5.0f);
+		AE::sounds()->playSound("./res/sound/cheering.wav", glm::vec3(0.0f), 1.0f);
 	}
 
 	//Draw the graph
