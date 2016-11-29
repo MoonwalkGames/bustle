@@ -148,6 +148,27 @@ Collision CollisionHandler::PLAYERvPASSENGER(const Player& a, const Passenger& b
 	return res;
 }
 
+Collision CollisionHandler::PLAYERvCAR(const Player& a, glm::vec3 carPos)
+{
+	Collision res(false, glm::vec3(0.0f));
+	
+		Col_Sphere aExtentSphere(a.getPosition(), busStageExtents[a.getStage()].x);
+		Col_Sphere carSphere = Col_Sphere(carPos, BUS_WIDTH);
+		if (SPHEREvSPHERE(aExtentSphere, carSphere))
+		{
+			Col_Traffic_Light aTrafficLight = Col_Traffic_Light(a.getStage(), a.getPosition(), a.getRotation(), busStageExtents[a.getStage()]);
+			for (int i = 0; i < aTrafficLight.bubbles.size(); i++)
+			{
+				if (SPHEREvSPHERE(carSphere, aTrafficLight.bubbles[i]))
+				{
+					res.status = true;
+					return res;
+				}
+			}
+		}
+	return res;
+}
+
 Collision CollisionHandler::PLAYERvPLAYER(const Player& a, const Player& b)
 {
 	static int counter = 0;

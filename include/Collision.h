@@ -45,6 +45,7 @@ public:
 	static Collision PLAYERvPLAYER(const Player& a, const Player& b);
 	static Collision PLAYERvPASSENGER(const Player& a, const Passenger& b);
 	static Collision TRAFFIC_LIGHTvTRAFFIC_LIGHT(const Player& a, const Player& b, int aStage, int bStage);
+	static Collision PLAYERvCAR(const Player& a, glm::vec3 carPos);
 };
 typedef CollisionHandler CH;
 

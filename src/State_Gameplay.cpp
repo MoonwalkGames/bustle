@@ -1141,6 +1141,19 @@ void State_Gameplay::update()
 			}
 		}
 	}
+	if (carOnScreen)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			//if (!playerActive[i])
+			//{
+			//	continue;
+			//}
+			if (CollisionHandler::PLAYERvCAR(buses[i], car.getPosition()).status)
+				launchPassengers(i, 2);
+
+		}
+	}
 	
 	//update powerup stuff
 	updatePowerups();
@@ -1422,18 +1435,56 @@ void State_Gameplay::excecute()
 
 void State_Gameplay::summonCar()
 {
+	static int spawnpoint = MathHelper::randomInt(0, 5);
 	carLaunched = false; //car just spawned, haven't launched passengers yet
 	if (!warning && !carOnScreen)
 	{
 		timewarning = timeLeft;
 		warning = true;
+		spawnpoint = MathHelper::randomInt(0, 5);
 	}
 	if (!soundPlayed)
 	{
 		AE::sounds()->playSound("./res/sound/car.wav", glm::vec3(0.0f), 0.25f);
 		soundPlayed = true;
 	}
-	//do warning stuff
+	if (warning)
+	{
+		//draw warning sprite at
+		switch (spawnpoint)
+		{
+		case 0:
+			car.setPosition(glm::vec3(-49.9f, 1.0f, 52.4f));
+			car.setRotationY(0.0f);
+			car.setVelocity(glm::vec3(75.0f, 0.0f, 0.0f));
+			break;
+		case 1:
+			car.setPosition(glm::vec3(-49.9f, 1.0f, 2.4f));
+			car.setRotationY(0.0f);
+			car.setVelocity(glm::vec3(75.0f, 0.0f, 0.0f));
+			break;
+		case 2:
+			car.setPosition(glm::vec3(-49.9f, 1.0f, -47.6f));
+			car.setRotationY(0.0f);
+			car.setVelocity(glm::vec3(75.0f, 0.0f, 0.0f));
+			break;
+		case 3:
+			car.setPosition(glm::vec3(52.4f, 1.0f, 49.9f));
+			car.setRotationY(90.0f);
+			car.setVelocity(glm::vec3(0.0f, 0.0f, -75.0f));
+			break;
+		case 4:
+			car.setPosition(glm::vec3(2.4f, 1.0f, 49.9f));
+			car.setRotationY(90.0f);
+			car.setVelocity(glm::vec3(0.0f, 0.0f, -75.0f));
+			break;
+		case 5:
+			car.setPosition(glm::vec3(-47.6f, 1.0f, 49.9f));
+			car.setRotationY(90.0f);
+			car.setVelocity(glm::vec3(0.0f, 0.0f, -75.0f));
+			break;
+		}
+	}
 	if (timewarning - timeLeft > 1.5f)
 		warning = false;
 
@@ -1448,7 +1499,7 @@ void State_Gameplay::summonCar()
 
 
 		//setting the position, rotation & velocity randomly between 6 possibilities
-		switch (MathHelper::randomInt(0, 5))
+		switch (spawnpoint)
 		{
 		case 0:
 			car.setPosition(glm::vec3(-49.9f, 1.0f, 52.4f));
