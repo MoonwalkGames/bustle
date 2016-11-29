@@ -1708,7 +1708,7 @@ void State_Gameplay::launchSpecialPassengers()
 	glm::vec3 startPosition = car.getPosition();
 	glm::vec3 startRotation;
 	glm::vec3 startScale;
-	int amount = MathHelper::randomInt(1, 3);
+	int amount = MathHelper::randomInt(1, 2);
 	float launchSpeed = 25.0f;
 	glm::vec3 launchVel;
 
