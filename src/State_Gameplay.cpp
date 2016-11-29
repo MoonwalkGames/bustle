@@ -234,7 +234,7 @@ void State_Gameplay::load()
 
 	// ----- Set up the UI ------ ///
 	//set up the timer
-	timeStart = 15.0f;
+	timeStart = 120.0f;
 	timeLeft = timeStart;
 	//timer = Sprite::createTextVector(TEX_FONT, -5.0f, -10.0f, 5.0f, 5.0f, "0:00");
 
