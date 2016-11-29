@@ -1115,9 +1115,10 @@ void State_Gameplay::update()
 
 				if (!specialPassengers[j].getAlive())
 				{
-					buses[i].powerup = specialPassengers[j].powerup;
-					buses[i].timePowerupStarted = timeLeft;
-					switch (buses[i].powerup)
+					int target = specialPassengers[j].getBusTargetNumber();
+					buses[target].powerup = specialPassengers[j].powerup;
+					buses[target].timePowerupStarted = timeLeft;
+					switch (buses[target].powerup)
 					{
 					case smelly_dude:
 						AE::sounds()->playSound("./res/sound/flies.wav", glm::vec3(0.0f), 1.0f);
