@@ -207,6 +207,11 @@ void State_EndRound::load()
 		}
 	}
 
+	buttonPrompt = Sprite(TEX_ENDSCREEN_BUTTONPROMPT, 1, 1);
+	buttonPrompt.setScale(1.0f, 1.0f, 1.0f);
+	buttonPrompt.setPositionZ(5.0f);
+	buttonPrompt.update(DH::getDeltaTime());
+
 	fountainCounter = 0;
 
 	//Decide who won
@@ -392,6 +397,22 @@ void State_EndRound::update()
 
 	//Draw the graph
 	drawEndGraph();
+
+	if (currentStage == CROWN_STAGE)
+	{
+		glMatrixMode(GL_PROJECTION);
+		glPushMatrix();
+		glLoadIdentity();
+		glOrtho(-1.0f, 1.0f, -1.0f, 1.0f, -5.0f, 5.0f);
+
+		glViewport(0, 0, DH::windowWidth, DH::windowHeight);
+		buttonPrompt.draw();
+		glPopMatrix();
+		if (controller.checkButton(BUTTON_A))
+			GM::game()->setActiveState(STATE_GAMEPLAY);
+		else if (controller.checkButton(BUTTON_B))
+			GM::game()->setActiveState(STATE_MAINMENU);
+	}
 
 	if (DH::getKey('r'))
 	{

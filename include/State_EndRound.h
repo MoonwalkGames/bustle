@@ -93,6 +93,7 @@ private:
 	GameObject buses[4];
 	GameObject skybox;
 	Mesh* crown;
+	Sprite buttonPrompt;
 
 	MController controller;
 

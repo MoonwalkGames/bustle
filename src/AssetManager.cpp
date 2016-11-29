@@ -115,6 +115,7 @@ void AssetManager::loadAssets()
 	loadedTextures.push_back(Texture2D("./res/img/tex_Garage_Right.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Tutorial_Ground.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Tutorial_Ground_Back.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Endscreen_ButtonPrompt.png"));
 }
 
 void AssetManager::bindTexture(TEXTURE_NAME textureName)
