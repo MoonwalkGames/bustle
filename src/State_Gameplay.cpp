@@ -240,7 +240,7 @@ void State_Gameplay::load()
 
 	// ----- Set up the UI ------ ///
 	//set up the timer
-	timeStart = 15.0f;
+	timeStart = 120.0f;
 	timeLeft = timeStart;
 	//timer = Sprite::createTextVector(TEX_FONT, -5.0f, -10.0f, 5.0f, 5.0f, "0:00");
 
@@ -1977,6 +1977,9 @@ void State_Gameplay::drawBillboardUI()
 {
 	for (int i = 0; i < 4; i++)
 	{
+		if (!playerActive[i])
+			continue;
+
 		// ----- Draw the progress bars ----- //
 		int currentStage = buses[i].getStage();
 		int currentScore = buses[i].getPoints();
@@ -2000,6 +2003,8 @@ void State_Gameplay::drawBillboardUI()
 		//Ensure there are no errors
 		if (progressFrameNumber > 7)
 			progressFrameNumber = 7;
+		else if (progressFrameNumber < 0)
+			progressFrameNumber = 0;
 
 		billboardProgressBars[i].setActiveFrame(progressFrameNumber);
 		billboardProgressBars[i].draw();

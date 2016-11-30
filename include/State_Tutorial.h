@@ -31,7 +31,7 @@ private:
 
 	// --- Tutorial Stuff --- //
 	MController controllers[4];
-	bool playerEnabled[4];
+	std::vector<bool> playerEnabled;
 	int numPlayersEnabled;
 
 	// --- Players ---//

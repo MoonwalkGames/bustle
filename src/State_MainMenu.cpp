@@ -179,25 +179,25 @@ void State_MainMenu::load()
 	logo = Sprite(TEX_MENU, 1, 4);
 	logo.setActiveFrame(0);
 	logo.setScale(glm::vec3(16.0f, 12.0f, 1.0f));
-	logo.setPosition(glm::vec3(-7.0f, 10.0f, 0.0f));
+	logo.setPosition(glm::vec3(-6.5f, 10.0f, 0.0f));
 	logo.update(DH::deltaTime);
 
 	playButton = Sprite(TEX_MENU, 1, 4);
 	playButton.setActiveFrame(1);
 	playButton.setScale(glm::vec3(8.0f, 6.0f, 1.0f));
-	playButton.setPosition(glm::vec3(-11.0f, -2.0f, 0.0f));
+	playButton.setPosition(glm::vec3(-10.5f, -2.0f, 0.0f));
 	playButton.update(DH::deltaTime);
 
 	exitButton = Sprite(TEX_MENU, 1, 4);
 	exitButton.setActiveFrame(2);
 	exitButton.setScale(glm::vec3(8.0f, 6.0f, 1.0f));
-	exitButton.setPosition(glm::vec3(-11.0f, -8.0f, 0.0f));
+	exitButton.setPosition(glm::vec3(-10.5f, -8.0f, 0.0f));
 	exitButton.update(DH::deltaTime);
 
 	buttonHighlight = Sprite(TEX_MENU, 1, 4);
 	buttonHighlight.setActiveFrame(3);
 	buttonHighlight.setScale(glm::vec3(8.0f, 6.0f, 1.0f));
-	buttonHighlight.setPosition(glm::vec3(-11.0f, -2.0f, 1.0f));
+	buttonHighlight.setPosition(glm::vec3(-10.5f, -2.0f, 1.0f));
 
 	controller = MController(0);
 	timeSinceLastInput = 0.0f;

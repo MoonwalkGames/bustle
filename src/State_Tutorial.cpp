@@ -43,7 +43,7 @@ void State_Tutorial::load()
 	for (int i = 0; i < 4; i++)
 	{
 		controllers[i] = MController(i);
-		playerEnabled[i] = false;
+		playerEnabled.push_back(false);
 	}
 	numPlayersEnabled = 0;
 
@@ -81,7 +81,7 @@ void State_Tutorial::load()
 	// ----- Set up the tutorial sprites ----- //
 	startIndicator = Sprite(TEX_TUT_START, 1, 1);
 	startIndicator.setScale(1.0f, 1.0f, 1.0f);
-	startIndicator.setPositionZ(5.0f);
+	startIndicator.setPosition(0.0f, -0.75f, 5.0f);
 	startIndicator.update(DH::deltaTime);
 
 	staticBillboard1 = Sprite(TEX_TUT_BILLBOARD1, 1, 1);
@@ -106,15 +106,15 @@ void State_Tutorial::load()
 	billboardPlayerIndicators[2].setActiveFrame(2);
 	billboardPlayerIndicators[3].setActiveFrame(3);
 
-	billboardPlayerIndicators[0].setScale(6.5f, 6.5f, 6.5f);
-	billboardPlayerIndicators[1].setScale(6.5f, 6.5f, 6.5f);
-	billboardPlayerIndicators[2].setScale(6.5f, 6.5f, 6.5f);
-	billboardPlayerIndicators[3].setScale(6.5f, 6.5f, 6.5f);
+	billboardPlayerIndicators[0].setScale(8.5f, 8.5f, 8.5f);
+	billboardPlayerIndicators[1].setScale(8.5f, 8.5f, 8.5f);
+	billboardPlayerIndicators[2].setScale(8.5f, 8.5f, 8.5f);
+	billboardPlayerIndicators[3].setScale(8.5f, 8.5f, 8.5f);
 
-	billboardPlayerIndicators[0].setPosition(42.5f, 32.5f, 49.98f);
-	billboardPlayerIndicators[1].setPosition(17.5f, 32.5f, 49.98f);
-	billboardPlayerIndicators[2].setPosition(-7.5f, 32.5f, 49.98f);
-	billboardPlayerIndicators[3].setPosition(-32.5f, 32.5f, 49.98f);
+	billboardPlayerIndicators[0].setPosition(41.5f, 30.0f, 49.98f);
+	billboardPlayerIndicators[1].setPosition(17.5f, 30.5f, 49.98f);
+	billboardPlayerIndicators[2].setPosition(-7.0f, 30.5f, 49.98f);
+	billboardPlayerIndicators[3].setPosition(-32.0f, 30.5f, 49.98f);
 
 	billboardPlayerIndicators[0].setRotationY(180.0f);
 	billboardPlayerIndicators[1].setRotationY(180.0f);
@@ -344,7 +344,7 @@ void State_Tutorial::drawStartIndicator()
 	glOrtho(-1.0f, 1.0f, -1.0f, 1.0f, -5.0f, 5.0f);
 
 	glViewport(0, 0, DH::windowWidth, DH::windowHeight);
-	//startIndicator.draw();
+	startIndicator.draw();
 
 	glPopMatrix();
 }
