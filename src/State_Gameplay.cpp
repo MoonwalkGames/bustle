@@ -1481,6 +1481,8 @@ void State_Gameplay::drawCrown()
 {
 	glDisable(GL_LIGHTING);
 
+	glColor3f(1.0f, 1.0f, 1.0f);
+
 	for (int i = 0; i < 4; i++)
 	{
 		if (buses[i].isLeading())
