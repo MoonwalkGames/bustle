@@ -206,42 +206,44 @@ void State_Tutorial::update()
 		if (controllers[i].isConnected())
 		{
 			//Need to rotate this by the rotation of the world VS the camera since up is actually up right(ish) (angle is 45)
-			glm::vec3 worldRotatedController = glm::rotate(glm::vec3(-controllers[i].lX, 0.0f, controllers[i].lY), DH::degToRad(-45.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+			glm::vec3 worldRotatedController = glm::rotate(glm::vec3(-controllers[i].lX, 0.0f, controllers[i].lY), DH::degToRad(-45.0f + rotation), glm::vec3(0.0f, 1.0f, 0.0f));
 
 			//Calculates the vector between the bus and the target
 			glm::vec3 desired = busTargets[i] - buses[i].getPosition();
 
-			//Move target based on controller input if the target is within a certain distance from the controller
-			//if ((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z) < 90.0f)
-			busTargets[i] += (worldRotatedController / 1.5f);
-
-			if (busTargets[i].x > 55.0f)
-				busTargets[i].x = 55.0f;
-			else if (busTargets[i].x < -55.0f)
-				busTargets[i].x = -55.0f;
-
-			if (busTargets[i].z > 55.0f)
-				busTargets[i].z = 55.0f;
-			else if (busTargets[i].z < -55.0f)
-				busTargets[i].z = -55.0f;
-
+			//******restrain target movement from going too far away
+			if (!((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z) > 90.0f))
+				busTargets[i] += worldRotatedController;
+			//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			if (busTargets[i].x > 50.0f)
+				busTargets[i].x = 50.0f;
+			else if (busTargets[i].x < -50.0f)
+				busTargets[i].x = -50.0f;
+			if (busTargets[i].z > 50.0f)
+				busTargets[i].z = 50.0f;
+			else if (busTargets[i].z < -50.0f)
+				busTargets[i].z = -50.0f;
 			//Set forward vector to face the target
 			glm::vec3 currentForwardVector = buses[i].getForwardVector();
 			desired = busTargets[i] - buses[i].getPosition(); //Calculates the new desired vector since we moved the target
 
-			if (!(controllers[i].lX == 0 && controllers[i].lY == 0))
+			if (controllers[i].lX != 0 && controllers[i].lY != 0 && (currentForwardVector != desired)) {
 				currentForwardVector = MathHelper::LERP(currentForwardVector, desired, DH::getDeltaTime() * buses[i].getTurningSpeed());
-
+			}
 			if (desired.x != 0.0f || desired.y != 0.0f || desired.z != 0.0f)
 				buses[i].setForwardVector(currentForwardVector);
 
 			// --- Move the bus --- //
 			//Check if the bus has reached the target. If so, zero out velocity. Only does this if no input on controller
-
-			if (((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z) < 90.0f) && (controllers[i].lX == 0 && controllers[i].lY == 0))
+			if ((controllers[i].lX == 0 && controllers[i].lY == 0))
 				buses[i].setVelocity(0.0f, 0.0f, 0.0f);
 			else//Otherwise, move forward
-				buses[i].setVelocity(glm::normalize(buses[i].getForwardVector()) * buses[i].getMovementSpeed());
+			{
+				float Maxspeed = (((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z)) / 90.0f);
+				if (Maxspeed > 1.0f)
+					Maxspeed = 1.0f;
+				buses[i].setVelocity(glm::normalize(buses[i].getForwardVector()) * (buses[i].getMovementSpeed()*Maxspeed));
+			}
 			//Draw the bus target
 			if (DBG::debug()->getVisualDebugEnabled())
 			{
@@ -319,7 +321,7 @@ void State_Tutorial::update()
 
 		for (int i = 0; i < 4; i++)
 		{
-			if (controllers[i].checkButton(BUTTON_START))
+			if (controllers[i].isConnected() && controllers[i].checkButton(BUTTON_START) && playerEnabled[i])
 			{
 				AE::sounds()->unLoadSound("./res/sound/select.wav");
 				GM::game()->setActivePlayers(playerEnabled[0], playerEnabled[1], playerEnabled[2], playerEnabled[3]);

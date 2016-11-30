@@ -174,6 +174,7 @@ void State_EndRound::load()
 
 	//load sound effects
 	AE::sounds()->loadSound("./res/sound/cheering.wav", true, true, false);
+	AE::sounds()->loadSound("./res/sound/drumroll.wav", true, true, false);
 
 	//Init the billboard texts
 	for (int i = 0; i < 4; i++)
@@ -252,13 +253,14 @@ void State_EndRound::update()
 
 		timeOnMoonwalkStage += DH::deltaTime;
 
-		if (timeOnMoonwalkStage >= 3.0f)
+		if (timeOnMoonwalkStage >= 1.0f)
 		{
 			promptVisible = true;
 
 			if (controller.checkButton(BUTTON_A) || DH::getKey(32))
 			{
 				AE::sounds()->unLoadSound("./res/sound/cheering.wav");
+				AE::sounds()->unLoadSound("./res/sound/drumroll.wav");
 				GM::game()->setActiveState(STATE_MAINMENU);
 			}
 		}
@@ -274,6 +276,7 @@ void State_EndRound::update()
 			if (controller.checkButton(BUTTON_A) || DH::getKey(32))
 			{
 				promptVisible = false;
+				AE::sounds()->playSound("./res/sound/drumroll.wav", glm::vec3(0.0f), 1.0f);
 				currentStage = FOUNTAIN_STAGE;
 			}
 		}
@@ -480,7 +483,10 @@ void State_EndRound::update()
 
 		//Draw the other effects
 		if (currentStage == END_STAGE::FOUNTAIN_STAGE)
+		{
+
 			fountainPassengers();
+		}
 
 		if (currentStage == END_STAGE::CROWN_STAGE)
 			showWinners();
@@ -491,6 +497,7 @@ void State_EndRound::update()
 			currentStage = END_STAGE::CROWN_STAGE;
 			promptVisible = true;
 			AE::sounds()->playSound("./res/sound/cheering.wav", glm::vec3(0.0f), 1.0f);
+			AE::sounds()->unLoadSound("./res/sound/drumroll.wav");
 		}
 
 		//Draw the graph
@@ -503,6 +510,7 @@ void State_EndRound::update()
 		renderedGraphData.clear();
 		GM::game()->setActiveState(STATE_GAMEPLAY);
 		AE::sounds()->unLoadSound("./res/sound/cheering.wav");
+		AE::sounds()->unLoadSound("./res/sound/drumroll.wav");
 	}
 }
 
@@ -722,7 +730,7 @@ void State_EndRound::launchPassenger(int busNumber)
 	startRotation = MathHelper::randomVec3(0.0f, 360.0f);
 	startScale = glm::vec3(1.2f);
 
-	launchVel.x = -1.0f;
+	launchVel.x = -2.0f;
 	launchVel.y = 3.0f;
 
 	launchVel = glm::rotate(launchVel, DH::degToRad(buses[busNumber].getRotation().y), glm::vec3(0.0f, 1.0f, 0.0f));

@@ -243,7 +243,7 @@ void State_Gameplay::load()
 
 	// ----- Set up the UI ------ ///
 	//set up the timer
-	timeStart = 120.0f;
+	timeStart = 10.0f;
 	timeLeft = timeStart;
 	//timer = Sprite::createTextVector(TEX_FONT, -5.0f, -10.0f, 5.0f, 5.0f, "0:00");
 
@@ -330,24 +330,28 @@ void State_Gameplay::load()
 		{
 			temp.setPosition(billboard1.getPosition().x, billboard1.getPosition().y + 1.5f, billboard1.getPosition().z - 5.5f);
 			temp.setRotationY(180.0f);
+			temp.setColour(glm::vec4(1.0f, 1.0f, 1.0f, 0.75f));
 			temp.setScale(25.0f, 17.5f, 25.0f);
 		}
 		else if (i == 1)
 		{
 			temp.setPosition(billboard2.getPosition().x, billboard2.getPosition().y + 1.5f, billboard2.getPosition().z - 5.5f);
 			temp.setRotationY(180.0f);
+			temp.setColour(glm::vec4(1.0f, 1.0f, 1.0f, 0.75f));
 			temp.setScale(25.0f, 17.5f, 25.0f);
 		}
 		else if (i == 2)
 		{
 			temp.setPosition(billboard3.getPosition().x + 5.5f, billboard3.getPosition().y + 1.5f, billboard3.getPosition().z);
 			temp.setRotationY(90.0f);
+			temp.setColour(glm::vec4(1.0f, 1.0f, 1.0f, 0.75f));
 			temp.setScale(25.0f, 17.5f, 25.0f);
 		}
 		else if (i == 3)
 		{
 			temp.setPosition(billboard4.getPosition().x + 5.5f, billboard4.getPosition().y + 1.5f, billboard4.getPosition().z);
 			temp.setRotationY(90.0f);
+			temp.setColour(glm::vec4(1.0f, 1.0f, 1.0f, 0.75f));
 			temp.setScale(25.0f, 17.5f, 25.0f);
 		}
 		else if (i > 3 && i < 8)	//Bus lights
@@ -875,12 +879,14 @@ void State_Gameplay::update()
 		glColor3f(1.0f, 1.0f, 1.0f);*/
 
 		//Draw the clock hand and the clock face
-		if (clockRot_T <= 0.25f)
+		if (clockRot_T <= 0.10f)
 		{
 			//Make the clock blink red if the time is almost up
 			if ((int)(clockRot_T * 100) % 2 == 0)
 			{
-				glColor3f(0.99f, 0.24f, 0.051f);
+				clock[0].setColour(glm::vec4(0.99f, 0.24f, 0.051f, 1.0f));
+				clock2[0].setColour(glm::vec4(0.99f, 0.24f, 0.051f, 1.0f));
+
 				if (!ticking)
 				{
 					ticking = true;
@@ -892,30 +898,24 @@ void State_Gameplay::update()
 
 		/*glm::vec3 clockColour = MathHelper::LERP(glm::vec3(1.0f), colorFinal, 1 - clockRot_T);
 		glColor3f(clockColour.x, clockColour.y, clockColour.z);*/
-			clock[0].draw();
-			glColor3f(1.0f, 1.0f, 1.0f);
+		clock[0].draw();
 
-			clock[1].update(DH::deltaTime);
-			clock[2].update(DH::deltaTime);
+		clock[1].update(DH::deltaTime);
+		clock[2].update(DH::deltaTime);
 
-			clock[1].draw();
-			clock[2].draw();
+		clock[1].draw();
+		clock[2].draw();
 
-			if (clockRot_T <= 0.25f)
-			{
-				//Make the clock blink red if the time is almost up
-				if ((int)(clockRot_T * 100) % 2 == 0)
-					glColor3f(0.99f, 0.24f, 0.051f);
-			}
+		clock2[0].draw();
+			
+		clock[0].setColour(glm::vec4(1.0f));
+		clock2[0].setColour(glm::vec4(1.0f));
 
-			clock2[0].draw();
-			glColor3f(1.0f, 1.0f, 1.0f);
+		clock2[1].update(DH::deltaTime);
+		clock2[2].update(DH::deltaTime);
 
-			clock2[1].update(DH::deltaTime);
-			clock2[2].update(DH::deltaTime);
-
-			clock2[1].draw();
-			clock2[2].draw();
+		clock2[1].draw();
+		clock2[2].draw();
 
 		//Update and draw the passengers
 		for (unsigned int i = 0; i < passengers.size(); i++)
@@ -957,7 +957,16 @@ void State_Gameplay::update()
 
 			//avoidence behaviour
 			//passengers[i].addImpulse(SteeringBehaviour::avoidence(passengers, i, 3.0f, 3.0f));
-			passengers[i].update(DH::getDeltaTime(), passengersFrozen);
+			if (inEndBuffer)
+			{
+				passengers[i].setScale(glm::vec3(1.2f));
+				passengers[i].setRotation(glm::vec3(0.0f));
+				passengers[i].setPositionY(2.0f);
+				passengers[i].setState(PASSENGER_STATE::GROUNDED);
+				passengers[i].update(DH::deltaTime, passengersFrozen);
+			}
+			else
+				passengers[i].update(DH::getDeltaTime(), passengersFrozen);
 			
 			glDisable(GL_LIGHTING);
 			passengers[i].draw();
@@ -1139,7 +1148,7 @@ void State_Gameplay::update()
 				{
 					if (CollisionHandler::PLAYERvPASSENGER(buses[i], passengers[j]))
 					{
-						if (passengers[j].getState() != PASSENGER_STATE::VACUUM)
+						if (passengers[j].getState() != PASSENGER_STATE::VACUUM && passengers[j].getState() == PASSENGER_STATE::GROUNDED)
 						{
 							passengers[j].setState(PASSENGER_STATE::VACUUM);
 							AE::sounds()->playSound("./res/sound/suck.wav", glm::vec3(0.0f), 0.15f);
@@ -1427,9 +1436,6 @@ void State_Gameplay::updatePowerups()
 	{
 		//removing powerups if they've been held for longer than the duration
 		if (buses[i].powerup == smelly_dude)
-			if (buses[i].timePowerupStarted - timeLeft > smelly_dudeDuration)
-				buses[i].powerup = no_powerup;
-			else
 				smelly = true;
 		else if (buses[i].powerup == attractive_person)
 			if (buses[i].timePowerupStarted - timeLeft > attractive_personDuration)
@@ -1662,7 +1668,9 @@ void State_Gameplay::drawBuses()
 		if (buses[0].getStage() == fifthStage)
 			AM::assets()->bindTexture(TEX_BUS4_RED);
 
-		buses[0].update(DH::getDeltaTime());
+		if (!inEndBuffer)
+			buses[0].update(DH::getDeltaTime());
+
 		buses[0].updateChildren(DH::deltaTime);
 		buses[0].draw();
 
@@ -1691,7 +1699,9 @@ void State_Gameplay::drawBuses()
 		if (buses[1].getStage() == fifthStage)
 			AM::assets()->bindTexture(TEX_BUS4_BLUE);
 
-		buses[1].update(DH::getDeltaTime());
+		if (!inEndBuffer)
+			buses[1].update(DH::getDeltaTime());
+
 		buses[1].updateChildren(DH::deltaTime);
 		buses[1].draw();
 
@@ -1720,7 +1730,9 @@ void State_Gameplay::drawBuses()
 		if (buses[2].getStage() == fifthStage)
 			AM::assets()->bindTexture(TEX_BUS4_GREEN);
 
-		buses[2].update(DH::getDeltaTime());
+		if (!inEndBuffer)
+			buses[2].update(DH::getDeltaTime());
+
 		buses[2].updateChildren(DH::deltaTime);
 		buses[2].draw();
 
@@ -1749,7 +1761,9 @@ void State_Gameplay::drawBuses()
 		if (buses[3].getStage() == fifthStage)
 			AM::assets()->bindTexture(TEX_BUS4_YELLOW);
 
-		buses[3].update(DH::getDeltaTime());
+		if (!inEndBuffer)
+			buses[3].update(DH::getDeltaTime());
+
 		buses[3].updateChildren(DH::deltaTime);
 		buses[3].draw();
 
@@ -1951,8 +1965,8 @@ void State_Gameplay::initBillboardUI()
 	for (int i = 0; i < 4; i++)
 	{
 		Sprite billboardBar = Sprite(TEX_FILLBAR, 8, 1);
-		billboardBar.setPosition(7.5f, 0.0f, -5.5f);
-		billboardBar.setScale(10.0f, 15.0f, 15.0f);
+		billboardBar.setPosition(9.75f, 1.35f, -5.25f);
+		billboardBar.setScale(7.5f, 12.5f, 15.0f);
 		billboardBar.setRotationY(180.0f);
 		billboardBar.update(DH::deltaTime);
 
@@ -1961,7 +1975,7 @@ void State_Gameplay::initBillboardUI()
 		else if (i == 1)
 			billboardBar.setColour(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
 		else if (i == 2)
-			billboardBar.setColour(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+			billboardBar.setColour(glm::vec4(0.0f, 1.0f, 0.0f, 1.04f));
 		else
 			billboardBar.setColour(glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
 
@@ -1969,11 +1983,12 @@ void State_Gameplay::initBillboardUI()
 	}
 
 	//Init the bus logos and make them children of the billboards
+
 	for (int i = 0; i < 4; i++)
 	{
 		Sprite billboardLogo = Sprite(TEX_LOGOS, 5, 4);
-		billboardLogo.setPosition(-7.5f, 0.0f, -5.5f);
-		billboardLogo.setScale(15.0f, 15.0f, 15.0f);
+		billboardLogo.setPosition(-5.0f, 1.35f, -5.5f);
+		billboardLogo.setScale(20.0f, 20.0f, 20.0f);
 		billboardLogo.setRotationY(180.0f);
 		billboardLogo.update(DH::deltaTime);
 

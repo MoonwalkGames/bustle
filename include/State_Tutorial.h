@@ -44,6 +44,7 @@ private:
 	Sprite staticBillboard1;
 	Sprite staticBillboard2;
 	Sprite billboardPlayerIndicators[4];
+	float rotation;
 };
 
 #endif

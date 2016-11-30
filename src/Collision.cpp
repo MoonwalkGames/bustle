@@ -9,7 +9,7 @@
 
 glm::vec3 busStageExtents[5] =
 {
-	glm::vec3(2.5f, 2.0f, 2.0f),
+	glm::vec3(3.5f, 2.0f, 2.0f),
 	glm::vec3(4.0f, 2.0f, 2.0f),
 	glm::vec3(6.0f, 2.0f, 2.0f),
 	glm::vec3(6.0f, 2.0f, 2.0f),
