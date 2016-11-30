@@ -112,6 +112,7 @@ private:
 	GameObject clockTower;
 	GameObject skyBox;
 	Kinematic car;
+	Sprite carWarning;
 	int timesCarSummoned;
 	bool passengersFrozen;
 	bool freezeBuses = false;
@@ -171,7 +172,12 @@ private:
 	std::vector<Sprite> billboardProgressBars;
 	std::vector<Sprite> billboardLogos;
 
+	//Powerup indicators
+	std::vector<Sprite> powerupIcons;
+
 	void initBillboardUI();
 	void drawBillboardUI();
+
+	void drawPowerupIndicators();
 };
 #endif

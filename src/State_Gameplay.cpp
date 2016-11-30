@@ -163,6 +163,9 @@ void State_Gameplay::load()
 	car.setAffectedByGravity(false);
 	timesCarSummoned = 0;
 
+	carWarning = Sprite(TEX_CAR_WARNING, 1, 1);
+	carWarning.setScale(5.0f, 5.0f, 5.0f);
+
 	//Init the clock
 	clock[0] = Sprite(TEX_CLOCK, 2, 1);
 	clock[1] = Sprite(TEX_CLOCK, 2, 1);
@@ -384,6 +387,21 @@ void State_Gameplay::load()
 			buses[i].setPoints(0);
 	}
 
+	//Init the powerup icons
+	for (int i = 0; i < 4; i++)
+	{
+		Sprite temp = Sprite(TEX_POWERUP_ICON, 4, 1, cameraPos, glm::vec3(0.0f));
+		temp.setPositionY(5.0f);
+		temp.setScale(8.0f, 8.0f, 8.0f);
+		temp.update(DH::deltaTime);
+		powerupIcons.push_back(temp);
+	}
+
+	buses[0].addChild(&powerupIcons[0]);
+	buses[1].addChild(&powerupIcons[1]);
+	buses[2].addChild(&powerupIcons[2]);
+	buses[3].addChild(&powerupIcons[3]);
+	
 	//End buffer
 	inEndBuffer = false;
 	timeOnEndBuffer = 0.0f;
@@ -792,6 +810,9 @@ void State_Gameplay::update()
 		billboard4.draw();
 
 		drawBillboardUI();
+
+		//Draw the powerup icons
+		//drawPowerupIndicators();
 
 		//Draw the clock tower
 		AM::assets()->bindTexture(TEX_CLOCKTOWER);
@@ -1486,6 +1507,9 @@ void State_Gameplay::excecute()
 void State_Gameplay::summonCar()
 {
 	static int spawnpoint = MathHelper::randomInt(0, 5);
+	glm::vec3 warningPosition;
+	float warningRotation;
+
 	carLaunched = false; //car just spawned, haven't launched passengers yet
 	if (!warning && !carOnScreen)
 	{
@@ -1505,36 +1529,33 @@ void State_Gameplay::summonCar()
 		switch (spawnpoint)
 		{
 		case 0:
-			car.setPosition(glm::vec3(-49.9f, 1.0f, 52.4f));
-			car.setRotationY(0.0f);
-			car.setVelocity(glm::vec3(75.0f, 0.0f, 0.0f));
+			carWarning.setPosition(glm::vec3(-49.9f, 5.0f, 52.4f));
+			carWarning.setRotationY(90.0f);
 			break;
 		case 1:
-			car.setPosition(glm::vec3(-49.9f, 1.0f, 2.4f));
-			car.setRotationY(0.0f);
-			car.setVelocity(glm::vec3(75.0f, 0.0f, 0.0f));
+			carWarning.setPosition(glm::vec3(-49.9f, 5.0f, 2.4f));
+			carWarning.setRotationY(90.0f);
 			break;
 		case 2:
-			car.setPosition(glm::vec3(-49.9f, 1.0f, -47.6f));
-			car.setRotationY(0.0f);
-			car.setVelocity(glm::vec3(75.0f, 0.0f, 0.0f));
+			carWarning.setPosition(glm::vec3(-49.9f, 5.0f, -47.6f));
+			carWarning.setRotationY(90.0f);
 			break;
 		case 3:
-			car.setPosition(glm::vec3(52.4f, 1.0f, 49.9f));
-			car.setRotationY(90.0f);
-			car.setVelocity(glm::vec3(0.0f, 0.0f, -75.0f));
+			carWarning.setPosition(glm::vec3(52.4f, 1.0f, 49.9f));
+			carWarning.setRotationY(0.0f);
 			break;
 		case 4:
-			car.setPosition(glm::vec3(2.4f, 1.0f, 49.9f));
-			car.setRotationY(90.0f);
-			car.setVelocity(glm::vec3(0.0f, 0.0f, -75.0f));
+			carWarning.setPosition(glm::vec3(2.4f, 1.0f, 49.9f));
+			carWarning.setRotationY(0.0f);
 			break;
 		case 5:
-			car.setPosition(glm::vec3(-47.6f, 1.0f, 49.9f));
-			car.setRotationY(90.0f);
-			car.setVelocity(glm::vec3(0.0f, 0.0f, -75.0f));
+			carWarning.setPosition(glm::vec3(-47.6f, 1.0f, 49.9f));
+			carWarning.setRotationY(0.0f);
 			break;
 		}
+
+		carWarning.update(DH::deltaTime);
+		//carWarning.draw();
 	}
 
 	//do warning stuff
@@ -2012,5 +2033,22 @@ void State_Gameplay::drawBillboardUI()
 		// ----- Draw the logos ----- //
 		billboardLogos[i].setActiveFrame((i * 5) + currentStage);
 		billboardLogos[i].draw();
+	}
+}
+
+void State_Gameplay::drawPowerupIndicators()
+{
+	for (int i = 0; i < 4; i++)
+	{
+		powerupIcons[i].setPosition(buses[i].getPosition());
+		powerupIcons[i].setPositionY(7.5f);
+		powerupIcons[i].draw();
+
+		/*if (buses[i].powerup != 0)
+		{
+			powerupIcons[i].setActiveFrame(buses[i].powerup - 1);
+			powerupIcons[i].update(DH::deltaTime);
+			powerupIcons[i].draw();
+		}*/
 	}
 }

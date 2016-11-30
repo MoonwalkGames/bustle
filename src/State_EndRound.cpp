@@ -790,6 +790,8 @@ void State_EndRound::drawMoonwalkScreen()
 	}
 	glEnd();
 
+	glTranslated(0.0f, -0.5f, 0.0f);
+
 	if (promptVisible)
 	{
 		AM::assets()->bindTexture(TEX_BUTTONPROMPT);
@@ -797,8 +799,8 @@ void State_EndRound::drawMoonwalkScreen()
 		{
 			glTexCoord2f(0.0f, 0.0f);  glVertex3f(-0.5f, -0.8f, 0.8f);
 			glTexCoord2f(1.0f, 0.0f);  glVertex3f(0.5f, -0.8f, 0.8f);
-			glTexCoord2f(1.0f, 1.0f);  glVertex3f(0.5f, -0.3f, 0.8f);
-			glTexCoord2f(0.0f, 1.0f);  glVertex3f(-0.5f, -0.3f, 0.8f);
+			glTexCoord2f(1.0f, 1.0f);  glVertex3f(0.5f, 0.0f, 0.8f);
+			glTexCoord2f(0.0f, 1.0f);  glVertex3f(-0.5f, 0.0f, 0.8f);
 		}
 		glEnd();
 	}

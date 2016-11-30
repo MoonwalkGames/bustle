@@ -121,11 +121,13 @@ void AssetManager::loadAssets()
 	loadedTextures.push_back(Texture2D("./res/img/tex_Garage_Right.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Tutorial_Ground.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Tutorial_Ground_Back.png"));
-	loadedTextures.push_back(Texture2D("./res/img/tex_LoadingScreen.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_EndingScreen.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Headlight.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_AButtonPrompt.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_SpecialPassenger.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_CompanyLogos.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_CarIndicator.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_PowerUpIndicator.png"));
 }
 
 void AssetManager::bindTexture(TEXTURE_NAME textureName)
