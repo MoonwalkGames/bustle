@@ -13,7 +13,6 @@ enum powerups
 	no_powerup,
 	smelly_dude,
 	attractive_person,
-	freeze_passengers,
 	freeze_buses,
 	star
 };
@@ -152,6 +151,7 @@ private:
 	bool warning = false;
 	float timewarning;
 	bool carLaunched = false; //if the car's already launched passengers, then we shouldn't do it again
+	bool carHonked = false;
 	float lastCollisionSound; //the timeleft value when the last collision sound played. used so that sound isn't being played every frame
 	float dings;
 

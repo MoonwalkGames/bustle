@@ -243,9 +243,8 @@ void State_Gameplay::load()
 
 	// ----- Set up the UI ------ ///
 	//set up the timer
-	timeStart = 10.0f;
+	timeStart = 120.0f;
 	timeLeft = timeStart;
-	//timer = Sprite::createTextVector(TEX_FONT, -5.0f, -10.0f, 5.0f, 5.0f, "0:00");
 
 	//Set up the skybox
 	skyBox = GameObject(MESH_SKYBOX, TEX_SKYBOX);
@@ -303,6 +302,7 @@ void State_Gameplay::load()
 	AE::sounds()->loadSound("./res/sound/frozen.wav", true, false, false);
 	AE::sounds()->loadSound("./res/sound/bus_ignition.wav", true, false, false);
 	AE::sounds()->loadSound("./res/sound/suck.wav", true, false, false);
+	AE::sounds()->loadSound("./res/sound/honk.wav", true, false, false);
 
 	ticking = false;
 	lastCollisionSound = 0.0f;
@@ -462,6 +462,7 @@ void State_Gameplay::update()
 				AE::sounds()->unLoadSound("./res/sound/frozen.wav");
 				AE::sounds()->unLoadSound("./res/sound/bus_ignition.wav");
 				AE::sounds()->unLoadSound("./res/sound/suck.wav");
+				AE::sounds()->unLoadSound("./res/sound/honk.wav");
 
 				//Output the data to the files
 				DBG::debug()->outputAnalytics();
@@ -845,6 +846,7 @@ void State_Gameplay::update()
 			{
 				carOnScreen = false;
 				soundPlayed = false;
+				carHonked = false;
 			}
 
 		}
@@ -935,8 +937,6 @@ void State_Gameplay::update()
 			{
 				if (buses[j].powerup == attractive_person)
 					passengers[i].addImpulse(SteeringBehaviour::seek(passengers[i].getPosition(), buses[j].getPosition(), 350.0f));
-				if (buses[j].powerup == freeze_passengers)
-					passengersFrozen = true;
 			}
 			passengers[i].addImpulse(SteeringBehaviour::wander(passengers[i], 50.0f, 500.0f));
 
@@ -996,21 +996,21 @@ void State_Gameplay::update()
 				specialPassengers[i].setPositionY(0.0f);
 			}
 
-			//wander behaviour
-
-			for (int j = 0; j < 4; j++)
-			{
-				//if (buses[j].powerup == attractive_person)
-					//specialPassengers[i].addImpulse(SteeringBehaviour::seek(specialPassengers[i].getPosition(), buses[j].getPosition(), 350.0f));
-				if (buses[j].powerup == freeze_passengers)
-					passengersFrozen = true;
-			}
-
 			if (!passengersFrozen)
 				specialPassengers[i].addImpulse(SteeringBehaviour::wander(specialPassengers[i], 50.0f, 500.0f));
 
 			//	if (!passengersFrozen)
-			specialPassengers[i].update(DH::getDeltaTime(), passengersFrozen);
+			if (inEndBuffer)
+			{
+				specialPassengers[i].setScale(glm::vec3(1.2f));
+				specialPassengers[i].setRotation(glm::vec3(0.0f));
+				specialPassengers[i].setPositionY(2.0f);
+				specialPassengers[i].setState(PASSENGER_STATE::GROUNDED);
+				specialPassengers[i].update(DH::deltaTime, passengersFrozen);
+			}
+			else
+				specialPassengers[i].update(DH::getDeltaTime(), passengersFrozen);
+
 			specialPassengers[i].draw();
 
 			if (specialPassengers[i].getPosition().x > 50.0f)
@@ -1211,9 +1211,6 @@ void State_Gameplay::update()
 						case freeze_buses:
 							AE::sounds()->playSound("./res/sound/frozen.wav", glm::vec3(0.0f), 1.0f);
 							break;
-						case freeze_passengers:
-							AE::sounds()->playSound("./res/sound/frozen.wav", glm::vec3(0.0f), 1.0f);
-							break;
 						case star:
 							AE::sounds()->playSound("./res/sound/star.wav", glm::vec3(0.0f), 1.0f);
 							break;
@@ -1267,6 +1264,7 @@ void State_Gameplay::update()
 		AE::sounds()->unLoadSound("./res/sound/frozen.wav");
 		AE::sounds()->unLoadSound("./res/sound/bus_ignition.wav");
 		AE::sounds()->unLoadSound("./res/sound/suck.wav");
+		AE::sounds()->unLoadSound("./res/sound/honk.wav");
 		load();
 		inIntro = true;
 	}
@@ -1424,12 +1422,11 @@ void State_Gameplay::updateStages()
 void State_Gameplay::updatePowerups()
 {
 	static float tick = 0.0f;
-	static float smelly_dudeDuration = 5.0f;
 	static float attractive_personDuration = 3.0f;
 	static float freeze_busesDuration = 1.5f;
-	static float freeze_passengersDuration = 3.0f;
 	static float starDuration = 3.0f;
-	bool smelly = false, attract = false, freezePassengers = false, starPresent = false, freeBuses = false;
+	bool smelly = false, attract = false, starPresent = false;
+	freezeBuses = false;
 	tick += 0.1f;
 
 	for (int i = 0; i < 4; i++)
@@ -1443,23 +1440,20 @@ void State_Gameplay::updatePowerups()
 			else
 				attract = true;
 		else if (buses[i].powerup == freeze_buses)
+		{
 			if (buses[i].timePowerupStarted - timeLeft > freeze_busesDuration)
 				buses[i].powerup = no_powerup;
 			else
 				freezeBuses = true;
+		}
 		else if (buses[i].powerup == star)
 			if (buses[i].timePowerupStarted - timeLeft > starDuration)
 			{
 				buses[i].powerup = no_powerup;
-				freeBuses = false;
+				starPresent = false;
 			}
 			else
 				starPresent = true;
-		else if (buses[i].powerup == freeze_passengers)
-			if (buses[i].timePowerupStarted - timeLeft > freeze_passengersDuration)
-				buses[i].powerup = no_powerup;
-			else
-				freezePassengers = true;
 
 		if (buses[i].powerup == smelly_dude)
 		{
@@ -1475,7 +1469,7 @@ void State_Gameplay::updatePowerups()
 			AE::sounds()->unLoadSound("./res/sound/flies.wav");
 		if (!attract)
 			AE::sounds()->unLoadSound("./res/sound/magnet.wav");
-		if (!freezePassengers)
+		if (!freezeBuses)
 			AE::sounds()->unLoadSound("./res/sound/frozen.wav");
 		if (!starPresent)
 			AE::sounds()->unLoadSound("./res/sound/star.wav");
@@ -1527,12 +1521,17 @@ void State_Gameplay::summonCar()
 	}
 	if (!soundPlayed)
 	{
-		AE::sounds()->playSound("./res/sound/car.wav", glm::vec3(0.0f), 0.25f);
+		AE::sounds()->playSound("./res/sound/car.wav", glm::vec3(0.0f), 0.75f);
 		soundPlayed = true;
 	}
 
 	if (warning)
 	{
+		if (!carHonked)
+		{
+			AE::sounds()->playSound("./res/sound/honk.wav", glm::vec3(0.0f), 0.25f);
+			carHonked = true;
+		}
 		//draw warning sprite at
 		switch (spawnpoint)
 		{
@@ -1578,6 +1577,7 @@ void State_Gameplay::summonCar()
 		timesCarSummoned++;
 		//car's on screen, so we should update & draw it
 		carOnScreen = true;
+			
 
 		//setting the position, rotation & velocity randomly between 6 possibilities
 		switch (spawnpoint)
@@ -1654,6 +1654,21 @@ void State_Gameplay::drawBuses()
 {
 	glDisable(GL_LIGHTING);
 
+	if (freezeBuses)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			if (!playerActive[i])
+				continue;
+
+			if (buses[i].powerup != freeze_buses)
+			{
+				buses[i].setVelocity(glm::vec3(0.0f));
+				buses[i].setColour(glm::vec4(0.247f, 1.0f, 0.949f, 1.0f));
+			}
+		}
+	}
+
 	if (playerActive[0])
 	{
 		//Bind correct texture for Player 1
@@ -1669,10 +1684,13 @@ void State_Gameplay::drawBuses()
 			AM::assets()->bindTexture(TEX_BUS4_RED);
 
 		if (!inEndBuffer)
+		{
 			buses[0].update(DH::getDeltaTime());
+		}
 
 		buses[0].updateChildren(DH::deltaTime);
 		buses[0].draw();
+		buses[0].setColour(glm::vec4(1.0f));
 
 		if (buses[0].getPosition().x > 50.0f)
 			buses[0].setPositionX(50.0f);
@@ -1704,6 +1722,7 @@ void State_Gameplay::drawBuses()
 
 		buses[1].updateChildren(DH::deltaTime);
 		buses[1].draw();
+		buses[1].setColour(glm::vec4(1.0f));
 
 		if (buses[1].getPosition().x > 50.0f)
 			buses[1].setPositionX(50.0f);
@@ -1735,6 +1754,7 @@ void State_Gameplay::drawBuses()
 
 		buses[2].updateChildren(DH::deltaTime);
 		buses[2].draw();
+		buses[2].setColour(glm::vec4(1.0f));
 
 		if (buses[2].getPosition().x > 50.0f)
 			buses[2].setPositionX(50.0f);
@@ -1766,6 +1786,7 @@ void State_Gameplay::drawBuses()
 
 		buses[3].updateChildren(DH::deltaTime);
 		buses[3].draw();
+		buses[3].setColour(glm::vec4(1.0f));
 
 		if (buses[3].getPosition().x > 50.0f)
 			buses[3].setPositionX(50.0f);
@@ -2062,7 +2083,6 @@ void State_Gameplay::drawPowerupIndicators()
 			switch (buses[i].powerup)
 			{
 			case freeze_buses:
-			case freeze_passengers:
 				powerupIcons[i].setActiveFrame(0);
 				break;
 			case star:

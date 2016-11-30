@@ -542,33 +542,17 @@ void State_EndRound::drawEndGraph()
 	glViewport(0, 0, DH::windowWidth, DH::windowHeight);
 
 	//Draw the graph background
-	glDisable(GL_TEXTURE_2D);
-	glColor4f(0.1f, 0.1f, 0.1f, 0.75f);
+	AM::assets()->bindTexture(TEX_ENDGRAPH);
+	glColor4f(1.0f, 1.0f, 1.0f, 0.75f);
 	glBegin(GL_QUADS);
 	{
-		glVertex2f(-0.75f, -0.75f);
-		glVertex2f(0.75f, -0.75f);
-		glVertex2f(0.75f, 0.75f);
-		glVertex2f(-0.75f, 0.75f);
+		glTexCoord2f(0.0f, 0.0f);  glVertex2f(-0.75f, -0.75f);
+		glTexCoord2f(1.0f, 0.0f); glVertex2f(0.75f, -0.75f);
+		glTexCoord2f(1.0f, 1.0f); glVertex2f(0.75f, 0.75f);
+		glTexCoord2f(0.0f, 1.0f); glVertex2f(-0.75f, 0.75f);
 	}
 	glEnd();
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	glEnable(GL_TEXTURE_2D);
-
-	//Draw the graph axes
-	glDisable(GL_TEXTURE_2D);
-	glColor4f(1.0f, 1.0f, 1.0f, 0.8f);
-	glLineWidth(15.0f);
-	glBegin(GL_LINES);
-	{
-		glVertex3f(-0.60f, -0.625f, -1.0f);
-		glVertex3f(-0.60f, 0.625f, -1.0f);
-
-		glVertex3f(-0.60f, -0.625f, -1.0f);
-		glVertex3f(0.60f, -0.625f, -1.0f);
-	}
-	glEnd();
-	glEnable(GL_TEXTURE_2D);
 
 	if (currentStage == END_STAGE::AXES_STAGE)
 	{
@@ -585,8 +569,8 @@ void State_EndRound::drawEndGraph()
 				float graphWorldPosX_A = -0.6f + (1.2f * (allGraphData[segmentNumber].time / allGraphData[allGraphData.size() - 1].time));
 				float graphWorldPosX_B = -0.6f + (1.2f * (allGraphData[segmentNumber + 1].time / allGraphData[allGraphData.size() - 1].time));
 
-				float graphWorldPosY_A = -0.6f + (1.2f * (allGraphData[segmentNumber].score[busNumber] / 100.0f));
-				float graphWorldPosY_B = -0.6f + (1.2f * (allGraphData[segmentNumber + 1].score[busNumber] / 100.0f));
+				float graphWorldPosY_A = -0.5f + (1.2f * (allGraphData[segmentNumber].score[busNumber] / 100.0f));
+				float graphWorldPosY_B = -0.5f + (1.2f * (allGraphData[segmentNumber + 1].score[busNumber] / 100.0f));
 
 				if (busNumber == 0)
 					glColor4f(0.8f, 0.0f, 0.0f, 1.0f);
@@ -598,7 +582,7 @@ void State_EndRound::drawEndGraph()
 					glColor4f(0.8f, 0.8f, 0.0f, 1.0f);
 
 				glDisable(GL_TEXTURE_2D);
-				glLineWidth(5.0f);
+				glLineWidth(7.5f);
 
 				glBegin(GL_LINES);
 				{

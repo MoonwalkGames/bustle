@@ -128,6 +128,7 @@ void AssetManager::loadAssets()
 	loadedTextures.push_back(Texture2D("./res/img/tex_CompanyLogos.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_CarIndicator.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_PowerUpIndicator.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_Graph.png"));
 }
 
 void AssetManager::bindTexture(TEXTURE_NAME textureName)

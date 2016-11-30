@@ -196,7 +196,7 @@ SpecialPassenger::SpecialPassenger(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, 
 	meshB_Data = &AM::assets()->getMesh(MESH_SPECIAL_B);
 	meshC_Data = nullptr;
 
-	this->powerup = MathHelper::randomInt(1, 5);
+	this->powerup = MathHelper::randomInt(1, 4);
 	scale *= 0.5f;
 }
 
