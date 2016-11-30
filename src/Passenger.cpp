@@ -101,10 +101,12 @@ void Passenger::update(float deltaTime, bool frozen)
 			currentMeshNumber = 1;
 		}
 	}
+
+	if(!frozen)
+		setForwardVector(-velocity);
+
 	if (currentState == PASSENGER_STATE::GROUNDED && frozen)
 		velocity = glm::vec3(0.0f);
-
-	setForwardVector(-velocity);
 
 	Kinematic::update(deltaTime);
 }

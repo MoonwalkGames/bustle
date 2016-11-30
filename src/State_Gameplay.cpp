@@ -477,63 +477,66 @@ void State_Gameplay::update()
 				controllers[i].getInputs();
 				if (!firstPerson)
 				{
-					//Need to rotate this by the rotation of the world VS the camera since up is actually up right(ish) (angle is 45)
-					glm::vec3 worldRotatedController = glm::rotate(glm::vec3(-controllers[i].lX, 0.0f, controllers[i].lY), DH::degToRad(-45.0f + rotation), glm::vec3(0.0f, 1.0f, 0.0f));
-
-					//Calculates the vector between the bus and the target
-					glm::vec3 desired = busTargets[i] - buses[i].getPosition();
-
-					//******restrain target movement from going too far away
-					if (!((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z) > 90.0f))
-						busTargets[i] += worldRotatedController;
-					//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					if (busTargets[i].x > 55.0f)
-						busTargets[i].x = 55.0f;
-					else if (busTargets[i].x < -55.0f)
-						busTargets[i].x = -55.0f;
-					if (busTargets[i].z > 55.0f)
-						busTargets[i].z = 55.0f;
-					else if (busTargets[i].z < -55.0f)
-						busTargets[i].z = -55.0f;
-					//Set forward vector to face the target
-					glm::vec3 currentForwardVector = buses[i].getForwardVector();
-					desired = busTargets[i] - buses[i].getPosition(); //Calculates the new desired vector since we moved the target
-
-					if (controllers[i].lX != 0 && controllers[i].lY != 0 && (currentForwardVector != desired)) {
-						currentForwardVector = MathHelper::LERP(currentForwardVector, desired, DH::getDeltaTime() * buses[i].getTurningSpeed());
-					}
-					if (desired.x != 0.0f || desired.y != 0.0f || desired.z != 0.0f)
-						buses[i].setForwardVector(currentForwardVector);
-
-					// --- Move the bus --- //
-					//Check if the bus has reached the target. If so, zero out velocity. Only does this if no input on controller
-					if ((controllers[i].lX == 0 && controllers[i].lY == 0))
-						buses[i].setVelocity(0.0f, 0.0f, 0.0f);
-					else//Otherwise, move forward
+					if (buses[i].powerup != freeze_buses)
 					{
-						float Maxspeed = (((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z)) / 90.0f);
-						if (Maxspeed > 1.0f)
-							Maxspeed = 1.0f;
-						buses[i].setVelocity(glm::normalize(buses[i].getForwardVector()) * (buses[i].getMovementSpeed()*Maxspeed));
-					}
-					//Draw the bus target
-					if (DBG::debug()->getVisualDebugEnabled())
-					{
-						if (i == 0)
-							glColor3f(1.0f, 0.0f, 0.0f);
-						else if (i == 1)
-							glColor3f(0.0f, 0.0f, 1.0f);
-						else if (i == 2)
-							glColor3f(0.0f, 1.0f, 0.0f);
-						else if (i == 3)
-							glColor3f(1.0f, 1.0f, 0.0f);
+						//Need to rotate this by the rotation of the world VS the camera since up is actually up right(ish) (angle is 45)
+						glm::vec3 worldRotatedController = glm::rotate(glm::vec3(-controllers[i].lX, 0.0f, controllers[i].lY), DH::degToRad(-45.0f + rotation), glm::vec3(0.0f, 1.0f, 0.0f));
 
-						glPointSize(10.0f);
-						glBegin(GL_POINTS);
-						glVertex3f(busTargets[i].x, 1.0f, busTargets[i].z);
-						glEnd();
+						//Calculates the vector between the bus and the target
+						glm::vec3 desired = busTargets[i] - buses[i].getPosition();
 
-						glColor3f(1.0f, 1.0f, 1.0f);
+						//******restrain target movement from going too far away
+						if (!((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z) > 90.0f))
+							busTargets[i] += worldRotatedController;
+						//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+						if (busTargets[i].x > 55.0f)
+							busTargets[i].x = 55.0f;
+						else if (busTargets[i].x < -55.0f)
+							busTargets[i].x = -55.0f;
+						if (busTargets[i].z > 55.0f)
+							busTargets[i].z = 55.0f;
+						else if (busTargets[i].z < -55.0f)
+							busTargets[i].z = -55.0f;
+						//Set forward vector to face the target
+						glm::vec3 currentForwardVector = buses[i].getForwardVector();
+						desired = busTargets[i] - buses[i].getPosition(); //Calculates the new desired vector since we moved the target
+
+						if (controllers[i].lX != 0 && controllers[i].lY != 0 && (currentForwardVector != desired)) {
+							currentForwardVector = MathHelper::LERP(currentForwardVector, desired, DH::getDeltaTime() * buses[i].getTurningSpeed());
+						}
+						if (desired.x != 0.0f || desired.y != 0.0f || desired.z != 0.0f)
+							buses[i].setForwardVector(currentForwardVector);
+
+						// --- Move the bus --- //
+						//Check if the bus has reached the target. If so, zero out velocity. Only does this if no input on controller
+						if ((controllers[i].lX == 0 && controllers[i].lY == 0))
+							buses[i].setVelocity(0.0f, 0.0f, 0.0f);
+						else//Otherwise, move forward
+						{
+							float Maxspeed = (((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z)) / 90.0f);
+							if (Maxspeed > 1.0f)
+								Maxspeed = 1.0f;
+							buses[i].setVelocity(glm::normalize(buses[i].getForwardVector()) * (buses[i].getMovementSpeed()*Maxspeed));
+						}
+						//Draw the bus target
+						if (DBG::debug()->getVisualDebugEnabled())
+						{
+							if (i == 0)
+								glColor3f(1.0f, 0.0f, 0.0f);
+							else if (i == 1)
+								glColor3f(0.0f, 0.0f, 1.0f);
+							else if (i == 2)
+								glColor3f(0.0f, 1.0f, 0.0f);
+							else if (i == 3)
+								glColor3f(1.0f, 1.0f, 0.0f);
+
+							glPointSize(10.0f);
+							glBegin(GL_POINTS);
+							glVertex3f(busTargets[i].x, 1.0f, busTargets[i].z);
+							glEnd();
+
+							glColor3f(1.0f, 1.0f, 1.0f);
+						}
 					}
 				}
 				else
@@ -870,6 +873,7 @@ void State_Gameplay::update()
 				if (buses[j].powerup == freeze_passengers)
 					passengersFrozen = true;
 			}
+			//if(!passengersFrozen)
 			passengers[i].addImpulse(SteeringBehaviour::wander(passengers[i], 50.0f, 500.0f));
 
 			
@@ -928,7 +932,8 @@ void State_Gameplay::update()
 				if (buses[j].powerup == freeze_passengers)
 					passengersFrozen = true;
 			}
-			specialPassengers[i].addImpulse(SteeringBehaviour::wander(specialPassengers[i], 50.0f, 500.0f));
+			if(!passengersFrozen)
+				specialPassengers[i].addImpulse(SteeringBehaviour::wander(specialPassengers[i], 50.0f, 500.0f));
 
 			//	if (!passengersFrozen)
 			specialPassengers[i].update(DH::getDeltaTime(), passengersFrozen);
@@ -1204,6 +1209,12 @@ void State_Gameplay::update()
 	if (DH::getKey(']'))
 		DBG::debug()->setVisualDebugEnabled(false);
 
+	if (DH::getKey('1'))
+	{
+		buses[0].timePowerupStarted = timeLeft;
+		buses[0].powerup = freeze_buses;
+	}
+
 	//Draw debug text
 	DBG::debug()->displayDebugText(buses, DH::getDeltaTime());
 
@@ -1346,7 +1357,7 @@ void State_Gameplay::updatePowerups()
 	static float freeze_busesDuration = 1.5f;
 	static float freeze_passengersDuration = 3.0f;
 	static float starDuration = 3.0f;
-	bool smelly = false, attract = false, freeze = false, starPresent = false;
+	bool smelly = false, attract = false, freezePassengers = false, starPresent = false; //freezeBuses = false;
 	tick += 0.1f;
 
 	for (int i = 0; i < 4; i++)
@@ -1366,12 +1377,21 @@ void State_Gameplay::updatePowerups()
 			if (buses[i].timePowerupStarted - timeLeft > freeze_busesDuration)
 				buses[i].powerup = no_powerup;
 			else
-				freeze = true;
+				freezeBuses = true;
 		else if (buses[i].powerup == star)
 			if (buses[i].timePowerupStarted - timeLeft > starDuration)
+			{
 				buses[i].powerup = no_powerup;
+				freezeBuses = false;
+			}
 			else
 				starPresent = true;
+
+		else if (buses[i].powerup == freeze_passengers)
+			if (buses[i].timePowerupStarted - timeLeft > freeze_passengersDuration)
+				buses[i].powerup = no_powerup;
+			else
+				freezePassengers = true;
 
 		if (buses[i].powerup == smelly_dude)
 		{
@@ -1387,7 +1407,7 @@ void State_Gameplay::updatePowerups()
 			AE::sounds()->unLoadSound("./res/sound/flies.wav");
 		if (!attract)
 			AE::sounds()->unLoadSound("./res/sound/magnet.wav");
-		if (!freeze)
+		if (!freezePassengers)
 			AE::sounds()->unLoadSound("./res/sound/frozen.wav");
 		if (!starPresent)
 			AE::sounds()->unLoadSound("./res/sound/star.wav");
