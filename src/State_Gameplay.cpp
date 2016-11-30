@@ -477,7 +477,7 @@ void State_Gameplay::update()
 				controllers[i].getInputs();
 				if (!firstPerson)
 				{
-					if (buses[i].powerup != freeze_buses)
+					//if (buses[i].powerup != freeze_buses)
 					{
 						//Need to rotate this by the rotation of the world VS the camera since up is actually up right(ish) (angle is 45)
 						glm::vec3 worldRotatedController = glm::rotate(glm::vec3(-controllers[i].lX, 0.0f, controllers[i].lY), DH::degToRad(-45.0f + rotation), glm::vec3(0.0f, 1.0f, 0.0f));
