@@ -114,6 +114,8 @@ void Sprite::draw()
 	glDisable(GL_CULL_FACE);
 	glDisable(GL_LIGHTING);
 
+	glColor4f(colour.x, colour.y, colour.z, colour.w);
+
 	//Draw the sprite
 	glBegin(GL_QUADS);
 	{
@@ -123,6 +125,8 @@ void Sprite::draw()
 		glTexCoord2f(activeFrame.uMin, activeFrame.vMax); glVertex3f(-0.5f, 0.5f, 0.0f);
 	}
 	glEnd();
+
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 	if (DH::lightingEnabled)
 		glEnable(GL_LIGHTING);

@@ -48,7 +48,9 @@ void AssetManager::loadAssets()
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_TutorialBillboard.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Garage_Left.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Garage_Right.obj"));
-	
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_SpecialPassenger_A.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_SpecialPassenger_B.obj"));
+
 	/* ========== TEXTURES (Naming: tex_XXXXXX.png) ========== */
 	loadedTextures.push_back(Texture2D("./res/img/tex_Bus0_Red.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Bus0_Blue.png"));
@@ -122,6 +124,8 @@ void AssetManager::loadAssets()
 	loadedTextures.push_back(Texture2D("./res/img/tex_LoadingScreen.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_Headlight.png"));
 	loadedTextures.push_back(Texture2D("./res/img/tex_AButtonPrompt.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_SpecialPassenger.png"));
+	loadedTextures.push_back(Texture2D("./res/img/tex_CompanyLogos.png"));
 }
 
 void AssetManager::bindTexture(TEXTURE_NAME textureName)

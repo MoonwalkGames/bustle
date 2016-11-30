@@ -1,12 +1,6 @@
 #include "Particle.h"
 #include "MathHelper.h"
 
-/* ===================================== Particle Struct =============================================== */
-
-/* ===================================== Particle Struct =============================================== */
-
-
-
 /* ===================================== Particle Emitter Class ======================================== */
 /* --- Constructors & Destructor --- */
 ParticleEmitter::ParticleEmitter()
@@ -21,8 +15,13 @@ ParticleEmitter::ParticleEmitter()
 	particleLifeRange = glm::vec2(0.0f);
 	particleVel_Min = glm::vec3(0.0f);
 	particleVel_Max = glm::vec3(0.0f);
-	particleColour_Min = glm::vec4(1.0f);
-	particleColour_Max = glm::vec4(1.0f);
+	particleColour_Min = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	particleColour_Max = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	particleRotation_Min = glm::vec3(0.0f, 0.0f, 0.0f);
+	particleRotation_Max = glm::vec3(0.0f, 0.0f, 0.0f);
+	particleScaleRange = glm::vec2(1.0f, 1.0f);
+	particleCameraPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+	billboardParticles = false;
 
 	//Optional renderables
 	particleMesh = NUM_MESHES; //Essentially treated as NULL
@@ -41,8 +40,13 @@ ParticleEmitter::ParticleEmitter(glm::vec3 _emitterPosition, int maxNumParticles
 	particleLifeRange = glm::vec2(1.0f, 2.0f);
 	particleVel_Min = glm::vec3(-1.0f, -1.0f, -1.0f);
 	particleVel_Max = glm::vec3(1.0f, 1.0f, 1.0f);
-	particleColour_Min = glm::vec4(0.5f);
-	particleColour_Max = glm::vec4(0.5f);
+	particleColour_Min = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	particleColour_Max = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	particleRotation_Min = glm::vec3(0.0f, 0.0f, 0.0f);
+	particleRotation_Max = glm::vec3(0.0f, 0.0f, 0.0f);
+	particleScaleRange = glm::vec2(1.0f, 1.0f);
+	particleCameraPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+	billboardParticles = false;
 
 	//Optional renderables
 	particleMesh = NUM_MESHES; //Essentially treated as NULL
@@ -96,6 +100,24 @@ void ParticleEmitter::setParticleColourRange(glm::vec4 minColour, glm::vec4 maxC
 {
 	particleColour_Min = minColour;
 	particleColour_Max = maxColour;
+}
+
+void ParticleEmitter::setParticleRotationRange(glm::vec3 minRotation, glm::vec3 maxRotation)
+{
+	particleRotation_Min = minRotation;
+	particleRotation_Max = maxRotation;
+}
+
+void ParticleEmitter::setParticleScaleRange(float scaleMin, float scaleMax) {
+	particleScaleRange = glm::vec2(scaleMin, scaleMax);
+}
+
+void ParticleEmitter::setParticleCameraPosition(glm::vec3 cameraPosition) {
+	particleCameraPosition = cameraPosition;
+}
+
+void ParticleEmitter::setBillboard(bool billboard) {
+	billboardParticles = billboard;
 }
 
 void ParticleEmitter::setParticleMesh(MESH_NAME newMesh) {
@@ -175,6 +197,8 @@ void ParticleEmitter::update(float deltaTime)
 			particles[i].update(deltaTime);
 			particles[i].draw();
 		}
+
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 }
 
@@ -195,7 +219,18 @@ void ParticleEmitter::applyParticleValues()
 
 		//Colour
 		particles[i].setColour(glm::vec4(MathHelper::randomFloat(particleColour_Min.x, particleColour_Max.x), MathHelper::randomFloat(particleColour_Min.y, particleColour_Max.y), MathHelper::randomFloat(particleColour_Min.z, particleColour_Max.z), MathHelper::randomFloat(particleColour_Min.w, particleColour_Max.w)));
-	
+
+		//Rotation
+		particles[i].setRotation(glm::vec3(MathHelper::randomFloat(particleRotation_Min.x, particleRotation_Max.x), MathHelper::randomFloat(particleRotation_Min.y, particleRotation_Max.y), MathHelper::randomFloat(particleRotation_Min.z, particleRotation_Max.z)));
+		
+		//Scale
+		float pScale = MathHelper::randomFloat(particleScaleRange.x, particleScaleRange.y);
+		particles[i].setScale(glm::vec3(pScale, pScale, pScale));
+
+		//Billboarding
+		particles[i].cameraPosition = particleCameraPosition;
+		particles[i].billboard = billboardParticles;
+
 		//Mesh
 		if (particleMesh != NUM_MESHES)
 			particles[i].setMesh(particleMesh);

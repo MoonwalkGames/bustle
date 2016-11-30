@@ -6,6 +6,7 @@
 #include "Passenger.h"
 #include "Player.h"
 #include "Sprite.h"
+#include "Particle.h"
 
 enum powerups
 {
@@ -30,10 +31,8 @@ public:
 	void updatePowerups();
 	void updateStages();
 	void drawCrown();
-	void drawUI();
 	void drawBuses();
 	glm::vec3 getClockHandEndPosition(float angle);
-	void enableLighting();
 	void checkMatrixStackStatus();
 	void excecute();
 	void summonCar();
@@ -140,7 +139,7 @@ private:
 	Sprite clock[3];
 	Sprite clock2[3];
 	//for the intro sequence
-	Sprite levelname;
+	Sprite levelMessage;
 	Sprite countdown[4];
 
 	std::vector<glm::vec3> clockHandPositions;
@@ -162,5 +161,16 @@ private:
 	glm::vec3 finalLightingColour;
 	std::vector<Sprite> lightOverlays; //0-3 are billboard lights, 4-7 are bus lights
 	std::vector<bool> playerActive;
+
+	//End buffer
+	bool inEndBuffer;
+	float timeOnEndBuffer;
+
+	//Billboard UI
+	std::vector<Sprite> billboardProgressBars;
+	std::vector<Sprite> billboardLogos;
+
+	void initBillboardUI();
+	void drawBillboardUI();
 };
 #endif

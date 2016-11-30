@@ -16,6 +16,7 @@ void State_Gameplay::load()
 	//Seed the random number generator
 	rotation = 0;
 	srand(time(0));
+	
 	//Init the level mesh
 	levelPlay = GameObject(glm::vec3(0.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_LEVELPLAY, TEX_LEVELPLAY);
 	levelSidewalk1 = GameObject(glm::vec3(25.5f, 0.0f, 25.0f), glm::vec3(0.0f), glm::vec3(1.0f), MESH_SIDEWALK, TEX_SIDEWALK);
@@ -239,7 +240,7 @@ void State_Gameplay::load()
 
 	// ----- Set up the UI ------ ///
 	//set up the timer
-	timeStart = 120.0f;
+	timeStart = 15.0f;
 	timeLeft = timeStart;
 	//timer = Sprite::createTextVector(TEX_FONT, -5.0f, -10.0f, 5.0f, 5.0f, "0:00");
 
@@ -250,11 +251,11 @@ void State_Gameplay::load()
 	skyBox.update(DH::deltaTime);
 
 	//set up sprites for the intro
-	levelname = Sprite(TEX_ROUND_SEQUENCE, 4, 2);
-	levelname.setScale(1.0f, 1.0f, 1.0f);
-	levelname.setPositionZ(5.0f);
-	levelname.setActiveFrame(0);
-	levelname.update(DH::getDeltaTime());
+	levelMessage = Sprite(TEX_ROUND_SEQUENCE, 4, 2);
+	levelMessage.setScale(1.0f, 1.0f, 1.0f);
+	levelMessage.setPositionZ(5.0f);
+	levelMessage.setActiveFrame(0);
+	levelMessage.update(DH::getDeltaTime());
 
 	countdown[0] = Sprite(TEX_ROUND_SEQUENCE, 4, 2);
 	countdown[0].setScale(1.0f, 1.0f, 1.0f);
@@ -382,6 +383,13 @@ void State_Gameplay::load()
 		if (!playerActive[i])
 			buses[i].setPoints(0);
 	}
+
+	//End buffer
+	inEndBuffer = false;
+	timeOnEndBuffer = 0.0f;
+
+	//Billboard UI
+	initBillboardUI();
 }
 
 void State_Gameplay::update()
@@ -411,29 +419,38 @@ void State_Gameplay::update()
 		}
 		else
 		{
-			//unload gameplay sounds
-			AE::sounds()->unLoadSound("./res/sound/star.wav");
-			AE::sounds()->unLoadSound("./res/sound/crash.wav");
-			AE::sounds()->unLoadSound("./res/sound/ding.wav");
-			AE::sounds()->unLoadSound("./res/sound/flies.wav");
-			AE::sounds()->unLoadSound("./res/sound/magnet.wav");
-			AE::sounds()->unLoadSound("./res/sound/car.wav");
-			AE::sounds()->unLoadSound("./res/sound/idle.wav");
-			AE::sounds()->unLoadSound("./res/sound/ambient.wav");
-			AE::sounds()->unLoadSound("./res/sound/tick-tock.wav");
-			AE::sounds()->unLoadSound("./res/sound/frozen.wav");
-			AE::sounds()->unLoadSound("./res/sound/bus_ignition.wav");
-			AE::sounds()->unLoadSound("./res/sound/suck.wav");
+			timeOnEndBuffer += DH::deltaTime;
+			inEndBuffer = true;
+			levelMessage.setActiveFrame(1);
 
-			//Output the data to the files
-			DBG::debug()->outputAnalytics();
-			DBG::debug()->outputRoundScores();
+			if (timeOnEndBuffer > 3.0f)
+			{
+				inEndBuffer = false;
 
-			//Clear the data in the vectors to prevent the files from being doubled up
-			DBG::debug()->clearAnalytics();
-			DBG::debug()->clearRoundScores();
+				//unload gameplay sounds
+				AE::sounds()->unLoadSound("./res/sound/star.wav");
+				AE::sounds()->unLoadSound("./res/sound/crash.wav");
+				AE::sounds()->unLoadSound("./res/sound/ding.wav");
+				AE::sounds()->unLoadSound("./res/sound/flies.wav");
+				AE::sounds()->unLoadSound("./res/sound/magnet.wav");
+				AE::sounds()->unLoadSound("./res/sound/car.wav");
+				AE::sounds()->unLoadSound("./res/sound/idle.wav");
+				AE::sounds()->unLoadSound("./res/sound/ambient.wav");
+				AE::sounds()->unLoadSound("./res/sound/tick-tock.wav");
+				AE::sounds()->unLoadSound("./res/sound/frozen.wav");
+				AE::sounds()->unLoadSound("./res/sound/bus_ignition.wav");
+				AE::sounds()->unLoadSound("./res/sound/suck.wav");
 
-			GM::game()->setActiveState(STATE_ENDROUND);
+				//Output the data to the files
+				DBG::debug()->outputAnalytics();
+				DBG::debug()->outputRoundScores();
+
+				//Clear the data in the vectors to prevent the files from being doubled up
+				DBG::debug()->clearAnalytics();
+				DBG::debug()->clearRoundScores();
+
+				GM::game()->setActiveState(STATE_ENDROUND);
+			}
 		}
 	}
 
@@ -473,7 +490,7 @@ void State_Gameplay::update()
 	}
 
 	glm::vec3 targetDirection;
-	if(!inIntro && !inBuffer)
+	if(!inIntro && !inBuffer && !inEndBuffer)
 	{
 		//Moves the bus targets based on the controller inputs
 		for (int i = 0; i < 4; i++)
@@ -770,6 +787,8 @@ void State_Gameplay::update()
 
 		AM::assets()->bindTexture(TEX_BILLBOARD4);
 		billboard4.draw();
+
+		drawBillboardUI();
 
 		//Draw the clock tower
 		AM::assets()->bindTexture(TEX_CLOCKTOWER);
@@ -1080,88 +1099,91 @@ void State_Gameplay::update()
 	}
 
 	//player vs passenger collisions
-	for (int i = 0; i < 4; i++)
+	if (!inEndBuffer && !inBuffer)
 	{
-		if (!playerActive[i])
+		for (int i = 0; i < 4; i++)
 		{
-			continue;
-		}
-		else
-		{
-			for (unsigned int j = 0; j < passengers.size(); j++)
+			if (!playerActive[i])
 			{
-				if (CollisionHandler::PLAYERvPASSENGER(buses[i], passengers[j]))
-				{
-					if (passengers[j].getState() != PASSENGER_STATE::VACUUM)
-					{
-						passengers[j].setState(PASSENGER_STATE::VACUUM);
-						AE::sounds()->playSound("./res/sound/suck.wav", glm::vec3(0.0f), 0.15f);
-						passengers[j].setTargetBusPosition(buses[i].getPosition());
-						passengers[j].setBusTargetNumber(i);
-						buses[i].addPoints(1);
-						buses[i].addMass(1.0f);
-					}
-				}
-				else
-				{
-					if (passengers[j].getState() == PASSENGER_STATE::VACUUM)
-					{
-						passengers[j].setTargetBusPosition(buses[passengers[j].getBusTargetNumber()].getPosition());
-					}
-				}
-
-				if (!passengers[j].getAlive())
-				{
-					passengers.erase(passengers.begin() + j);
-					j--;
-				}
+				continue;
 			}
-
-			for (unsigned int j = 0; j < specialPassengers.size(); j++)
+			else
 			{
-				if (CollisionHandler::PLAYERvPASSENGER(buses[i], specialPassengers[j]))
+				for (unsigned int j = 0; j < passengers.size(); j++)
 				{
-					if (specialPassengers[j].getState() != PASSENGER_STATE::VACUUM)
+					if (CollisionHandler::PLAYERvPASSENGER(buses[i], passengers[j]))
 					{
-						specialPassengers[j].setState(PASSENGER_STATE::VACUUM);
-						AE::sounds()->playSound("./res/sound/suck.wav", glm::vec3(0.0f), 0.15f);
-						specialPassengers[j].setTargetBusPosition(buses[i].getPosition());
-						specialPassengers[j].setBusTargetNumber(i);
+						if (passengers[j].getState() != PASSENGER_STATE::VACUUM)
+						{
+							passengers[j].setState(PASSENGER_STATE::VACUUM);
+							AE::sounds()->playSound("./res/sound/suck.wav", glm::vec3(0.0f), 0.15f);
+							passengers[j].setTargetBusPosition(buses[i].getPosition());
+							passengers[j].setBusTargetNumber(i);
+							buses[i].addPoints(1);
+							buses[i].addMass(1.0f);
+						}
+					}
+					else
+					{
+						if (passengers[j].getState() == PASSENGER_STATE::VACUUM)
+						{
+							passengers[j].setTargetBusPosition(buses[passengers[j].getBusTargetNumber()].getPosition());
+						}
+					}
 
+					if (!passengers[j].getAlive())
+					{
+						passengers.erase(passengers.begin() + j);
+						j--;
 					}
 				}
-				else
-				{
-					if (specialPassengers[j].getState() == PASSENGER_STATE::VACUUM)
-					{
-						specialPassengers[j].setTargetBusPosition(buses[specialPassengers[j].getBusTargetNumber()].getPosition());
-					}
-				}
 
-				if (!specialPassengers[j].getAlive())
+				for (unsigned int j = 0; j < specialPassengers.size(); j++)
 				{
-					buses[i].powerup = specialPassengers[j].powerup;
-					buses[i].timePowerupStarted = timeLeft;
-					switch (buses[i].powerup)
+					if (CollisionHandler::PLAYERvPASSENGER(buses[i], specialPassengers[j]))
 					{
-					case smelly_dude:
-						AE::sounds()->playSound("./res/sound/flies.wav", glm::vec3(0.0f), 1.0f);
-						break;
-					case attractive_person:
-						AE::sounds()->playSound("./res/sound/magnet.wav", glm::vec3(0.0f), 1.0f);
-						break;
-					case freeze_buses:
-						AE::sounds()->playSound("./res/sound/frozen.wav", glm::vec3(0.0f), 1.0f);
-						break;
-					case freeze_passengers:
-						AE::sounds()->playSound("./res/sound/frozen.wav", glm::vec3(0.0f), 1.0f);
-						break;
-					case star:
-						AE::sounds()->playSound("./res/sound/star.wav", glm::vec3(0.0f), 1.0f);
-						break;
+						if (specialPassengers[j].getState() != PASSENGER_STATE::VACUUM)
+						{
+							specialPassengers[j].setState(PASSENGER_STATE::VACUUM);
+							AE::sounds()->playSound("./res/sound/suck.wav", glm::vec3(0.0f), 0.15f);
+							specialPassengers[j].setTargetBusPosition(buses[i].getPosition());
+							specialPassengers[j].setBusTargetNumber(i);
+
+						}
 					}
-					specialPassengers.erase(specialPassengers.begin() + j);
-					j--;
+					else
+					{
+						if (specialPassengers[j].getState() == PASSENGER_STATE::VACUUM)
+						{
+							specialPassengers[j].setTargetBusPosition(buses[specialPassengers[j].getBusTargetNumber()].getPosition());
+						}
+					}
+
+					if (!specialPassengers[j].getAlive())
+					{
+						buses[i].powerup = specialPassengers[j].powerup;
+						buses[i].timePowerupStarted = timeLeft;
+						switch (buses[i].powerup)
+						{
+						case smelly_dude:
+							AE::sounds()->playSound("./res/sound/flies.wav", glm::vec3(0.0f), 1.0f);
+							break;
+						case attractive_person:
+							AE::sounds()->playSound("./res/sound/magnet.wav", glm::vec3(0.0f), 1.0f);
+							break;
+						case freeze_buses:
+							AE::sounds()->playSound("./res/sound/frozen.wav", glm::vec3(0.0f), 1.0f);
+							break;
+						case freeze_passengers:
+							AE::sounds()->playSound("./res/sound/frozen.wav", glm::vec3(0.0f), 1.0f);
+							break;
+						case star:
+							AE::sounds()->playSound("./res/sound/star.wav", glm::vec3(0.0f), 1.0f);
+							break;
+						}
+						specialPassengers.erase(specialPassengers.begin() + j);
+						j--;
+					}
 				}
 			}
 		}
@@ -1180,6 +1202,7 @@ void State_Gameplay::update()
 		AE::sounds()->stopAllChannels();
 		specialPassengers.clear();
 		passengers.clear();
+
 		//unload gameplay sounds
 		AE::sounds()->unLoadSound("./res/sound/star.wav");
 		AE::sounds()->unLoadSound("./res/sound/crash.wav");
@@ -1221,11 +1244,8 @@ void State_Gameplay::update()
 	//Update the lighting
 	updateLighting();
 
-	//Draw the ui
-	drawUI();
-
 	//Draw the countdowns
-	if (inIntro || inBuffer)
+	if (inIntro || inBuffer || inEndBuffer)
 		drawIntroSprite();
 
 	//Bind a NULL texture at the end of the frame for cleanliness
@@ -1244,6 +1264,7 @@ void State_Gameplay::launchPassengers(int busNumber, int amount)
 		{
 			amount = buses[busNumber].getPoints();
 		}
+
 		buses[busNumber].addPoints(-amount);
 		float launchSpeed = 25.0f;
 		glm::vec3 launchVel;
@@ -1426,18 +1447,6 @@ void State_Gameplay::drawCrown()
 	}
 
 	glEnable(GL_LIGHTING);
-}
-
-void State_Gameplay::drawUI()
-{
-	//Reset view for HUD in screen space
-	glViewport(0, 0, DH::windowWidth, DH::windowHeight);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluOrtho2D(-15.0f, 15.0f, -15.0f, 15.0f);
 }
 
 void State_Gameplay::excecute()
@@ -1741,6 +1750,7 @@ void State_Gameplay::drawIntroSprite()
 		else if (bufferTime < 0.0f)
 			inBuffer = false;
 	}
+
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
@@ -1750,8 +1760,8 @@ void State_Gameplay::drawIntroSprite()
 
 	if (inBuffer)
 		countdown[i].draw();
-	else if (inIntro)
-		levelname.draw();
+	else if (inIntro || inEndBuffer)
+		levelMessage.draw();
 
 	glPopMatrix();
 }
@@ -1840,5 +1850,93 @@ void State_Gameplay::updateLighting()
 		//The car headlights
 		if (carOnScreen)
 			lightOverlays[8].draw();
+	}
+}
+
+void State_Gameplay::initBillboardUI()
+{
+	//Init the progress bars and make them children of the billboards
+	for (int i = 0; i < 4; i++)
+	{
+		Sprite billboardBar = Sprite(TEX_FILLBAR, 8, 1);
+		billboardBar.setPosition(7.5f, 0.0f, -5.5f);
+		billboardBar.setScale(10.0f, 15.0f, 15.0f);
+		billboardBar.setRotationY(180.0f);
+		billboardBar.update(DH::deltaTime);
+
+		if (i == 0)
+			billboardBar.setColour(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+		else if (i == 1)
+			billboardBar.setColour(glm::vec4(0.0f, 0.0f, 1.0f, 1.0f));
+		else if (i == 2)
+			billboardBar.setColour(glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
+		else
+			billboardBar.setColour(glm::vec4(1.0f, 1.0f, 0.0f, 1.0f));
+
+		billboardProgressBars.push_back(billboardBar);
+	}
+
+	//Init the bus logos and make them children of the billboards
+	for (int i = 0; i < 4; i++)
+	{
+		Sprite billboardLogo = Sprite(TEX_LOGOS, 5, 4);
+		billboardLogo.setPosition(-7.5f, 0.0f, -5.5f);
+		billboardLogo.setScale(15.0f, 15.0f, 15.0f);
+		billboardLogo.setRotationY(180.0f);
+		billboardLogo.update(DH::deltaTime);
+
+		billboardLogos.push_back(billboardLogo);
+	}
+
+	billboard1.addChild(&billboardProgressBars[0]);
+	billboard2.addChild(&billboardProgressBars[1]);
+	billboard3.addChild(&billboardProgressBars[2]);
+	billboard4.addChild(&billboardProgressBars[3]);
+
+	billboard1.addChild(&billboardLogos[0]);
+	billboard2.addChild(&billboardLogos[1]);
+	billboard3.addChild(&billboardLogos[2]);
+	billboard4.addChild(&billboardLogos[3]);
+
+	billboard1.updateChildren(DH::deltaTime);
+	billboard2.updateChildren(DH::deltaTime);
+	billboard3.updateChildren(DH::deltaTime);
+	billboard4.updateChildren(DH::deltaTime);
+}
+
+void State_Gameplay::drawBillboardUI()
+{
+	for (int i = 0; i < 4; i++)
+	{
+		// ----- Draw the progress bars ----- //
+		int currentStage = buses[i].getStage();
+		int currentScore = buses[i].getPoints();
+		float percentCompletion;
+
+		//Find out how far along the bus is to the next stage
+		if (currentStage == 0)
+			percentCompletion = (currentScore / 10.0f);
+		else if (currentStage == 1)
+			percentCompletion = ((currentScore - 10.0f) / (25.0f - 10.0f));
+		else if (currentStage == 2)
+			percentCompletion = ((currentScore - 25.0f) / (35.0f - 25.0f));
+		else if (currentStage == 3)
+			percentCompletion = ((currentScore - 35.0f) / (50.0f - 35.0f));
+		else
+			percentCompletion = 1.0f;
+
+		//Convert the progress from 0 - 100% to frame numbers from 0 - 7
+		int progressFrameNumber = 7 * percentCompletion;
+		
+		//Ensure there are no errors
+		if (progressFrameNumber > 7)
+			progressFrameNumber = 7;
+
+		billboardProgressBars[i].setActiveFrame(progressFrameNumber);
+		billboardProgressBars[i].draw();
+
+		// ----- Draw the logos ----- //
+		billboardLogos[i].setActiveFrame((i * 5) + currentStage);
+		billboardLogos[i].draw();
 	}
 }

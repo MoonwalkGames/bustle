@@ -18,12 +18,22 @@ struct Particle : public Kinematic
 	float maxLifetime = 1.0f;
 	float timeAlive = 0.0f;
 	glm::vec3 parentEmitterPosition;
+	glm::vec3 cameraPosition;
+	bool billboard;
 
 	void update(float deltaTime)
 	{
 		timeAlive += deltaTime;
 
+		if (billboard)
+			faceCamera();
+
 		Kinematic::update(deltaTime);
+	}
+
+	void faceCamera()
+	{
+
 	}
 
 	void draw()
@@ -50,6 +60,8 @@ struct Particle : public Kinematic
 
 			glPointSize(1.0f);
 		}
+
+		glLoadIdentity();
 	}
 };
 
@@ -90,6 +102,10 @@ public:
 	void setParticleLifeRange(float minLife, float maxLife);
 	void setParticleVelRange(glm::vec3 minVelocity, glm::vec3 maxVelocity);
 	void setParticleColourRange(glm::vec4 minColour, glm::vec4 maxColour);
+	void setParticleRotationRange(glm::vec3 minRotation, glm::vec3 maxRotation);
+	void setParticleScaleRange(float scaleMin, float scaleMax);
+	void setParticleCameraPosition(glm::vec3 cameraPosition);
+	void setBillboard(bool billboard);
 	void setParticleMesh(MESH_NAME mesh);
 	void setParticleTexture(TEXTURE_NAME texture);
 
@@ -123,6 +139,14 @@ private:
 
 	glm::vec4 particleColour_Min; //Range of colours that the particle can be spawned with
 	glm::vec4 particleColour_Max;
+
+	glm::vec3 particleRotation_Min; //Range of rotations for the particles in Euler angles
+	glm::vec3 particleRotation_Max;
+	
+	glm::vec2 particleScaleRange; //Range of scales for the particles as vec2...x - min, y = max
+
+	glm::vec3 particleCameraPosition; //For billboarding
+	bool billboardParticles;
 	
 	MESH_NAME particleMesh; //Optional renderables
 	TEXTURE_NAME particleTexture;

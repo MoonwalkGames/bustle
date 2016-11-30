@@ -173,12 +173,6 @@ bool Passenger::getAlive() const
 		return true;
 }
 
-SpecialPassenger::SpecialPassenger(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, bool gravityAffected, 
-	glm::vec3 accel, glm::vec3 launchVel, float mass, MESH_NAME meshA, MESH_NAME meshB, MESH_NAME meshC, TEXTURE_NAME texture) : 
-	Passenger(pos, rot, scl, gravityAffected, accel, launchVel, mass, meshA,  meshB,  meshC, texture)
-{
-	this->powerup = MathHelper::randomInt(1, 5);
-}
 /*
 enum powerups
 {
@@ -189,18 +183,101 @@ freeze_passengers,
 freeze_buses,
 star
 };*/
+SpecialPassenger::SpecialPassenger(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, bool gravityAffected,
+	glm::vec3 accel, glm::vec3 launchVel, float mass, MESH_NAME meshA, MESH_NAME meshB, MESH_NAME meshC, TEXTURE_NAME texture) :
+	Passenger(pos, rot, scl, gravityAffected, accel, launchVel, mass, meshA, meshB, meshC, texture)
+{
+	meshA_Data = &AM::assets()->getMesh(MESH_SPECIAL_A);
+	meshB_Data = &AM::assets()->getMesh(MESH_SPECIAL_B);
+	meshC_Data = nullptr;
+
+	this->powerup = MathHelper::randomInt(1, 5);
+	scale *= 0.5f;
+}
+
+void SpecialPassenger::update(float deltaTime)
+{
+	//DELETE LATER - Prevents the object from falling below y = 1
+	if (position.y < 2.25f && this->currentState != FLYING_UP)
+	{
+		//applying "normal force"
+		velocity.y = 0;
+		acceleration.y = 0;
+		position.y = 2.25f;
+		rotation = glm::vec3(0, rotation.y, 0);
+	}
+
+	//Performs different tasks based on the state the passenger is currently in
+	if (currentState == PASSENGER_STATE::FLYING_UP)
+	{
+		//Spins the passenger in the air
+		rotation += startRotationSpeed;
+
+		if (velocity.y <= 0.1f)
+		{
+			ableToBePickedUp = true;
+			currentState = PASSENGER_STATE::FALLING;
+			maxHeight = position.y;
+		}
+	}
+	else if (currentState == PASSENGER_STATE::FALLING)
+	{
+		float t = 1 - (position.y / maxHeight);
+
+		//LERPS the falling rotation so that it lands perfectly on its feet
+		fallingRotationSpeed.x = ((1 - t) * startRotationSpeed.x) + (t * 0.0f);
+		fallingRotationSpeed.z = ((1 - t) * startRotationSpeed.z) + (t * 0.0f);
+
+		rotation = MathHelper::LERP(rotation, glm::vec3(0.0f, rotation.y, 0.0f), t);
+
+		if (position.y < 2.0f)
+			currentState = PASSENGER_STATE::GROUNDED;
+	}
+	else if (currentState == PASSENGER_STATE::VACUUM)
+	{
+		//Set the final position when the passenger is first hit
+		if (finalPosition == glm::vec3(0.0f))
+			finalPosition = glm::vec3(position);
+
+		scale = MathHelper::LERP(glm::vec3(1.0f), glm::vec3(5.0f, 0.1f, 1.0f), 1 - timeLeft / 0.33f);
+		position = MathHelper::LERP(finalPosition, targetBusPosition, 1 - timeLeft / 0.33f);
+
+		timeLeft -= deltaTime;
+	}
+
+	//Update the morphing interpolation parameter
+	if (morphForward)
+		morph_T += 3 * deltaTime;
+	else
+		morph_T -= 3 * deltaTime;
+
+	if (morph_T >= 1.0f)
+	{
+		morph_T = 1.0f;
+		morphForward = false;
+	}
+	else if (morph_T <= 0.0f)
+	{ 
+		morph_T = 0.0f;
+		morphForward = true;
+	}
+
+	setForwardVector(velocity);
+	Kinematic::update(deltaTime);
+}
+
 void SpecialPassenger::draw()
 {
-	if(this->powerup == 1)
-		AM::assets()->bindTexture(TEX_BUS0_GREEN);
+	if (this->powerup == 1)
+		AM::assets()->bindTexture(TEX_SPECIAL);
 	else if (this->powerup == 2)
-		AM::assets()->bindTexture(TEX_BUS0_RED);
+		AM::assets()->bindTexture(TEX_SPECIAL);
 	else if (this->powerup == 3)
-		AM::assets()->bindTexture(TEX_BUS0_BLUE);
+		AM::assets()->bindTexture(TEX_SPECIAL);
 	else if (this->powerup == 4)
-		AM::assets()->bindTexture(TEX_BUS0_BLUE);
+		AM::assets()->bindTexture(TEX_SPECIAL);
 	else if (this->powerup == 5)
-		AM::assets()->bindTexture(TEX_BUS0_YELLOW);
+		AM::assets()->bindTexture(TEX_SPECIAL);
 
 	if (DBG::debug()->getVisualDebugEnabled())
 		drawDebug();
@@ -208,11 +285,22 @@ void SpecialPassenger::draw()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(glm::value_ptr(localToWorld));
 
-	//Draws the current mesh
-	if (currentMeshNumber == 0)
-		meshA_Data->draw(true);
-	else if (currentMeshNumber == 1)
-		meshB_Data->draw(true);
-	else if (currentMeshNumber == 2)
-		meshC_Data->draw(true);
+	//Draw the morphed mesh
+	glBegin(GL_TRIANGLES);
+	{
+		for (unsigned int i = 0; i < meshA_Data->faces.size(); i++)
+		{
+			Face morphedFace;
+
+			for (int j = 0; j < 3; j++)
+			{
+				morphedFace.vertices[j].position = MathHelper::LERP(meshA_Data->faces[i].vertices[j].position, meshB_Data->faces[i].vertices[j].position, morph_T);
+				morphedFace.vertices[j].normal = MathHelper::LERP(meshA_Data->faces[i].vertices[j].normal, meshB_Data->faces[i].vertices[j].normal, morph_T);
+				morphedFace.vertices[j].uvCoord = meshA_Data->faces[i].vertices[j].uvCoord;
+			}
+
+			morphedFace.draw(true);
+		}
+	}
+	glEnd();
 }

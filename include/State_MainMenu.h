@@ -103,11 +103,6 @@ private:
 	float rotation;
 
 	//Menu
-	Sprite billboards[4];
-	Sprite fillbar[4];
-	Sprite fillbarshade[4];
-	Sprite fillbarbackground[4];
-	Sprite billboardlight[4];
 	Sprite logo;
 	Sprite playButton;
 	Sprite exitButton;
