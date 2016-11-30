@@ -238,7 +238,7 @@ void State_Gameplay::load()
 	
 	//Enable visual debug mode
 	DBG::debug()->setDebugEnabled(true);
-	DBG::debug()->setVisualDebugEnabled(false);
+	//DBG::debug()->setVisualDebugEnabled(false);
 	timeSinceLastDataPush = 0;
 
 	// ----- Set up the UI ------ ///
@@ -286,7 +286,7 @@ void State_Gameplay::load()
 	bufferTime = 4.0f;
 	
 	//Initialize the data & analytics
-	DBG::debug()->addData(getTimeOnState(), buses);
+	//DBG::debug()->addData(getTimeOnState(), buses);
 	DBG::debug()->addScoreData(getTimeOnState(), buses);
 	
 	//load all the gameplay sounds
@@ -417,8 +417,8 @@ void State_Gameplay::load()
 void State_Gameplay::update()
 {
 //	static float FOV = 75.0f;
-	if (DH::getKey('h'))
-		GM::game()->setActiveState(STATE_GAMEPLAY);
+	/*if (DH::getKey('h'))
+		GM::game()->setActiveState(STATE_GAMEPLAY);*/
 	if (!inIntro && !inBuffer)
 	{
 		if (timeLeft > 0.0f && !inIntro)
@@ -465,11 +465,11 @@ void State_Gameplay::update()
 				AE::sounds()->unLoadSound("./res/sound/honk.wav");
 
 				//Output the data to the files
-				DBG::debug()->outputAnalytics();
+				//DBG::debug()->outputAnalytics();
 				DBG::debug()->outputRoundScores();
 
 				//Clear the data in the vectors to prevent the files from being doubled up
-				DBG::debug()->clearAnalytics();
+				//DBG::debug()->clearAnalytics();
 				DBG::debug()->clearRoundScores();
 
 				GM::game()->setActiveState(STATE_ENDROUND);
@@ -483,7 +483,7 @@ void State_Gameplay::update()
 	if (timeSinceLastDataPush >= 2.0f)
 	{
 		timeSinceLastDataPush = 0.0f;
-		DBG::debug()->addData(getTimeOnState(), buses);
+		//DBG::debug()->addData(getTimeOnState(), buses);
 		DBG::debug()->addScoreData(getTimeOnState(), buses);
 	}
 		
@@ -619,19 +619,19 @@ void State_Gameplay::update()
 				}
 
 				//Spawn passenger
-				if (aButtonEnabled && controllers[i].checkButton(BUTTON_A) && controllers[i].isConnected())
-					launchPassengers(i, 1);
+				/*if (aButtonEnabled && controllers[i].checkButton(BUTTON_A) && controllers[i].isConnected())
+					launchPassengers(i, 1);*/
 			}
 		}
 	}
 
 	//Move the camera around
-	if (DH::getKey('w'))
+	/*if (DH::getKey('w'))
 		gameplayCameraPos.z -= 0.5f;
 	else if (DH::getKey('s'))
-		gameplayCameraPos.z += 0.5f;
+		gameplayCameraPos.z += 0.5f;*/
 
-	if (DH::getKey('a'))
+	/*if (DH::getKey('a'))
 	{
 		gameplayCameraPos = glm::rotate(gameplayCameraPos, degToRad * -0.5f, glm::vec3(0, 1, 0));
 		rotation -= 0.5f;
@@ -646,7 +646,7 @@ void State_Gameplay::update()
 	{
 		gameplayCameraPos = glm::vec3(54.0f, 25.0f, 60.0f);
 		rotation = 0;
-	}
+	}*/
 
 	if (DH::getKey('f') && inIntro == false)
 		firstPerson = true;
@@ -1002,7 +1002,7 @@ void State_Gameplay::update()
 			//	if (!passengersFrozen)
 			if (inEndBuffer)
 			{
-				specialPassengers[i].setScale(glm::vec3(1.2f));
+				specialPassengers[i].setScale(glm::vec3(0.70f));
 				specialPassengers[i].setRotation(glm::vec3(0.0f));
 				specialPassengers[i].setPositionY(2.0f);
 				specialPassengers[i].setState(PASSENGER_STATE::GROUNDED);
@@ -1244,30 +1244,30 @@ void State_Gameplay::update()
 	updateCrownedPlayer();
 	drawCrown();
 
-	//Reset the scene if 'r' is pressed or start is pressed on a button
-	if (DH::getKey('r') || controllers[0].checkButton(BUTTON_START) || controllers[1].checkButton(BUTTON_START) || controllers[2].checkButton(BUTTON_START) || controllers[3].checkButton(BUTTON_START))
-	{
-		AE::sounds()->stopAllChannels();
-		specialPassengers.clear();
-		passengers.clear();
+	////Reset the scene if 'r' is pressed or start is pressed on a button
+	//if (DH::getKey('r') || controllers[0].checkButton(BUTTON_START) || controllers[1].checkButton(BUTTON_START) || controllers[2].checkButton(BUTTON_START) || controllers[3].checkButton(BUTTON_START))
+	//{
+	//	AE::sounds()->stopAllChannels();
+	//	specialPassengers.clear();
+	//	passengers.clear();
 
-		//unload gameplay sounds
-		AE::sounds()->unLoadSound("./res/sound/star.wav");
-		AE::sounds()->unLoadSound("./res/sound/crash.wav");
-		AE::sounds()->unLoadSound("./res/sound/ding.wav");
-		AE::sounds()->unLoadSound("./res/sound/flies.wav");
-		AE::sounds()->unLoadSound("./res/sound/magnet.wav");
-		AE::sounds()->unLoadSound("./res/sound/car.wav");
-		AE::sounds()->unLoadSound("./res/sound/idle.wav");
-		AE::sounds()->unLoadSound("./res/sound/ambient.wav");
-		AE::sounds()->unLoadSound("./res/sound/tick-tock.wav");
-		AE::sounds()->unLoadSound("./res/sound/frozen.wav");
-		AE::sounds()->unLoadSound("./res/sound/bus_ignition.wav");
-		AE::sounds()->unLoadSound("./res/sound/suck.wav");
-		AE::sounds()->unLoadSound("./res/sound/honk.wav");
-		load();
-		inIntro = true;
-	}
+	//	//unload gameplay sounds
+	//	AE::sounds()->unLoadSound("./res/sound/star.wav");
+	//	AE::sounds()->unLoadSound("./res/sound/crash.wav");
+	//	AE::sounds()->unLoadSound("./res/sound/ding.wav");
+	//	AE::sounds()->unLoadSound("./res/sound/flies.wav");
+	//	AE::sounds()->unLoadSound("./res/sound/magnet.wav");
+	//	AE::sounds()->unLoadSound("./res/sound/car.wav");
+	//	AE::sounds()->unLoadSound("./res/sound/idle.wav");
+	//	AE::sounds()->unLoadSound("./res/sound/ambient.wav");
+	//	AE::sounds()->unLoadSound("./res/sound/tick-tock.wav");
+	//	AE::sounds()->unLoadSound("./res/sound/frozen.wav");
+	//	AE::sounds()->unLoadSound("./res/sound/bus_ignition.wav");
+	//	AE::sounds()->unLoadSound("./res/sound/suck.wav");
+	//	AE::sounds()->unLoadSound("./res/sound/honk.wav");
+	//	load();
+	//	inIntro = true;
+	//}
 
 	if (controllers[0].checkButton(BUTTON_LB) && controllers[0].checkButton(BUTTON_RB) && controllers[0].checkButton(BUTTON_A) && !pressedLastFrame)
 	{
@@ -1280,15 +1280,15 @@ void State_Gameplay::update()
 	}
 
 	//Turn on visual debug mode
-	if (DH::getKey('['))
-		DBG::debug()->setVisualDebugEnabled(true);
+	//if (DH::getKey('['))
+	//	DBG::debug()->setVisualDebugEnabled(true);
 
 	//Turn off visual debug mode
-	if (DH::getKey(']'))
-		DBG::debug()->setVisualDebugEnabled(false);
+	//if (DH::getKey(']'))
+	//	DBG::debug()->setVisualDebugEnabled(false);
 
 	//Draw debug text
-	DBG::debug()->displayDebugText(buses, DH::getDeltaTime());
+	//DBG::debug()->displayDebugText(buses, DH::getDeltaTime());
 
 	//Update the lighting
 	updateLighting();

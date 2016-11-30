@@ -171,8 +171,8 @@ void State_MainMenu::load()
 	glLoadIdentity();
 
 	//Enable visual debug mode
-	DBG::debug()->setDebugEnabled(true);
-	DBG::debug()->setVisualDebugEnabled(false);
+	//DBG::debug()->setDebugEnabled(true);
+	//DBG::debug()->setVisualDebugEnabled(false);
 
 	// ----- Set up the UI ------ ///
 	//Set up the menu options
