@@ -164,7 +164,7 @@ void State_Gameplay::load()
 	timesCarSummoned = 0;
 
 	carWarning = Sprite(TEX_CAR_WARNING, 1, 1);
-	carWarning.setScale(5.0f, 5.0f, 5.0f);
+	carWarning.setScale(10.0f, 10.0f, 10.0f);
 
 	//Init the clock
 	clock[0] = Sprite(TEX_CLOCK, 2, 1);
@@ -391,7 +391,7 @@ void State_Gameplay::load()
 	for (int i = 0; i < 4; i++)
 	{
 		Sprite temp = Sprite(TEX_POWERUP_ICON, 4, 1, cameraPos, glm::vec3(0.0f));
-		temp.setPositionY(5.0f);
+		temp.setPositionY(10.0f);
 		temp.setScale(8.0f, 8.0f, 8.0f);
 		temp.update(DH::deltaTime);
 		powerupIcons.push_back(temp);
@@ -812,7 +812,7 @@ void State_Gameplay::update()
 		drawBillboardUI();
 
 		//Draw the powerup icons
-		//drawPowerupIndicators();
+		drawPowerupIndicators();
 
 		//Draw the clock tower
 		AM::assets()->bindTexture(TEX_CLOCKTOWER);
@@ -1529,33 +1529,33 @@ void State_Gameplay::summonCar()
 		switch (spawnpoint)
 		{
 		case 0:
-			carWarning.setPosition(glm::vec3(-49.9f, 5.0f, 52.4f));
+			carWarning.setPosition(glm::vec3(-49.9f, 8.0f, 52.4f));
 			carWarning.setRotationY(90.0f);
 			break;
 		case 1:
-			carWarning.setPosition(glm::vec3(-49.9f, 5.0f, 2.4f));
+			carWarning.setPosition(glm::vec3(-49.9f, 8.0f, 2.4f));
 			carWarning.setRotationY(90.0f);
 			break;
 		case 2:
-			carWarning.setPosition(glm::vec3(-49.9f, 5.0f, -47.6f));
+			carWarning.setPosition(glm::vec3(-49.9f, 8.0f, -47.6f));
 			carWarning.setRotationY(90.0f);
 			break;
 		case 3:
-			carWarning.setPosition(glm::vec3(52.4f, 1.0f, 49.9f));
+			carWarning.setPosition(glm::vec3(52.4f, 8.0f, 49.9f));
 			carWarning.setRotationY(0.0f);
 			break;
 		case 4:
-			carWarning.setPosition(glm::vec3(2.4f, 1.0f, 49.9f));
+			carWarning.setPosition(glm::vec3(2.4f, 8.0f, 49.9f));
 			carWarning.setRotationY(0.0f);
 			break;
 		case 5:
-			carWarning.setPosition(glm::vec3(-47.6f, 1.0f, 49.9f));
+			carWarning.setPosition(glm::vec3(-47.6f, 8.0f, 49.9f));
 			carWarning.setRotationY(0.0f);
 			break;
 		}
 
 		carWarning.update(DH::deltaTime);
-		//carWarning.draw();
+		carWarning.draw();
 	}
 
 	//do warning stuff
@@ -2040,15 +2040,26 @@ void State_Gameplay::drawPowerupIndicators()
 {
 	for (int i = 0; i < 4; i++)
 	{
-		powerupIcons[i].setPosition(buses[i].getPosition());
-		powerupIcons[i].setPositionY(7.5f);
-		powerupIcons[i].draw();
-
-		/*if (buses[i].powerup != 0)
+		if (buses[i].powerup != no_powerup)
 		{
-			powerupIcons[i].setActiveFrame(buses[i].powerup - 1);
-			powerupIcons[i].update(DH::deltaTime);
+			switch (buses[i].powerup)
+			{
+			case freeze_buses:
+			case freeze_passengers:
+				powerupIcons[i].setActiveFrame(0);
+				break;
+			case star:
+				powerupIcons[i].setActiveFrame(1);
+				break;
+			case attractive_person:
+				powerupIcons[i].setActiveFrame(2);
+				break;
+			case smelly_dude:
+				powerupIcons[i].setActiveFrame(3);
+				break;
+			}
 			powerupIcons[i].draw();
-		}*/
+
+		}
 	}
 }
