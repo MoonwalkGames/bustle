@@ -453,7 +453,7 @@ void State_EndRound::update()
 
 		for (unsigned int i = 0; i < activePassengers.size(); i++)
 		{
-			activePassengers[i].update(DH::deltaTime);
+			activePassengers[i].update(DH::deltaTime, false);
 			activePassengers[i].draw();
 
 			if (activePassengers[i].getPosition().z > 45.0f)

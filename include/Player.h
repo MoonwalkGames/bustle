@@ -46,7 +46,7 @@ public:
 	bool attractive; //the attractive powerup, if this is true the passengers will seek to this bus
 
 private:
-	int points = 50;
+	int points = 25;
 	int stage = thirdStage;
 	bool inTheLead = false;
 	float busMovementSpeed = 35.0f;

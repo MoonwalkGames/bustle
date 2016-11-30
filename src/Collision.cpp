@@ -27,8 +27,6 @@ Collision CH::SPHEREvSPHERE(const Col_Sphere& a, const Col_Sphere& b)
 	glm::vec3 distanceVector = b.position - a.position;
 	float distanceVectorMagnitude = sqrt((distanceVector.x * distanceVector.x) + (distanceVector.z * distanceVector.z));
 
-
-
 	float deltaX = a.position.x - b.position.x;
 	float deltaXSquared = deltaX * deltaX;
 
@@ -145,6 +143,27 @@ Collision CollisionHandler::PLAYERvPASSENGER(const Player& a, const Passenger& b
 			res = Collision(true, glm::vec3(0));
 		}
 	}
+	return res;
+}
+
+Collision CollisionHandler::PLAYERvCAR(const Player& a, glm::vec3 carPos)
+{
+	Collision res(false, glm::vec3(0.0f));
+	
+		Col_Sphere aExtentSphere(a.getPosition(), busStageExtents[a.getStage()].x);
+		Col_Sphere carSphere = Col_Sphere(carPos, BUS_WIDTH);
+		if (SPHEREvSPHERE(aExtentSphere, carSphere))
+		{
+			Col_Traffic_Light aTrafficLight = Col_Traffic_Light(a.getStage(), a.getPosition(), a.getRotation(), busStageExtents[a.getStage()]);
+			for (int i = 0; i < aTrafficLight.bubbles.size(); i++)
+			{
+				if (SPHEREvSPHERE(carSphere, aTrafficLight.bubbles[i]))
+				{
+					res.status = true;
+					return res;
+				}
+			}
+		}
 	return res;
 }
 

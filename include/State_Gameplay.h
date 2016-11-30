@@ -114,6 +114,7 @@ private:
 	Kinematic car;
 	int timesCarSummoned;
 	bool passengersFrozen;
+	bool freezeBuses = false;
 	Mesh* crown;
 
 	Player buses[4];

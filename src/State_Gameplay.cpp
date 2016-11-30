@@ -500,63 +500,66 @@ void State_Gameplay::update()
 				controllers[i].getInputs();
 				if (!firstPerson)
 				{
-					//Need to rotate this by the rotation of the world VS the camera since up is actually up right(ish) (angle is 45)
-					glm::vec3 worldRotatedController = glm::rotate(glm::vec3(-controllers[i].lX, 0.0f, controllers[i].lY), DH::degToRad(-45.0f + rotation), glm::vec3(0.0f, 1.0f, 0.0f));
-
-					//Calculates the vector between the bus and the target
-					glm::vec3 desired = busTargets[i] - buses[i].getPosition();
-
-					//******restrain target movement from going too far away
-					if (!((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z) > 90.0f))
-						busTargets[i] += worldRotatedController;
-					//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-					if (busTargets[i].x > 55.0f)
-						busTargets[i].x = 55.0f;
-					else if (busTargets[i].x < -55.0f)
-						busTargets[i].x = -55.0f;
-					if (busTargets[i].z > 55.0f)
-						busTargets[i].z = 55.0f;
-					else if (busTargets[i].z < -55.0f)
-						busTargets[i].z = -55.0f;
-					//Set forward vector to face the target
-					glm::vec3 currentForwardVector = buses[i].getForwardVector();
-					desired = busTargets[i] - buses[i].getPosition(); //Calculates the new desired vector since we moved the target
-
-					if (controllers[i].lX != 0 && controllers[i].lY != 0 && (currentForwardVector != desired)) {
-						currentForwardVector = MathHelper::LERP(currentForwardVector, desired, DH::getDeltaTime() * buses[i].getTurningSpeed());
-					}
-					if (desired.x != 0.0f || desired.y != 0.0f || desired.z != 0.0f)
-						buses[i].setForwardVector(currentForwardVector);
-
-					// --- Move the bus --- //
-					//Check if the bus has reached the target. If so, zero out velocity. Only does this if no input on controller
-					if ((controllers[i].lX == 0 && controllers[i].lY == 0))
-						buses[i].setVelocity(0.0f, 0.0f, 0.0f);
-					else//Otherwise, move forward
+					//if (buses[i].powerup != freeze_buses)
 					{
-						float Maxspeed = (((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z)) / 90.0f);
-						if (Maxspeed > 1.0f)
-							Maxspeed = 1.0f;
-						buses[i].setVelocity(glm::normalize(buses[i].getForwardVector()) * (buses[i].getMovementSpeed()*Maxspeed));
-					}
-					//Draw the bus target
-					if (DBG::debug()->getVisualDebugEnabled())
-					{
-						if (i == 0)
-							glColor3f(1.0f, 0.0f, 0.0f);
-						else if (i == 1)
-							glColor3f(0.0f, 0.0f, 1.0f);
-						else if (i == 2)
-							glColor3f(0.0f, 1.0f, 0.0f);
-						else if (i == 3)
-							glColor3f(1.0f, 1.0f, 0.0f);
+						//Need to rotate this by the rotation of the world VS the camera since up is actually up right(ish) (angle is 45)
+						glm::vec3 worldRotatedController = glm::rotate(glm::vec3(-controllers[i].lX, 0.0f, controllers[i].lY), DH::degToRad(-45.0f + rotation), glm::vec3(0.0f, 1.0f, 0.0f));
 
-						glPointSize(10.0f);
-						glBegin(GL_POINTS);
-						glVertex3f(busTargets[i].x, 1.0f, busTargets[i].z);
-						glEnd();
+						//Calculates the vector between the bus and the target
+						glm::vec3 desired = busTargets[i] - buses[i].getPosition();
 
-						glColor3f(1.0f, 1.0f, 1.0f);
+						//******restrain target movement from going too far away
+						if (!((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z) > 90.0f))
+							busTargets[i] += worldRotatedController;
+						//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+						if (busTargets[i].x > 55.0f)
+							busTargets[i].x = 55.0f;
+						else if (busTargets[i].x < -55.0f)
+							busTargets[i].x = -55.0f;
+						if (busTargets[i].z > 55.0f)
+							busTargets[i].z = 55.0f;
+						else if (busTargets[i].z < -55.0f)
+							busTargets[i].z = -55.0f;
+						//Set forward vector to face the target
+						glm::vec3 currentForwardVector = buses[i].getForwardVector();
+						desired = busTargets[i] - buses[i].getPosition(); //Calculates the new desired vector since we moved the target
+
+						if (controllers[i].lX != 0 && controllers[i].lY != 0 && (currentForwardVector != desired)) {
+							currentForwardVector = MathHelper::LERP(currentForwardVector, desired, DH::getDeltaTime() * buses[i].getTurningSpeed());
+						}
+						if (desired.x != 0.0f || desired.y != 0.0f || desired.z != 0.0f)
+							buses[i].setForwardVector(currentForwardVector);
+
+						// --- Move the bus --- //
+						//Check if the bus has reached the target. If so, zero out velocity. Only does this if no input on controller
+						if ((controllers[i].lX == 0 && controllers[i].lY == 0))
+							buses[i].setVelocity(0.0f, 0.0f, 0.0f);
+						else//Otherwise, move forward
+						{
+							float Maxspeed = (((desired.x * desired.x) + (desired.y * desired.y) + (desired.z * desired.z)) / 90.0f);
+							if (Maxspeed > 1.0f)
+								Maxspeed = 1.0f;
+							buses[i].setVelocity(glm::normalize(buses[i].getForwardVector()) * (buses[i].getMovementSpeed()*Maxspeed));
+						}
+						//Draw the bus target
+						if (DBG::debug()->getVisualDebugEnabled())
+						{
+							if (i == 0)
+								glColor3f(1.0f, 0.0f, 0.0f);
+							else if (i == 1)
+								glColor3f(0.0f, 0.0f, 1.0f);
+							else if (i == 2)
+								glColor3f(0.0f, 1.0f, 0.0f);
+							else if (i == 3)
+								glColor3f(1.0f, 1.0f, 0.0f);
+
+							glPointSize(10.0f);
+							glBegin(GL_POINTS);
+							glVertex3f(busTargets[i].x, 1.0f, busTargets[i].z);
+							glEnd();
+
+							glColor3f(1.0f, 1.0f, 1.0f);
+						}
 					}
 				}
 				else
@@ -933,7 +936,7 @@ void State_Gameplay::update()
 
 			//avoidence behaviour
 			//passengers[i].addImpulse(SteeringBehaviour::avoidence(passengers, i, 3.0f, 3.0f));
-			passengers[i].update(DH::getDeltaTime());
+			passengers[i].update(DH::getDeltaTime(), passengersFrozen);
 			
 			glDisable(GL_LIGHTING);
 			passengers[i].draw();
@@ -967,15 +970,17 @@ void State_Gameplay::update()
 
 			for (int j = 0; j < 4; j++)
 			{
-				if (buses[j].powerup == attractive_person)
-					specialPassengers[i].addImpulse(SteeringBehaviour::seek(specialPassengers[i].getPosition(), buses[j].getPosition(), 350.0f));
+				//if (buses[j].powerup == attractive_person)
+					//specialPassengers[i].addImpulse(SteeringBehaviour::seek(specialPassengers[i].getPosition(), buses[j].getPosition(), 350.0f));
 				if (buses[j].powerup == freeze_passengers)
 					passengersFrozen = true;
 			}
-			specialPassengers[i].addImpulse(SteeringBehaviour::wander(specialPassengers[i], 50.0f, 500.0f));
+
+			if (!passengersFrozen)
+				specialPassengers[i].addImpulse(SteeringBehaviour::wander(specialPassengers[i], 50.0f, 500.0f));
 
 			//	if (!passengersFrozen)
-			specialPassengers[i].update(DH::getDeltaTime());
+			specialPassengers[i].update(DH::getDeltaTime(), passengersFrozen);
 			specialPassengers[i].draw();
 
 			if (specialPassengers[i].getPosition().x > 50.0f)
@@ -1021,7 +1026,7 @@ void State_Gameplay::update()
 					//Star trumps all other powerups, it means that the player with the star always wins the collision.
 					if (res)
 					{
-						if (lastCollisionSound == 0.0f || lastCollisionSound - timeLeft > 1.0f)
+						if (lastCollisionSound == 0.0f || lastCollisionSound - timeLeft > 0.5f)
 						{
 							AE::sounds()->playSound("./res/sound/crash.wav", glm::vec3(0.0f), 0.25f);
 							lastCollisionSound = timeLeft;
@@ -1161,9 +1166,11 @@ void State_Gameplay::update()
 
 					if (!specialPassengers[j].getAlive())
 					{
-						buses[i].powerup = specialPassengers[j].powerup;
-						buses[i].timePowerupStarted = timeLeft;
-						switch (buses[i].powerup)
+						int target = specialPassengers[j].getBusTargetNumber();
+						buses[target].powerup = specialPassengers[j].powerup;
+						buses[target].timePowerupStarted = timeLeft;
+
+						switch (buses[target].powerup)
 						{
 						case smelly_dude:
 							AE::sounds()->playSound("./res/sound/flies.wav", glm::vec3(0.0f), 1.0f);
@@ -1189,6 +1196,20 @@ void State_Gameplay::update()
 		}
 	}
 	
+	if (carOnScreen)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			//if (!playerActive[i])
+			//{
+			//	continue;
+			//}
+			if (CollisionHandler::PLAYERvCAR(buses[i], car.getPosition()).status)
+				launchPassengers(i, 2);
+
+		}
+	}
+
 	//update powerup stuff
 	updatePowerups();
 
@@ -1378,7 +1399,7 @@ void State_Gameplay::updatePowerups()
 	static float freeze_busesDuration = 1.5f;
 	static float freeze_passengersDuration = 3.0f;
 	static float starDuration = 3.0f;
-	bool smelly = false, attract = false, freeze = false, starPresent = false;
+	bool smelly = false, attract = false, freezePassengers = false, starPresent = false, freeBuses = false;
 	tick += 0.1f;
 
 	for (int i = 0; i < 4; i++)
@@ -1398,12 +1419,20 @@ void State_Gameplay::updatePowerups()
 			if (buses[i].timePowerupStarted - timeLeft > freeze_busesDuration)
 				buses[i].powerup = no_powerup;
 			else
-				freeze = true;
+				freezeBuses = true;
 		else if (buses[i].powerup == star)
 			if (buses[i].timePowerupStarted - timeLeft > starDuration)
+			{
 				buses[i].powerup = no_powerup;
+				freeBuses = false;
+			}
 			else
 				starPresent = true;
+		else if (buses[i].powerup == freeze_passengers)
+			if (buses[i].timePowerupStarted - timeLeft > freeze_passengersDuration)
+				buses[i].powerup = no_powerup;
+			else
+				freezePassengers = true;
 
 		if (buses[i].powerup == smelly_dude)
 		{
@@ -1419,7 +1448,7 @@ void State_Gameplay::updatePowerups()
 			AE::sounds()->unLoadSound("./res/sound/flies.wav");
 		if (!attract)
 			AE::sounds()->unLoadSound("./res/sound/magnet.wav");
-		if (!freeze)
+		if (!freezePassengers)
 			AE::sounds()->unLoadSound("./res/sound/frozen.wav");
 		if (!starPresent)
 			AE::sounds()->unLoadSound("./res/sound/star.wav");
@@ -1456,17 +1485,58 @@ void State_Gameplay::excecute()
 
 void State_Gameplay::summonCar()
 {
+	static int spawnpoint = MathHelper::randomInt(0, 5);
 	carLaunched = false; //car just spawned, haven't launched passengers yet
 	if (!warning && !carOnScreen)
 	{
 		timewarning = timeLeft;
 		warning = true;
+		spawnpoint = MathHelper::randomInt(0, 5);
 	}
 	if (!soundPlayed)
 	{
 		AE::sounds()->playSound("./res/sound/car.wav", glm::vec3(0.0f), 0.25f);
 		soundPlayed = true;
 	}
+
+	if (warning)
+	{
+		//draw warning sprite at
+		switch (spawnpoint)
+		{
+		case 0:
+			car.setPosition(glm::vec3(-49.9f, 1.0f, 52.4f));
+			car.setRotationY(0.0f);
+			car.setVelocity(glm::vec3(75.0f, 0.0f, 0.0f));
+			break;
+		case 1:
+			car.setPosition(glm::vec3(-49.9f, 1.0f, 2.4f));
+			car.setRotationY(0.0f);
+			car.setVelocity(glm::vec3(75.0f, 0.0f, 0.0f));
+			break;
+		case 2:
+			car.setPosition(glm::vec3(-49.9f, 1.0f, -47.6f));
+			car.setRotationY(0.0f);
+			car.setVelocity(glm::vec3(75.0f, 0.0f, 0.0f));
+			break;
+		case 3:
+			car.setPosition(glm::vec3(52.4f, 1.0f, 49.9f));
+			car.setRotationY(90.0f);
+			car.setVelocity(glm::vec3(0.0f, 0.0f, -75.0f));
+			break;
+		case 4:
+			car.setPosition(glm::vec3(2.4f, 1.0f, 49.9f));
+			car.setRotationY(90.0f);
+			car.setVelocity(glm::vec3(0.0f, 0.0f, -75.0f));
+			break;
+		case 5:
+			car.setPosition(glm::vec3(-47.6f, 1.0f, 49.9f));
+			car.setRotationY(90.0f);
+			car.setVelocity(glm::vec3(0.0f, 0.0f, -75.0f));
+			break;
+		}
+	}
+
 	//do warning stuff
 	if (timewarning - timeLeft > 1.5f)
 		warning = false;
@@ -1480,9 +1550,8 @@ void State_Gameplay::summonCar()
 		//car's on screen, so we should update & draw it
 		carOnScreen = true;
 
-
 		//setting the position, rotation & velocity randomly between 6 possibilities
-		switch (MathHelper::randomInt(0, 5))
+		switch (spawnpoint)
 		{
 		case 0:
 			car.setPosition(glm::vec3(-49.9f, 1.0f, 52.4f));
@@ -1690,7 +1759,7 @@ void State_Gameplay::launchSpecialPassengers()
 	glm::vec3 startPosition = car.getPosition();
 	glm::vec3 startRotation;
 	glm::vec3 startScale;
-	int amount = MathHelper::randomInt(1, 3);
+	int amount = MathHelper::randomInt(1, 2);
 	float launchSpeed = 25.0f;
 	glm::vec3 launchVel;
 
