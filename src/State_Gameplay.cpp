@@ -5,6 +5,8 @@
 #include "Collision.h"
 #include "SteeringBehaviors.h"
 #include "DebugManager.h"
+#include "AudioEngine.h"
+#include "GameManager.h"
 
 void State_Gameplay::toggleDebugDrawing()
 {

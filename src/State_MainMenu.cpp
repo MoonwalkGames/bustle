@@ -5,6 +5,9 @@
 #include "Collision.h"
 #include "SteeringBehaviors.h"
 #include "DebugManager.h"
+#include "AudioEngine.h"
+#include "GameManager.h"
+
 void State_MainMenu::load()
 {
 	//Seed the random number generator
@@ -218,7 +221,6 @@ void State_MainMenu::update()
 	if (DH::getKey('g'))
 		playButton.addToRotation(0.0f, 5.0f, 0.0f);
 
-	printf("%f, %f, %f\n", menuCameraPos.x, menuCameraPos.y, menuCameraPos.z);
 	//Set up the camera
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();

@@ -9,12 +9,15 @@
 #include <stdlib.h>
 
 // 3rd Party Libraries
+#include <GL\glew.h>
 #include <GLUT\glut.h>
 
 //Our libraries
 #include "DisplayHandler.h"
 #include "AssetManager.h"
 #include "Mesh.h"
+#include "AudioEngine.h"
+#include "GameManager.h"
 
 int main(int argc, char **argv)
 {
@@ -23,6 +26,16 @@ int main(int argc, char **argv)
 	glutInitWindowSize(DisplayHandler::getWidth(), DisplayHandler::getHeight());
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);
 	glutCreateWindow("Bustle Alpha 2.0");
+
+	// Initialize OpenGL Extention Wrangler
+	GLenum res = glewInit();
+	if (res != GLEW_OK)
+		std::cerr << "Glew failed to initialize!" << std::endl;
+
+	// check OpenGL version
+	printf("Detecting OpenGL version... ");
+	const unsigned char *version = glGetString(GL_VERSION);
+	printf("Using OpenGL version %s\n", version);
 
 	//Setup function call backs
 	glutDisplayFunc(DisplayHandler::update);

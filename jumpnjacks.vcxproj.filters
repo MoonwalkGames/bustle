@@ -81,6 +81,9 @@
     <ClCompile Include="src\State_Tutorial.cpp">
       <Filter>game states</Filter>
     </ClCompile>
+    <ClCompile Include="src\Shader.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Mesh.h">
@@ -154,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="include\State_Tutorial.h">
       <Filter>game states</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Shader.h">
+      <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

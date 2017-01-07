@@ -1,7 +1,8 @@
+#include <string>
 #include <stdlib.h>
-#include "GLUT\glut.h"
 #include "IL\ilut.h"
-#include "GameManager.h"
+//#include "Shader.h"
+using std::string;
 
 #ifndef DISPLAYHANDLER_H
 #define DISPLAYHANDLER_H
@@ -48,6 +49,7 @@ struct DisplayHandler
 	static int mousePosY; //The mouse cursor's Y position
 	static float lightingMultiplier; //How dark everything is
 	static bool lightingEnabled; //Is lighting enabled
+	//static Shader* activeShader; //The active shader program
 
 	static bool keyDown[256]; //Array of all of the keys, holding if they are down that frame or not
 };

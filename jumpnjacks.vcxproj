@@ -57,7 +57,7 @@
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)\lib\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glut32.lib;DevIL.lib;xinput9_1_0.lib;ILU.lib;ILUT.lib;fmod_vc.lib;fmodstudio_vc.lib;fsbank_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glut32.lib;DevIL.lib;xinput9_1_0.lib;glew32.lib;ILU.lib;ILUT.lib;fmod_vc.lib;fmodstudio_vc.lib;fsbank_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -74,7 +74,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(SolutionDir)\lib\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glut32.lib;DevIL.lib;xinput9_1_0.lib;ILU.lib;ILUT.lib;fmod_vc.lib;fmodstudio_vc.lib;fsbank_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glut32.lib;DevIL.lib;xinput9_1_0.lib;glew32.lib;ILU.lib;ILUT.lib;fmod_vc.lib;fmodstudio_vc.lib;fsbank_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -94,6 +94,7 @@
     <ClCompile Include="src\Particle.cpp" />
     <ClCompile Include="src\Passenger.cpp" />
     <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\State_EndRound.cpp" />
     <ClCompile Include="src\State_Gameplay.cpp" />
@@ -119,6 +120,7 @@
     <ClInclude Include="include\Particle.h" />
     <ClInclude Include="include\Passenger.h" />
     <ClInclude Include="include\Player.h" />
+    <ClInclude Include="include\Shader.h" />
     <ClInclude Include="include\Sprite.h" />
     <ClInclude Include="include\State_EndRound.h" />
     <ClInclude Include="include\State_Gameplay.h" />

@@ -5,6 +5,8 @@
 #include <istream>
 #include "MathHelper.h"
 #include "glm\gtx\rotate_vector.hpp"
+#include "AudioEngine.h"
+#include "GameManager.h"
 
 void State_EndRound::load()
 {

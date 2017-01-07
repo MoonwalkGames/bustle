@@ -1,3 +1,4 @@
+#include "GameManager.h"
 #include "DisplayHandler.h"
 
 int DisplayHandler::windowWidth = 1600;
@@ -9,6 +10,7 @@ int DisplayHandler::mousePosY = 0;
 bool DisplayHandler::keyDown[256];
 float DisplayHandler::lightingMultiplier = 1.0f;
 bool DisplayHandler::lightingEnabled = false;
+//Shader* DisplayHandler::activeShader = new Shader("./shaders/passThru_v.glsl", "./shaders/passThru_f.glsl");
 
 //Sets up all of the OpenGL states
 void DisplayHandler::init()

@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <iostream>
+#include "GameState.h"
 #include "State_Gameplay.h"
 #include "State_EndRound.h"
 #include "State_MainMenu.h"
