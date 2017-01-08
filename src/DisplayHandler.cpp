@@ -35,7 +35,7 @@ void DisplayHandler::init()
 
 	//Enable the shader program
 	activeShader = loadShaders("./shaders/passThru_v.glsl", "./shaders/passThru_f.glsl");
-	glUseProgram(activeShader);
+	//glUseProgram(activeShader); //Now called in the loading state so that our loading screen shows up
 	viewMatrixLocation = glGetUniformLocation(activeShader, "view");
 	projectionMatrixLocation = glGetUniformLocation(activeShader, "projection");
 

@@ -23,12 +23,8 @@ uniform float Shininess;
 out vec4 lightColor; //Final sum of the light components
 out vec2 UV; //The UV coord
 
-out vec4 debugColor;
-
 void main()
 {
-	debugColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
-
 	//Create the combined model view matrix
 	mat4 model_view = view * model;
 

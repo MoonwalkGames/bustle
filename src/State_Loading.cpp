@@ -2,6 +2,7 @@
 #include "AssetManager.h"
 #include "GameManager.h"
 #include "Texture2D.h"
+#include "DisplayHandler.h"
 
 void State_Loading::update()
 {
@@ -28,5 +29,9 @@ void State_Loading::update()
 	glutSwapBuffers();
 
 	AM::assets()->loadAssets();
+
+	//Start using modern open gl
+	glUseProgram(DH::activeShader);
+
 	GM::game()->setActiveState(STATE_MAINMENU);
 }

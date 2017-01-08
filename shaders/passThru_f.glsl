@@ -4,8 +4,6 @@
 in vec2 UV;
 in vec4 lightColor;
 
-in vec4 debugColor;
-
 //The texture sampler
 uniform sampler2D myTextureSampler;
 
@@ -19,7 +17,7 @@ void main()
 	//fColor = lightColor * texture2D(myTextureSampler, UV).rgba;
 	//fColor = lightColor * vec4(1.0f, 0.0f, 0.0f, 1.0f);
 
-	fColor = debugColor * texture2D(myTextureSampler, UV).rgba;
+	fColor = texture2D(myTextureSampler, UV).rgba;
 }
 
 ///*
