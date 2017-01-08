@@ -123,16 +123,19 @@ void Passenger::draw()
 	if (DBG::debug()->getVisualDebugEnabled())
 		drawDebug();
 
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(glm::value_ptr(localToWorld));
+	/*glMatrixMode(GL_MODELVIEW);
+	glLoadMatrixf(glm::value_ptr(localToWorld));*/
+
+	//Load the model matrix
+	glUniformMatrix4fv(modelMatrixPosition, 1, GL_FALSE, &localToWorld[0][0]);
 
 	//Draws the current mesh
 	if (currentMeshNumber == 0)
-		meshA_Data->draw(true);
+		meshA_Data->draw();
 	else if (currentMeshNumber == 1)
-		meshB_Data->draw(true);
+		meshB_Data->draw();
 	else if (currentMeshNumber == 2)
-		meshC_Data->draw(true);
+		meshC_Data->draw();
 }
 
 void Passenger::drawDebug()

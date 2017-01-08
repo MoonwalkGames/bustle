@@ -192,8 +192,6 @@ Polymorphic update function
 */
 void Kinematic::update(float dt)
 {
-	
-
 	//Need to be able to reset the acceleration at the end of the frame, back to only the constant accels, without impulse
 	glm::vec3 constantAcceleration = acceleration;
 
