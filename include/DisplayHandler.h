@@ -1,7 +1,8 @@
 #include <string>
 #include <stdlib.h>
 #include "IL\ilut.h"
-//#include "Shader.h"
+#include "loadShader.h"
+
 using std::string;
 
 #ifndef DISPLAYHANDLER_H
@@ -49,7 +50,11 @@ struct DisplayHandler
 	static int mousePosY; //The mouse cursor's Y position
 	static float lightingMultiplier; //How dark everything is
 	static bool lightingEnabled; //Is lighting enabled
-	//static Shader* activeShader; //The active shader program
+
+	//Modern OpenGL Stuff
+	static GLuint activeShader; //The active shader program
+	static GLuint viewMatrixLocation; //The location of the view matrix in the shader
+	static GLuint projectionMatrixLocation; //The location of the projection matrix in the shader
 
 	static bool keyDown[256]; //Array of all of the keys, holding if they are down that frame or not
 };

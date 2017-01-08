@@ -221,15 +221,24 @@ void State_MainMenu::update()
 	if (DH::getKey('g'))
 		playButton.addToRotation(0.0f, 5.0f, 0.0f);
 
-	//Set up the camera
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	//glOrtho(-60.0f, 60.0f, -60.0f, 60.0f, 0.1f, 1000.0f);
-	
-	//glm::vec3(54.0f, 25.0f, 60.0f); is starting point, end point should be (-54.0f, 25.0f, -60.0f)
+	// --- Old OpenGL - Set up the camera --- //
+	//glMatrixMode(GL_PROJECTION);
+	//glLoadIdentity();
+	////glOrtho(-60.0f, 60.0f, -60.0f, 60.0f, 0.1f, 1000.0f);
+	//
+	//glm::vec3(54.0f, 25.0f, 60.0f); //is starting point, end point should be (-54.0f, 25.0f, -60.0f)
 
-	gluPerspective(75.0f, DH::getAspectRatio(), 0.1f, 10000.0f);
-	gluLookAt(menuCameraPos.x, menuCameraPos.y, menuCameraPos.z, 0, 1, 0, 0, 1, 0);
+	//gluPerspective(75.0f, DH::getAspectRatio(), 0.1f, 10000.0f);
+	//gluLookAt(menuCameraPos.x, menuCameraPos.y, menuCameraPos.z, 0, 1, 0, 0, 1, 0);
+
+	// --- Modern OpenGL Camera Setup --- //
+	viewMatrix = glm::lookAt(menuCameraPos, glm::vec3(0, 1, 0), glm::vec3(0, 1, 0));
+	projectionMatrix = glm::perspective(70.0f, DH::getAspectRatio(), 0.1f, 10000.0f);
+
+	glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &viewMatrix[0][0]);
+	glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, &projectionMatrix[0][0]);
+
+	// --- Rotate the camera --- //
 	menuCameraPos = glm::rotate(menuCameraPos, amount, glm::vec3(0, 1, 0));
 
 	if ((menuCameraPos.x <= -55.0f && menuCameraPos.z >= -70.0f && ccw) || (menuCameraPos.x <= 59.0f && menuCameraPos.z >= 50.0f && !ccw))

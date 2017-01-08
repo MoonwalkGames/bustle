@@ -139,10 +139,17 @@ void State_Tutorial::update()
 	startIndicator.update(DH::deltaTime);
 
 	//Set up the camera
-	glMatrixMode(GL_PROJECTION);
+	/*glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(-60.0f * DH::getOrthoStretch(), 60.0f * DH::getOrthoStretch(), -60.0f, 60.0f, -5.0f, 7000.0f);
-	gluLookAt(68.0f, 70.0f, -68.0f, -25, 0, 25, 0, 1, 0);
+	gluLookAt(68.0f, 70.0f, -68.0f, -25, 0, 25, 0, 1, 0);*/
+
+	// --- Modern OpenGL Camera Setup --- //
+	viewMatrix = glm::lookAt(glm::vec3(68.0f, 70.0f, -68.0f), glm::vec3(-25, 0, 25), glm::vec3(0, 1, 0));
+	projectionMatrix = glm::ortho(-60.0f * DH::getOrthoStretch(), 60.0f * DH::getOrthoStretch(), -60.0f, 60.0f, -5.0f, 7000.0f);
+
+	glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &viewMatrix[0][0]);
+	glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, &projectionMatrix[0][0]);
 
 	// ----- Draw the static level objects ----- //
 	AM::assets()->bindTexture(TEX_SKYBOX);

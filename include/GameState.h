@@ -7,6 +7,7 @@
 #include <stdlib.h> //Weird thing where stdlib HAS to be included and HAS to be above glut.h due to glut redefining exit in a weird way
 #include <GL\glew.h>
 #include <GLUT\glut.h>
+#include "glm\glm.hpp"
 #include "glm/gtx/string_cast.hpp"
 
 using namespace std::chrono;
@@ -49,6 +50,14 @@ private:
 	int stateNumber; //Essentially the ID of the game state
 	high_resolution_clock::time_point timeOfStateStart; //The time in seconds of when this state was loaded as a float
 	static int numStates; //A static int that is incremented every time a new state is created in order to keep track of how many states are loaded
+
+protected:
+	//Modern OpenGL
+	glm::mat4 viewMatrix;
+	glm::mat4 projectionMatrix;
+
+	GLuint viewMatrixLocation;
+	GLuint projectionMatrixLocation;
 };
 
 #endif

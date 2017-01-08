@@ -11,6 +11,13 @@ GameState::GameState()
 	stateNumber = numStates;
 	numStates++;
 	timeOfStateStart = high_resolution_clock::now();
+
+	//Modern OpenGL
+	viewMatrix = glm::mat4(1.0f);
+	projectionMatrix = glm::mat4(1.0f);
+	
+	viewMatrixLocation = DH::viewMatrixLocation;
+	projectionMatrixLocation = DH::projectionMatrixLocation;
 }
 
 //Returns the state ID

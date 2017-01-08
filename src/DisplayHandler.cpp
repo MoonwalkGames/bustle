@@ -10,7 +10,9 @@ int DisplayHandler::mousePosY = 0;
 bool DisplayHandler::keyDown[256];
 float DisplayHandler::lightingMultiplier = 1.0f;
 bool DisplayHandler::lightingEnabled = false;
-//Shader* DisplayHandler::activeShader = new Shader("./shaders/passThru_v.glsl", "./shaders/passThru_f.glsl");
+GLuint DisplayHandler::activeShader = 0;
+GLuint DisplayHandler::viewMatrixLocation = 0;
+GLuint DisplayHandler::projectionMatrixLocation = 0;
 
 //Sets up all of the OpenGL states
 void DisplayHandler::init()
@@ -30,6 +32,15 @@ void DisplayHandler::init()
 	ilInit();
 	iluInit();
 	ilutRenderer(ILUT_OPENGL);
+
+	//Enable the shader program
+	activeShader = loadShaders("./shaders/passThru_v.glsl", "./shaders/passThru_f.glsl");
+	glUseProgram(activeShader);
+	viewMatrixLocation = glGetUniformLocation(activeShader, "view");
+	projectionMatrixLocation = glGetUniformLocation(activeShader, "projection");
+
+	//Set up the texture sampler
+	glUniform1i(glGetUniformLocation(activeShader, "myTextureSampler"), 0);
 }
 
 //The draw function

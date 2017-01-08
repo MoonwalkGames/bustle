@@ -10,6 +10,9 @@
     <Filter Include="game states">
       <UniqueIdentifier>{3969c482-9480-4f04-86a9-911b646696be}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{50693ad3-fc49-4044-8cdb-6f16fba6b20b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -80,9 +83,6 @@
     </ClCompile>
     <ClCompile Include="src\State_Tutorial.cpp">
       <Filter>game states</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shader.cpp">
-      <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -158,8 +158,13 @@
     <ClInclude Include="include\State_Tutorial.h">
       <Filter>game states</Filter>
     </ClInclude>
-    <ClInclude Include="include\Shader.h">
-      <Filter>headers</Filter>
-    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\passThru_f.glsl">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shaders\passThru_v.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

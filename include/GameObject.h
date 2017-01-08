@@ -94,5 +94,8 @@ protected:
 	//Forward kinematics
 	std::vector<GameObject*> children;
 	bool hasParent;
+
+	//Modern OpenGL
+	GLuint modelMatrixPosition;
 };
 #endif

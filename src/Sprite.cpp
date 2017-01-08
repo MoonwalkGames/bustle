@@ -103,6 +103,8 @@ void Sprite::update(float dt)
 
 void Sprite::draw()
 {
+	glUseProgram(NULL);
+
 	//Passes the matrix to OpenGL which automatically applies the transformations
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(glm::value_ptr(localToWorld));
@@ -137,6 +139,8 @@ void Sprite::draw()
 		debugDraw();
 
 	glLoadIdentity();
+
+	glUseProgram(DH::activeShader);
 }
 
 void Sprite::debugDraw()

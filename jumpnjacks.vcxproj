@@ -94,7 +94,6 @@
     <ClCompile Include="src\Particle.cpp" />
     <ClCompile Include="src\Passenger.cpp" />
     <ClCompile Include="src\Player.cpp" />
-    <ClCompile Include="src\Shader.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\State_EndRound.cpp" />
     <ClCompile Include="src\State_Gameplay.cpp" />
@@ -120,7 +119,6 @@
     <ClInclude Include="include\Particle.h" />
     <ClInclude Include="include\Passenger.h" />
     <ClInclude Include="include\Player.h" />
-    <ClInclude Include="include\Shader.h" />
     <ClInclude Include="include\Sprite.h" />
     <ClInclude Include="include\State_EndRound.h" />
     <ClInclude Include="include\State_Gameplay.h" />
@@ -129,6 +127,10 @@
     <ClInclude Include="include\SteeringBehaviors.h" />
     <ClInclude Include="include\Texture2D.h" />
     <ClInclude Include="src\State_Loading.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\passThru_f.glsl" />
+    <None Include="shaders\passThru_v.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

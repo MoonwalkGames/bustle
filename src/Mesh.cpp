@@ -1,12 +1,22 @@
 #include "Mesh.h"
+#include "DisplayHandler.h"
+
 Mesh::Mesh()
 {
 	numFaces = 0;
+	shader = DH::activeShader;
+	loc_Position = 0;
+	loc_Normal = 0;
+	loc_UV = 0;
 }
 
 Mesh::Mesh(const string& fileName)
 {
 	numFaces = 1;
+	shader = DH::activeShader;
+	loc_Position = 0;
+	loc_Normal = 0;
+	loc_UV = 0;
 
 	loadOBJ(fileName);
 }
@@ -152,6 +162,8 @@ void Mesh::loadOBJ(const string& fileName)
 		faces.push_back(newFace);
 	}
 	//orderVertices();
+
+	generateVBO();
 }
 
 void Mesh::output() const
@@ -196,4 +208,85 @@ void Mesh::orderVertices()
 			faces[i].vertices[2] = temp;
 		}
 	}
+}
+
+//Sets up the VBO for modern openGL
+void Mesh::generateVBO()
+{
+	std::vector<glm::vec4> vertexPositions;
+	std::vector<glm::vec3> vertexNormals;
+	std::vector<glm::vec2> vertexUVs;
+
+	for (unsigned int i = 0; i < faces.size(); i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			vertexPositions.push_back(glm::vec4(faces[i].vertices[j].position, 1.0f));
+			vertexNormals.push_back(faces[i].vertices[j].normal);
+			vertexUVs.push_back(faces[i].vertices[j].uvCoord);
+		}
+	}
+
+	//Save the number of vertices
+	numVertices = faces.size() * 3;
+
+	//Generate the VBO id
+	glGenBuffers(1, &vbo);
+
+	//Find the attributes in the shader
+	loc_Position = glGetAttribLocation(shader, "vPosition");
+	loc_Normal = glGetAttribLocation(shader, "vNormal");
+	loc_UV = glGetAttribLocation(shader, "vUV");
+
+	//Calculate the offsets within the VBO for the attrib pointers
+	normalOffset = (sizeof(glm::vec4) * vertexPositions.size());
+	uvOffset = (sizeof(glm::vec4) * vertexPositions.size()) + (sizeof(glm::vec3) * vertexNormals.size());
+
+	// --- Create the VBO --- //
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	{
+		//Allocate all of the memory for the entire buffer
+		glBufferData(GL_ARRAY_BUFFER, (sizeof(glm::vec4) * vertexPositions.size()) + (sizeof(glm::vec3) * vertexNormals.size()) + (sizeof(glm::vec2) * vertexUVs.size()), NULL, GL_STATIC_DRAW);
+
+		/* ----- Position Data ----- */
+		//Assign the vertex data positions to the buffer
+		glBufferSubData(GL_ARRAY_BUFFER, 0, (sizeof(glm::vec4) * vertexPositions.size()), vertexPositions.data());
+
+		/* ----- Normal Data ----- */
+		//Assign the vertex normal information to the buffer
+		glBufferSubData(GL_ARRAY_BUFFER, (sizeof(glm::vec4) * vertexPositions.size()), (sizeof(glm::vec3) * vertexNormals.size()), vertexNormals.data());
+
+		/* ----- UV Data ----- */
+		//Assign the vertex UV data to the buffer
+		glBufferSubData(GL_ARRAY_BUFFER, (sizeof(glm::vec4) * vertexPositions.size()) + (sizeof(glm::vec3) * vertexNormals.size()), (sizeof(glm::vec2) * vertexUVs.size()), vertexUVs.data());
+
+		//Create and enable the position attrib array
+		glEnableVertexAttribArray(loc_Position);
+		glVertexAttribPointer(loc_Position, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(0));
+
+		//Create and enable the normal attrib array
+		glEnableVertexAttribArray(loc_Normal);
+		glVertexAttribPointer(loc_Normal, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(normalOffset));
+
+		//Create and enable the UV attrib array
+		glEnableVertexAttribArray(loc_UV);
+		glVertexAttribPointer(loc_UV, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(uvOffset));
+	}
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+//Draws the mesh using modern openGL
+void Mesh::draw() const
+{
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	{
+		//Set up the vertex attrib pointers so the correct data is used in the shaders
+		glVertexAttribPointer(loc_Position, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(0));
+		glVertexAttribPointer(loc_Normal, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(normalOffset));
+		glVertexAttribPointer(loc_UV, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)(uvOffset));
+
+		//Draw the data using the shader
+		glDrawArrays(GL_TRIANGLES, 0, numVertices);
+	}
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }

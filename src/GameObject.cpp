@@ -21,6 +21,9 @@ GameObject::GameObject()
 
 	//Forward Kinematics
 	hasParent = false;
+
+	//Modern OpenGL
+	modelMatrixPosition = glGetUniformLocation(DH::activeShader, "model");
 }
 
 GameObject::GameObject(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl)
@@ -37,6 +40,9 @@ GameObject::GameObject(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl)
 
 	//Forward Kinematics
 	hasParent = false;
+
+	//Modern OpenGL
+	modelMatrixPosition = glGetUniformLocation(DH::activeShader, "model");
 }
 
 GameObject::GameObject(MESH_NAME meshName, TEXTURE_NAME texName)
@@ -52,6 +58,9 @@ GameObject::GameObject(MESH_NAME meshName, TEXTURE_NAME texName)
 
 	//Forward Kinematics
 	hasParent = false;
+
+	//Modern OpenGL
+	modelMatrixPosition = glGetUniformLocation(DH::activeShader, "model");
 }
 
 GameObject::GameObject(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, MESH_NAME meshName, TEXTURE_NAME texName)
@@ -68,6 +77,9 @@ GameObject::GameObject(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, MESH_NAME me
 	
 	//Forward Kinematics
 	hasParent = false;
+
+	//Modern OpenGL
+	modelMatrixPosition = glGetUniformLocation(DH::activeShader, "model");
 }
 
 GameObject::~GameObject()
@@ -285,7 +297,6 @@ void GameObject::flee(glm::vec3 target, float movementSpeed, float turnSpeed) {
 //Update function that properly handles positioning the game object and also drawing the model
 void GameObject::update(float dt)
 {
-
 	//Create the scaling matrix
 	glm::mat4 scaleMatrix = glm::scale(scale);
 
@@ -304,41 +315,46 @@ void GameObject::update(float dt)
 
 void GameObject::draw()
 {
-	//Passes the matrix to OpenGL which automatically applies the transformations
-	glMatrixMode(GL_MODELVIEW);
-	glLoadMatrixf(glm::value_ptr(localToWorld));
+	/* MODERN OPEN GL METHOD */
+	glUniformMatrix4fv(modelMatrixPosition, 1, GL_FALSE, &localToWorld[0][0]);
+	mesh->draw();
 
-	//Checks if there is a texture assigned before trying to bind it, otherwise temporarily disables textures so it renders with colours
-	/*if (texture != 0)
-		texture->bind();
-	else
-	{
-		glDisable(GL_TEXTURE_2D);
-		glColor4f(colour.x, colour.y, colour.z, colour.w);
-	}*/
-		
-	//Checks if there is a mesh assigned before tyring to draw it
-	glColor4f(colour.x * DH::lightingMultiplier, colour.y * DH::lightingMultiplier, colour.z * DH::lightingMultiplier, colour.w);
-	if (mesh != 0)
-	{
-		//Checks if there is a texture, if there is draws the mesh with texture coordinates too
-		if (texture != 0)
-			mesh->draw(true);
-		else
-			mesh->draw(false);
-	}
-		
-	//Checks if there is a texture assigned before trying to unbind it, otherwise re-enables textures
-	/*if (texture != 0)
-		texture->unbind();
-	else
-		glEnable(GL_TEXTURE_2D);*/
+	/* OLD OPEN GL METHOD */
+	////Passes the matrix to OpenGL which automatically applies the transformations
+	//glMatrixMode(GL_MODELVIEW);
+	//glLoadMatrixf(glm::value_ptr(localToWorld));
 
-	if (DBG::debug()->getVisualDebugEnabled())
-		drawDebug();
+	////Checks if there is a texture assigned before trying to bind it, otherwise temporarily disables textures so it renders with colours
+	///*if (texture != 0)
+	//	texture->bind();
+	//else
+	//{
+	//	glDisable(GL_TEXTURE_2D);
+	//	glColor4f(colour.x, colour.y, colour.z, colour.w);
+	//}*/
+	//	
+	////Checks if there is a mesh assigned before tyring to draw it
+	//glColor4f(colour.x * DH::lightingMultiplier, colour.y * DH::lightingMultiplier, colour.z * DH::lightingMultiplier, colour.w);
+	//if (mesh != 0)
+	//{
+	//	//Checks if there is a texture, if there is draws the mesh with texture coordinates too
+	//	if (texture != 0)
+	//		mesh->draw(true);
+	//	else
+	//		mesh->draw(false);
+	//}
+	//	
+	////Checks if there is a texture assigned before trying to unbind it, otherwise re-enables textures
+	///*if (texture != 0)
+	//	texture->unbind();
+	//else
+	//	glEnable(GL_TEXTURE_2D);*/
 
-	//Loads identity for cleanliness
-	glLoadIdentity();
+	//if (DBG::debug()->getVisualDebugEnabled())
+	//	drawDebug();
+
+	////Loads identity for cleanliness
+	//glLoadIdentity();
 }
 
 void GameObject::drawDebug()

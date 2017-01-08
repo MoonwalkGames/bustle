@@ -119,6 +119,7 @@ public:
 	Mesh(const string& fileName); //The mesh takes a string for the fileName that it is loading in OBJ format, this will be passed to the OBJLoader in order to get the vertices from it
 	~Mesh() {};
 
+	void draw() const; ////Draws the mesh in modern OpenGL
 	void draw(bool textured) const; //Called every frame...passes the vertices to immediate openGl in the main screen callback function
 	void output() const; //Outputs mesh data to the screen
  	std::vector<Vertex> getVertices() const; //Returns all of the vertices in the mesh (good for morhping)
@@ -130,6 +131,15 @@ private:
 
 	void loadOBJ(const string& fileName); //private utility functions that actually loads the obj passed to the mesh in the constructor
 	void orderVertices();
+
+	//Modern OpenGL
+	void generateVBO();
+
+	GLuint shader;
+	GLuint vbo;
+	GLuint loc_Position, loc_Normal, loc_UV;
+	unsigned int normalOffset, uvOffset;
+	int numVertices;
 };
 
 #endif
