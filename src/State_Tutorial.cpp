@@ -138,7 +138,7 @@ void State_Tutorial::update()
 
 	startIndicator.update(DH::deltaTime);
 
-	//Set up the camera
+	//Set up the camera -> needed for sprites!
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(-60.0f * DH::getOrthoStretch(), 60.0f * DH::getOrthoStretch(), -60.0f, 60.0f, -5.0f, 7000.0f);

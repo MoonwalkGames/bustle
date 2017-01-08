@@ -246,6 +246,13 @@ void State_EndRound::update()
 	gluPerspective(60.0f, DH::aspectRatio, 0.1f, 1000.0f);
 	gluLookAt(37.5f, 7.5f, -37.5f, 0.0f, 3.5f, 0.0f, 0, 1, 0);
 
+	// --- Modern OpenGL Camera Setup --- //
+	viewMatrix = glm::lookAt(glm::vec3(37.5f, 7.5f, -37.5f), glm::vec3(0.0f, 3.5f, 0.0f), glm::vec3(0, -1, 0));
+	projectionMatrix = glm::perspective(93.0f, DH::aspectRatio, 0.1f, 1000.0f);
+
+	glUniformMatrix4fv(viewMatrixLocation, 1, GL_FALSE, &viewMatrix[0][0]);
+	glUniformMatrix4fv(projectionMatrixLocation, 1, GL_FALSE, &projectionMatrix[0][0]);
+
 	//Update the controller
 	controller.getInputs();
 
@@ -537,6 +544,8 @@ void State_EndRound::drawEndGraph()
 	}
 
 	//Reset the view to make drawing the graph easier
+	glUseProgram(NULL);
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glMatrixMode(GL_MODELVIEW);
@@ -600,6 +609,8 @@ void State_EndRound::drawEndGraph()
 	}
 
 	glColor3f(1.0, 1.0f, 1.0f);
+
+	glUseProgram(DH::activeShader);
 }
 
 void State_EndRound::loadRoundScores()
@@ -654,6 +665,8 @@ void State_EndRound::showWinners()
 	{
 		if (winners[i] && playerActive[i])
 		{
+			glUseProgram(NULL);
+
 			glMatrixMode(GL_MODELVIEW);
 			glLoadIdentity();
 
@@ -681,6 +694,8 @@ void State_EndRound::showWinners()
 			glRotatef(crownRot, 0.0f, 1.0f, 0.0f);
 			glScalef(2.0f, 2.0f, 2.0f);
 			crown->draw(true);
+
+			glUseProgram(DH::activeShader);
 		}
 	}
 }
@@ -766,6 +781,8 @@ void State_EndRound::drawBillboardCounters()
 
 void State_EndRound::drawMoonwalkScreen()
 {
+	glUseProgram(NULL);
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(-1, 1, -1, 1, -1, 5);
@@ -798,4 +815,6 @@ void State_EndRound::drawMoonwalkScreen()
 		}
 		glEnd();
 	}
+
+	glUseProgram(DH::activeShader);
 }

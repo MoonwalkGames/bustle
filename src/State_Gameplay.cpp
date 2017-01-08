@@ -245,7 +245,7 @@ void State_Gameplay::load()
 
 	// ----- Set up the UI ------ ///
 	//set up the timer
-	timeStart = 120.0f;
+	timeStart = 10.f;
 	timeLeft = timeStart;
 
 	//Set up the skybox
