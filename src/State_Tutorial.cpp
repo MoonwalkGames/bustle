@@ -139,10 +139,10 @@ void State_Tutorial::update()
 	startIndicator.update(DH::deltaTime);
 
 	//Set up the camera
-	/*glMatrixMode(GL_PROJECTION);
+	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(-60.0f * DH::getOrthoStretch(), 60.0f * DH::getOrthoStretch(), -60.0f, 60.0f, -5.0f, 7000.0f);
-	gluLookAt(68.0f, 70.0f, -68.0f, -25, 0, 25, 0, 1, 0);*/
+	gluLookAt(68.0f, 70.0f, -68.0f, -25, 0, 25, 0, 1, 0);
 
 	// --- Modern OpenGL Camera Setup --- //
 	viewMatrix = glm::lookAt(glm::vec3(68.0f, 70.0f, -68.0f), glm::vec3(-25, 0, 25), glm::vec3(0, 1, 0));
