@@ -1,7 +1,7 @@
 #include "World.h"
 #include <vector>
 #include <glm/gtc/type_ptr.hpp>
-World* World::inst = 0; //The singleton instance of this class
+World* World::mInstance = 0; //The singleton instance of this class
 World::World()
 {
 	delete World::physicsWorld;
@@ -34,18 +34,79 @@ World::World()
 
 World* World::gameWorld()
 {
-	if (!inst)
+	if (!mInstance)
 	{
-		inst = new World;
+		mInstance = new World;
 	}
-	return inst;
+	return mInstance;
 }
 
 void World::init()
 {
 	//resetting the physics "world"
-	delete inst;
+	delete mInstance;
 	gameWorld();
+}
+
+rigidBody::rigidBody(std::string name, World::shapeTypes type, glm::vec3 extent, glm::vec3 startposition)
+{
+	btTransform transform;
+	transform.setIdentity;
+	transform.setOrigin(btVector3(startposition.x, startposition.y, startposition.z));
+	btDefaultMotionState motionState(transform);
+
+	switch (type)
+	{
+	case World::shapeTypes::cube:
+		mShape = new btBoxShape(vec3tobtVector3(extent));
+		break;
+	case World::shapeTypes::sphere:
+		mShape = new btSphereShape(extent.length());
+		break;
+	case World::shapeTypes::capsule:
+		mShape = new btCapsuleShape(extent.x, extent.y);
+		break;
+	}
+
+	btVector3 inertia(0.0, 0.0, 0.0);
+
+	btRigidBody body = btRigidBody(0.0f, &motionState, mShape, inertia);
+
+	World::gameWorld()->addRigidBody(this, name);
+}
+rigidBody::rigidBody(std::string name, World::shapeTypes type, glm::vec3 extent, glm::vec3 startPosition, float mass, float friction = 0, float restitution = 0)
+{
+	btTransform transform;
+	transform.setIdentity;
+	transform.setOrigin(vec3tobtVector3(startPosition));
+	btDefaultMotionState motionState(transform);
+
+	switch (type)
+	{
+	case World::shapeTypes::cube:
+		mShape = new btBoxShape(vec3tobtVector3(extent));
+		break;
+	case World::shapeTypes::sphere:
+		mShape = new btSphereShape(extent.length());
+		break;
+	case World::shapeTypes::capsule:
+		mShape = new btCapsuleShape(extent.x, extent.y);
+		break;
+	}
+
+	btVector3 inertia(0.0, 0.0, 0.0);
+
+	if (mass != 0)
+		mShape->calculateLocalInertia(mass, inertia);
+
+	btRigidBody btbody = btRigidBody(0.0f, &motionState, mShape, inertia);
+	this->mRigidBody = &btbody;
+	World::gameWorld()->addRigidBody(this, name);
+}
+
+void World::addRigidBody(rigidBody * _body, const std::string _name)
+{
+	mRigidBodies.insert(_name, _body);
 }
 
 void World::drawWireframe()

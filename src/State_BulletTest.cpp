@@ -91,24 +91,26 @@ void State_BulletTest::update()
 
 	if (DH::getKey('w'))
 	{
-		rigidBodies[1]->applyCentralForce(btVector3(0.0, 0.0, 100.0));
+		World::gameWorld()->rigidBodies[1]->applyCentralForce(btVector3(0.0, 0.0, 100.0));
 	}
 	if (DH::getKey('s'))
 	{
-		rigidBodies[1]->applyCentralForce(btVector3(0.0, 0.0, -100.0));
+		World::gameWorld()->rigidBodies[1]->applyCentralForce(btVector3(0.0, 0.0, -100.0));
 	}
 	if (DH::getKey('a'))
 	{
-		rigidBodies[1]->applyCentralForce(btVector3(-100.0, 0.0, 0.0));
+		World::gameWorld()->rigidBodies[1]->applyCentralForce(btVector3(-100.0, 0.0, 0.0));
 	}
 	if (DH::getKey('d'))
 	{
-		rigidBodies[1]->applyCentralForce(btVector3(100.0, 0.0, 0.0));
+		World::gameWorld()->rigidBodies[1]->applyCentralForce(btVector3(100.0, 0.0, 0.0));
 	}
 	if (DH::getKey('j'))
-		rigidBodies[1]->applyCentralImpulse(btVector3(0.0, 10.0, 0.0));
+		World::gameWorld()->rigidBodies[1]->applyCentralImpulse(btVector3(0.0, 10.0, 0.0));
 	if (DH::getKey('r'))
+	{
 		load();
+	}
 
 
 	auto transform = dynamicsWorld->getCollisionObjectArray()[1]->getWorldTransform().getOrigin();
