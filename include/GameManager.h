@@ -9,6 +9,7 @@
 #include "State_MainMenu.h"
 #include "State_Loading.h"
 #include "State_Tutorial.h"
+#include "State_BulletTest.h"
 
 /*
 	GameManager class

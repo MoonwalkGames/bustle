@@ -1,0 +1,57 @@
+﻿  Texture2D.cpp
+  m_controller.cpp
+  Mesh.cpp
+c:\repo\bustle\src\mesh.cpp(183): warning C4018: '<': signed/unsigned mismatch
+  main.cpp
+  Kinematic.cpp
+  GameState.cpp
+  GameObject.cpp
+  GameManager.cpp
+  DisplayHandler.cpp
+  AssetManager.cpp
+  Generating Code...
+DisplayHandler.obj : error LNK2001: unresolved external symbol __imp____glewAttachShader
+DisplayHandler.obj : error LNK2001: unresolved external symbol __imp____glewCompileShader
+DisplayHandler.obj : error LNK2001: unresolved external symbol __imp____glewCreateProgram
+DisplayHandler.obj : error LNK2001: unresolved external symbol __imp____glewCreateShader
+DisplayHandler.obj : error LNK2001: unresolved external symbol __imp____glewDeleteShader
+DisplayHandler.obj : error LNK2001: unresolved external symbol __imp____glewGetProgramInfoLog
+DisplayHandler.obj : error LNK2001: unresolved external symbol __imp____glewGetProgramiv
+DisplayHandler.obj : error LNK2001: unresolved external symbol __imp____glewGetShaderInfoLog
+DisplayHandler.obj : error LNK2001: unresolved external symbol __imp____glewGetShaderiv
+DisplayHandler.obj : error LNK2001: unresolved external symbol __imp____glewGetUniformLocation
+GameObject.obj : error LNK2001: unresolved external symbol __imp____glewGetUniformLocation
+DisplayHandler.obj : error LNK2001: unresolved external symbol __imp____glewLinkProgram
+DisplayHandler.obj : error LNK2001: unresolved external symbol __imp____glewShaderSource
+DisplayHandler.obj : error LNK2001: unresolved external symbol __imp____glewUniform1i
+GameManager.obj : error LNK2001: unresolved external symbol "public: virtual void __thiscall Passenger::update(float,bool)" (?update@Passenger@@UAEXM_N@Z)
+GameManager.obj : error LNK2001: unresolved external symbol "public: virtual void __thiscall Passenger::draw(void)" (?draw@Passenger@@UAEXXZ)
+GameManager.obj : error LNK2001: unresolved external symbol "public: virtual void __thiscall Passenger::drawDebug(void)" (?drawDebug@Passenger@@UAEXXZ)
+GameManager.obj : error LNK2001: unresolved external symbol "public: virtual void __thiscall Player::update(float)" (?update@Player@@UAEXM@Z)
+GameManager.obj : error LNK2001: unresolved external symbol "public: virtual void __thiscall Player::draw(void)" (?draw@Player@@UAEXXZ)
+GameManager.obj : error LNK2001: unresolved external symbol "public: virtual void __thiscall Player::debugDraw(void)" (?debugDraw@Player@@UAEXXZ)
+GameManager.obj : error LNK2019: unresolved external symbol "public: __thiscall Sprite::Sprite(void)" (??0Sprite@@QAE@XZ) referenced in function "public: __thiscall State_EndRound::State_EndRound(void)" (??0State_EndRound@@QAE@XZ)
+GameManager.obj : error LNK2019: unresolved external symbol "public: __thiscall Sprite::~Sprite(void)" (??1Sprite@@QAE@XZ) referenced in function __unwindfunclet$??0State_EndRound@@QAE@XZ$67
+GameManager.obj : error LNK2001: unresolved external symbol "public: virtual void __thiscall State_Gameplay::load(void)" (?load@State_Gameplay@@UAEXXZ)
+GameManager.obj : error LNK2001: unresolved external symbol "public: virtual void __thiscall State_Gameplay::update(void)" (?update@State_Gameplay@@UAEXXZ)
+GameManager.obj : error LNK2001: unresolved external symbol "public: virtual void __thiscall State_EndRound::load(void)" (?load@State_EndRound@@UAEXXZ)
+GameManager.obj : error LNK2001: unresolved external symbol "public: virtual void __thiscall State_EndRound::update(void)" (?update@State_EndRound@@UAEXXZ)
+GameManager.obj : error LNK2001: unresolved external symbol "public: virtual void __thiscall State_MainMenu::load(void)" (?load@State_MainMenu@@UAEXXZ)
+GameManager.obj : error LNK2001: unresolved external symbol "public: virtual void __thiscall State_MainMenu::update(void)" (?update@State_MainMenu@@UAEXXZ)
+GameManager.obj : error LNK2001: unresolved external symbol "private: virtual void __thiscall State_Loading::update(void)" (?update@State_Loading@@EAEXXZ)
+GameManager.obj : error LNK2001: unresolved external symbol "public: virtual void __thiscall State_Tutorial::load(void)" (?load@State_Tutorial@@UAEXXZ)
+GameManager.obj : error LNK2001: unresolved external symbol "public: virtual void __thiscall State_Tutorial::update(void)" (?update@State_Tutorial@@UAEXXZ)
+GameObject.obj : error LNK2001: unresolved external symbol __imp____glewUniformMatrix4fv
+Kinematic.obj : error LNK2019: unresolved external symbol "public: bool __thiscall DebugManager::getVisualDebugEnabled(void)const " (?getVisualDebugEnabled@DebugManager@@QBE_NXZ) referenced in function "public: virtual void __thiscall Kinematic::draw(void)" (?draw@Kinematic@@UAEXXZ)
+Kinematic.obj : error LNK2019: unresolved external symbol "public: static class DebugManager * __cdecl DebugManager::debug(void)" (?debug@DebugManager@@SAPAV1@XZ) referenced in function "public: virtual void __thiscall Kinematic::draw(void)" (?draw@Kinematic@@UAEXXZ)
+main.obj : error LNK2019: unresolved external symbol __imp__glewInit@0 referenced in function _main
+main.obj : error LNK2019: unresolved external symbol "public: static void __cdecl CAudioEngine::init(void)" (?init@CAudioEngine@@SAXXZ) referenced in function _main
+main.obj : error LNK2019: unresolved external symbol "public: static class CAudioEngine * __cdecl CAudioEngine::sounds(void)" (?sounds@CAudioEngine@@SAPAV1@XZ) referenced in function _main
+Mesh.obj : error LNK2001: unresolved external symbol __imp____glewBindBuffer
+Mesh.obj : error LNK2001: unresolved external symbol __imp____glewBufferData
+Mesh.obj : error LNK2001: unresolved external symbol __imp____glewBufferSubData
+Mesh.obj : error LNK2001: unresolved external symbol __imp____glewGenBuffers
+Mesh.obj : error LNK2001: unresolved external symbol __imp____glewEnableVertexAttribArray
+Mesh.obj : error LNK2001: unresolved external symbol __imp____glewGetAttribLocation
+Mesh.obj : error LNK2001: unresolved external symbol __imp____glewVertexAttribPointer
+C:\repo\bustle\\bin\Bustle.exe : fatal error LNK1120: 43 unresolved externals

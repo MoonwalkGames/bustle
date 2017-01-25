@@ -50,6 +50,9 @@ void AssetManager::loadAssets()
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_Garage_Right.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_SpecialPassenger_A.obj"));
 	loadedMeshes.push_back(Mesh("./res/mesh/mesh_SpecialPassenger_B.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_UnitCube.obj"));
+	loadedMeshes.push_back(Mesh("./res/mesh/mesh_UnitSphere.obj"));
+
 
 	/* ========== TEXTURES (Naming: tex_XXXXXX.png) ========== */
 	loadedTextures.push_back(Texture2D("./res/img/tex_Bus0_Red.png"));

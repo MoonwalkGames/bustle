@@ -37,6 +37,7 @@ public:
 	void summonCar();
 	void launchSpecialPassengers();
 	void drawIntroSprite();
+	void initWorld();
 
 private:
 	//	Level Mesh

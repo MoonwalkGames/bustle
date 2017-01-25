@@ -48,10 +48,10 @@ void State_Tutorial::load()
 	numPlayersEnabled = 0;
 
 	// ----- Set up the player stuff ----- //
-	buses[0] = Player(glm::vec3(-25.0f, 1.75f, -25.0f), glm::vec3(0.0f, -45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_RED);
-	buses[1] = Player(glm::vec3(-25.0f, 1.75f, 25.0f), glm::vec3(0.0f, 45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_BLUE);
-	buses[2] = Player(glm::vec3(25.0f, 1.75f, 25.0f), glm::vec3(0.0f, 135.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_GREEN);
-	buses[3] = Player(glm::vec3(25.0f, 1.75f, -25.0f), glm::vec3(0.0f, 225.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_YELLOW);
+	buses[0] = Player(glm::vec3(-25.0f, 1.75f, -25.0f), glm::vec3(0.0f, -45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, 1.0f, MESH_BUS2, TEX_BUS2_RED);
+	buses[1] = Player(glm::vec3(-25.0f, 1.75f, 25.0f), glm::vec3(0.0f, 45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, 1.0f, MESH_BUS2, TEX_BUS2_BLUE);
+	buses[2] = Player(glm::vec3(25.0f, 1.75f, 25.0f), glm::vec3(0.0f, 135.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, 1.0f, MESH_BUS2, TEX_BUS2_GREEN);
+	buses[3] = Player(glm::vec3(25.0f, 1.75f, -25.0f), glm::vec3(0.0f, 225.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, 1.0f, MESH_BUS2, TEX_BUS2_YELLOW);
 
 	busTargets[0] = buses[0].getPosition();
 	busTargets[1] = buses[1].getPosition();
@@ -135,6 +135,16 @@ void State_Tutorial::update()
 		startIndicator.addToPosition(0.0f, 0.0f, 1.0f);
 	else if (DH::getKey('v'))
 		startIndicator.addToPosition(0.0f, 0.0f, -1.0f);
+	else if (DH::getKey('g'))
+	{
+		playerEnabled[0] = true;
+		playerEnabled[1] = true;
+		playerEnabled[2] = true;
+		playerEnabled[3] = true;
+		AE::sounds()->unLoadSound("./res/sound/select.wav");
+		GM::game()->setActivePlayers(playerEnabled[0], playerEnabled[1], playerEnabled[2], playerEnabled[3]);
+		GM::game()->setActiveState(STATE_GAMEPLAY);
+	}
 
 	startIndicator.update(DH::deltaTime);
 

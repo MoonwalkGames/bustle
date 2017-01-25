@@ -4,6 +4,7 @@
 #include "Texture2D.h"
 #include "DisplayHandler.h"
 
+
 void State_Loading::update()
 {
 	Texture2D loadingScreen = Texture2D("./res/img/tex_LoadingScreen.png");
@@ -33,5 +34,5 @@ void State_Loading::update()
 	//Start using modern open gl
 	glUseProgram(DH::activeShader);
 
-	GM::game()->setActiveState(STATE_MAINMENU);
+	GM::game()->setActiveState(STATE_BULLETTEST);
 }

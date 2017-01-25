@@ -74,4 +74,14 @@ float Player::getTurningSpeed() const
 	return busTurnSpeed;
 }
 
+btRigidBody *Player::getRigidBody()
+{
+	return this->rigidBody;
+}
+
+void Player::setRigidBody( btRigidBody* body)
+{
+	this->rigidBody = body;
+}
+
 

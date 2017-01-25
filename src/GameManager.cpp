@@ -45,6 +45,8 @@ void GameManager::setActiveState(STATE newActiveState)
 		activeState = new State_Loading();
 	else if (newActiveState == STATE_TUTORIAL)
 		activeState = new State_Tutorial();
+	else if (newActiveState == STATE_BULLETTEST)
+		activeState = new State_BulletTest();
 	else
 	{
 		std::cout << "ERROR: INVALID STATE NUMBER, DEFAULTING TO TEST STATE!!!" << std::endl;

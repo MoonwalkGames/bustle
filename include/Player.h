@@ -2,6 +2,8 @@
 #define PLAYER_H
 
 #include "Kinematic.h"
+#include "World.h"
+#include <BulletDynamics\Dynamics\btRigidBody.h>
 #define INITIAL_POINTS 0
 enum busStages
 {
@@ -15,16 +17,63 @@ enum busStages
 Player class, child of Kinematic
 Game object with physics (Kinematic) but it also contains extra information like points, controller id, etc.
 */
+//forward declaration so we can get a player's rigidbody without including all of the rigidbody code
+//class btRigidBody;
 class Player : public Kinematic
 {
 public:
 	//All constructors are inherited from Kinematic, exept they initialize points value to 0
-	Player() : Kinematic() { stage = 3; }
-	Player(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl) : Kinematic(pos, rot, scl) {}; //Constructor with just the transform properties
-	Player(bool gravityAffected, glm::vec3 accel, glm::vec3 vel, float mass) : Kinematic(gravityAffected, accel, vel, mass) {}; //Constructor with just the physics properties
+
+	Player() : Kinematic() 
+	{ 
+		stage = thirdStage;
+		btDefaultMotionState* myMotionState = new btDefaultMotionState();
+		rigidBody = new btRigidBody(btRigidBody::btRigidBodyConstructionInfo(50.0, myMotionState, &World::gameWorld()->hitboxes[2])); 
+	};
+	Player(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl) : Kinematic(pos, rot, scl) 
+	{
+		stage = thirdStage;
+		btTransform givenTransform;
+
+		givenTransform.setIdentity();
+		givenTransform.setOrigin(btVector3(pos.x, pos.y, pos.z));
+		givenTransform.setRotation(btQuaternion(rot.y, rot.x, rot.z));
+
+		btDefaultMotionState* myMotionState = new btDefaultMotionState(givenTransform);
+		rigidBody = new btRigidBody(btRigidBody::btRigidBodyConstructionInfo(50.0, myMotionState, &World::gameWorld()->hitboxes[2]));
+	}; //Constructor with just the transform properties
+	//Player(bool gravityAffected, glm::vec3 accel, glm::vec3 vel, float mass) : Kinematic(gravityAffected, accel, vel, mass) 
+	//{
+	//	stage = thirdStage;
+
+	//	btDefaultMotionState* myMotionState = new btDefaultMotionState();
+	//	rigidBody = new btRigidBody(btRigidBody::btRigidBodyConstructionInfo(50.0, myMotionState, &World::gameWorld()->hitboxes[2]));
+	//}; //Constructor with just the physics properties
 	Player(MESH_NAME meshName, TEXTURE_NAME texName) : Kinematic(meshName, texName) {}; //Constructor with just the asset properties
-	Player(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, bool gravityAffected, glm::vec3 accel, glm::vec3 vel, float startMass) : Kinematic(pos, rot, scl, gravityAffected, accel, vel, startMass) {}; //Constructor with the transform and physics properties
-	Player(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, bool gravityAffected, glm::vec3 accel, glm::vec3 vel, float startMass, MESH_NAME meshName, TEXTURE_NAME texName) : Kinematic(pos, rot, scl, gravityAffected, accel, vel, startMass, meshName, texName) {}; //Constructor with all the properties
+	Player(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, bool gravityAffected, float startMass) : Kinematic(pos, rot, scl, gravityAffected, glm::vec3(0), glm::vec3(0), startMass) 
+	{
+		stage = thirdStage;
+		btTransform givenTransform;
+
+		givenTransform.setIdentity();
+		givenTransform.setOrigin(btVector3(pos.x, pos.y, pos.z));
+		givenTransform.setRotation(btQuaternion(rot.y, rot.x, rot.z));
+
+		btDefaultMotionState* myMotionState = new btDefaultMotionState(givenTransform);
+		rigidBody = new btRigidBody(btRigidBody::btRigidBodyConstructionInfo(startMass, myMotionState, &World::gameWorld()->hitboxes[2]));
+	}; //Constructor with the transform and physics properties
+	Player(glm::vec3 pos, glm::vec3 rot, glm::vec3 scl, bool gravityAffected, float startMass, MESH_NAME meshName, TEXTURE_NAME texName) : Kinematic(pos, rot, scl, gravityAffected, glm::vec3(0), glm::vec3(0), startMass, meshName, texName) 
+	{
+		stage = thirdStage;
+		btTransform givenTransform;
+
+		givenTransform.setIdentity();
+		givenTransform.setOrigin(btVector3(pos.x, pos.y, pos.z));
+		givenTransform.setRotation(btQuaternion(rot.y, rot.x, rot.z));
+
+		btDefaultMotionState* myMotionState = new btDefaultMotionState(givenTransform);
+		rigidBody = new btRigidBody(btRigidBody::btRigidBodyConstructionInfo(startMass, myMotionState, &World::gameWorld()->hitboxes[2]));
+	}; //Constructor with all the properties
 	~Player() {}
 
 	void setPoints(int number);
@@ -44,6 +93,9 @@ public:
 	float timePowerupStarted;
 	int powerup; //enumerated powerup this player has
 	bool attractive; //the attractive powerup, if this is true the passengers will seek to this bus
+	btRigidBody *getRigidBody();
+	void setRigidBody(btRigidBody*);
+
 
 private:
 	int points = 25;

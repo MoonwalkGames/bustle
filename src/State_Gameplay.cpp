@@ -1,12 +1,13 @@
 #include "State_Gameplay.h"
 #include "DisplayHandler.h"
-#include "glm\gtx\rotate_vector.hpp"
+#include <glm\gtx\rotate_vector.hpp>
 #include "MathHelper.h"
 #include "Collision.h"
 #include "SteeringBehaviors.h"
 #include "DebugManager.h"
 #include "AudioEngine.h"
 #include "GameManager.h"
+#include "World.h"
 
 void State_Gameplay::toggleDebugDrawing()
 {
@@ -150,10 +151,10 @@ void State_Gameplay::load()
 	clockTower.update(DH::deltaTime);
 
 	//Init the buses
-	buses[0] = Player(glm::vec3(-25.0f, 1.75f, -25.0f), glm::vec3(0.0f, -45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_RED);
-	buses[1] = Player(glm::vec3(-25.0f, 1.75f, 25.0f), glm::vec3(0.0f, 45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_BLUE);
-	buses[2] = Player(glm::vec3(25.0f, 1.75f, 25.0f), glm::vec3(0.0f, 135.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_GREEN);
-	buses[3] = Player(glm::vec3(25.0f, 1.75f, -25.0f), glm::vec3(0.0f, 225.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, glm::vec3(0.0f), glm::vec3(0.0f), 1.0f, MESH_BUS2, TEX_BUS2_YELLOW);
+	buses[0] = Player(glm::vec3(-25.0f, 1.75f, -25.0f), glm::vec3(0.0f, -45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, 1.0f, MESH_BUS2, TEX_BUS2_RED);
+	buses[1] = Player(glm::vec3(-25.0f, 1.75f, 25.0f), glm::vec3(0.0f, 45.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, 1.0f, MESH_BUS2, TEX_BUS2_BLUE);
+	buses[2] = Player(glm::vec3(25.0f, 1.75f, 25.0f), glm::vec3(0.0f, 135.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, 1.0f, MESH_BUS2, TEX_BUS2_GREEN);
+	buses[3] = Player(glm::vec3(25.0f, 1.75f, -25.0f), glm::vec3(0.0f, 225.0f, 0.0f), glm::vec3(0.75f, 0.75f, 0.75f), false, 1.0f, MESH_BUS2, TEX_BUS2_YELLOW);
 
 	busTargets[0] = buses[0].getPosition();
 	busTargets[1] = buses[1].getPosition();
@@ -414,6 +415,9 @@ void State_Gameplay::load()
 
 	//Billboard UI
 	initBillboardUI();
+
+	initWorld();
+	
 }
 
 void State_Gameplay::update()
@@ -1034,210 +1038,210 @@ void State_Gameplay::update()
 		updateStages();
 		drawBuses();
 	}
-
+	World::gameWorld()->physicsWorld->stepSimulation(DH::getDeltaTime());
 	//Detect collisions HERE
 	//Player vs Player Collisions
-	Collision res(false, glm::vec3(0));
-	for (int i = 0; i < 4; i++)
-	{
-		if (!playerActive[i])
-		{
-			continue;
-		}
-		else
-		{
-			for (int j = 0; j < 4; j++)
-			{
-				if (!playerActive[j])
-				{
-					continue;
-				}
-				else if (i != j)
-				{
-					res = CollisionHandler::PLAYERvPLAYER(buses[i], buses[j]);
-					//Star trumps all other powerups, it means that the player with the star always wins the collision.
-					if (res)
-					{
-						if (lastCollisionSound == 0.0f || lastCollisionSound - timeLeft > 0.5f)
-						{
-							AE::sounds()->playSound("./res/sound/crash.wav", glm::vec3(0.0f), 0.25f);
-							lastCollisionSound = timeLeft;
-						}
-						if (res.outcome == full_loss)
-						{
+	//Collision res(false, glm::vec3(0));
+	//for (int i = 0; i < 4; i++)
+	//{
+	//	if (!playerActive[i])
+	//	{
+	//		continue;
+	//	}
+	//	else
+	//	{
+	//		for (int j = 0; j < 4; j++)
+	//		{
+	//			if (!playerActive[j])
+	//			{
+	//				continue;
+	//			}
+	//			else if (i != j)
+	//			{
+	//				res = CollisionHandler::PLAYERvPLAYER(buses[i], buses[j]);
+	//				//Star trumps all other powerups, it means that the player with the star always wins the collision.
+	//				if (res)
+	//				{
+	//					if (lastCollisionSound == 0.0f || lastCollisionSound - timeLeft > 0.5f)
+	//					{
+	//						AE::sounds()->playSound("./res/sound/crash.wav", glm::vec3(0.0f), 0.25f);
+	//						lastCollisionSound = timeLeft;
+	//					}
+	//					if (res.outcome == full_loss)
+	//					{
 
-						}
-						else if (res.outcome == partial_loss)
-						{
-							if (buses[i].powerup == star)
-							{
-								launchPassengers(j, 2);
-							}
-							else if (buses[j].powerup == star)
-							{
-								launchPassengers(i, 2);
-							}
-							else
-							{
-								launchPassengers(i, 1);
-								launchPassengers(j, 1);
-								if (buses[i].powerup == smelly_dude)
-								{
-									launchPassengers(j, buses[j].getPoints() / 3);
-									buses[i].powerup = no_powerup;
-								}
-								else if (buses[j].powerup == smelly_dude)
-								{
-									launchPassengers(i, buses[i].getPoints() / 3);
-									buses[j].powerup = no_powerup;
-								}
-							}
-						}
-						else if (res.outcome == win)
-						{
-							if (buses[j].powerup != star)
-							{
-								launchPassengers(j, 2);
-								if (buses[i].powerup == smelly_dude)
-								{
-									launchPassengers(j, buses[j].getPoints() / 3);
-									buses[i].powerup = no_powerup;
-								}
-							}
-							else
-							{
-								launchPassengers(i, 2);
-							}
-						}
-						else
-						{
-							printf("Something weird happened! Collision returned an invalid outcome\n");
-						}
-						if (abs(res.penetration.x) > abs(res.penetration.z))
-						{
-							buses[i].addToPosition(res.penetration.x * 0.5, 0.0f, 0.0f);
-							buses[j].addToPosition(-res.penetration.x * 0.5, 0.0f, 0.0f);
-							//buses[j].addImpulse(-res.penetration * 1000.0f);					
-						}
-						else
-						{
-							buses[i].addToPosition(0.0f, 0.0f, res.penetration.z);
-							buses[j].addToPosition(0.0f, 0.0f, -res.penetration.z);
-							//buses[i].addImpulse(-res.penetration * 1000.0f);
-						}
-					}
-				}
-			}
-			//Adding drag
-			//if (buses[i].getVelocity().x != 0.0f && buses[i].getVelocity().y != 0.0f && buses[i].getVelocity().z != 0.0f)
-			//buses[i].addImpulse(-(glm::normalize(buses[i].getVelocity()) * 500.0f));
-		}
-		
-	}
+	//					}
+	//					else if (res.outcome == partial_loss)
+	//					{
+	//						if (buses[i].powerup == star)
+	//						{
+	//							launchPassengers(j, 2);
+	//						}
+	//						else if (buses[j].powerup == star)
+	//						{
+	//							launchPassengers(i, 2);
+	//						}
+	//						else
+	//						{
+	//							launchPassengers(i, 1);
+	//							launchPassengers(j, 1);
+	//							if (buses[i].powerup == smelly_dude)
+	//							{
+	//								launchPassengers(j, buses[j].getPoints() / 3);
+	//								buses[i].powerup = no_powerup;
+	//							}
+	//							else if (buses[j].powerup == smelly_dude)
+	//							{
+	//								launchPassengers(i, buses[i].getPoints() / 3);
+	//								buses[j].powerup = no_powerup;
+	//							}
+	//						}
+	//					}
+	//					else if (res.outcome == win)
+	//					{
+	//						if (buses[j].powerup != star)
+	//						{
+	//							launchPassengers(j, 2);
+	//							if (buses[i].powerup == smelly_dude)
+	//							{
+	//								launchPassengers(j, buses[j].getPoints() / 3);
+	//								buses[i].powerup = no_powerup;
+	//							}
+	//						}
+	//						else
+	//						{
+	//							launchPassengers(i, 2);
+	//						}
+	//					}
+	//					else
+	//					{
+	//						printf("Something weird happened! Collision returned an invalid outcome\n");
+	//					}
+	//					if (abs(res.penetration.x) > abs(res.penetration.z))
+	//					{
+	//						buses[i].addToPosition(res.penetration.x * 0.5, 0.0f, 0.0f);
+	//						buses[j].addToPosition(-res.penetration.x * 0.5, 0.0f, 0.0f);
+	//						//buses[j].addImpulse(-res.penetration * 1000.0f);					
+	//					}
+	//					else
+	//					{
+	//						buses[i].addToPosition(0.0f, 0.0f, res.penetration.z);
+	//						buses[j].addToPosition(0.0f, 0.0f, -res.penetration.z);
+	//						//buses[i].addImpulse(-res.penetration * 1000.0f);
+	//					}
+	//				}
+	//			}
+	//		}
+	//		//Adding drag
+	//		//if (buses[i].getVelocity().x != 0.0f && buses[i].getVelocity().y != 0.0f && buses[i].getVelocity().z != 0.0f)
+	//		//buses[i].addImpulse(-(glm::normalize(buses[i].getVelocity()) * 500.0f));
+	//	}
+	//	
+	//}
 
 	//player vs passenger collisions
-	if (!inEndBuffer && !inBuffer)
-	{
-		for (int i = 0; i < 4; i++)
-		{
-			if (!playerActive[i])
-			{
-				continue;
-			}
-			else
-			{
-				for (unsigned int j = 0; j < passengers.size(); j++)
-				{
-					if (CollisionHandler::PLAYERvPASSENGER(buses[i], passengers[j]))
-					{
-						if (passengers[j].getState() != PASSENGER_STATE::VACUUM && passengers[j].getState() == PASSENGER_STATE::GROUNDED)
-						{
-							passengers[j].setState(PASSENGER_STATE::VACUUM);
-							AE::sounds()->playSound("./res/sound/suck.wav", glm::vec3(0.0f), 0.15f);
-							passengers[j].setTargetBusPosition(buses[i].getPosition());
-							passengers[j].setBusTargetNumber(i);
-							buses[i].addPoints(1);
-							buses[i].addMass(1.0f);
-						}
-					}
-					else
-					{
-						if (passengers[j].getState() == PASSENGER_STATE::VACUUM)
-						{
-							passengers[j].setTargetBusPosition(buses[passengers[j].getBusTargetNumber()].getPosition());
-						}
-					}
+	//if (!inEndBuffer && !inBuffer)
+	//{
+	//	for (int i = 0; i < 4; i++)
+	//	{
+	//		if (!playerActive[i])
+	//		{
+	//			continue;
+	//		}
+	//		else
+	//		{
+	//			for (unsigned int j = 0; j < passengers.size(); j++)
+	//			{
+	//				if (CollisionHandler::PLAYERvPASSENGER(buses[i], passengers[j]))
+	//				{
+	//					if (passengers[j].getState() != PASSENGER_STATE::VACUUM && passengers[j].getState() == PASSENGER_STATE::GROUNDED)
+	//					{
+	//						passengers[j].setState(PASSENGER_STATE::VACUUM);
+	//						AE::sounds()->playSound("./res/sound/suck.wav", glm::vec3(0.0f), 0.15f);
+	//						passengers[j].setTargetBusPosition(buses[i].getPosition());
+	//						passengers[j].setBusTargetNumber(i);
+	//						buses[i].addPoints(1);
+	//						buses[i].addMass(1.0f);
+	//					}
+	//				}
+	//				else
+	//				{
+	//					if (passengers[j].getState() == PASSENGER_STATE::VACUUM)
+	//					{
+	//						passengers[j].setTargetBusPosition(buses[passengers[j].getBusTargetNumber()].getPosition());
+	//					}
+	//				}
 
-					if (!passengers[j].getAlive())
-					{
-						passengers.erase(passengers.begin() + j);
-						j--;
-					}
-				}
+	//				if (!passengers[j].getAlive())
+	//				{
+	//					passengers.erase(passengers.begin() + j);
+	//					j--;
+	//				}
+	//			}
 
-				for (unsigned int j = 0; j < specialPassengers.size(); j++)
-				{
-					if (CollisionHandler::PLAYERvPASSENGER(buses[i], specialPassengers[j]))
-					{
-						if (specialPassengers[j].getState() != PASSENGER_STATE::VACUUM)
-						{
-							specialPassengers[j].setState(PASSENGER_STATE::VACUUM);
-							AE::sounds()->playSound("./res/sound/suck.wav", glm::vec3(0.0f), 0.15f);
-							specialPassengers[j].setTargetBusPosition(buses[i].getPosition());
-							specialPassengers[j].setBusTargetNumber(i);
+	//			for (unsigned int j = 0; j < specialPassengers.size(); j++)
+	//			{
+	//				if (CollisionHandler::PLAYERvPASSENGER(buses[i], specialPassengers[j]))
+	//				{
+	//					if (specialPassengers[j].getState() != PASSENGER_STATE::VACUUM)
+	//					{
+	//						specialPassengers[j].setState(PASSENGER_STATE::VACUUM);
+	//						AE::sounds()->playSound("./res/sound/suck.wav", glm::vec3(0.0f), 0.15f);
+	//						specialPassengers[j].setTargetBusPosition(buses[i].getPosition());
+	//						specialPassengers[j].setBusTargetNumber(i);
 
-						}
-					}
-					else
-					{
-						if (specialPassengers[j].getState() == PASSENGER_STATE::VACUUM)
-						{
-							specialPassengers[j].setTargetBusPosition(buses[specialPassengers[j].getBusTargetNumber()].getPosition());
-						}
-					}
+	//					}
+	//				}
+	//				else
+	//				{
+	//					if (specialPassengers[j].getState() == PASSENGER_STATE::VACUUM)
+	//					{
+	//						specialPassengers[j].setTargetBusPosition(buses[specialPassengers[j].getBusTargetNumber()].getPosition());
+	//					}
+	//				}
 
-					if (!specialPassengers[j].getAlive())
-					{
-						int target = specialPassengers[j].getBusTargetNumber();
-						buses[target].powerup = specialPassengers[j].powerup;
-						buses[target].timePowerupStarted = timeLeft;
+	//				if (!specialPassengers[j].getAlive())
+	//				{
+	//					int target = specialPassengers[j].getBusTargetNumber();
+	//					buses[target].powerup = specialPassengers[j].powerup;
+	//					buses[target].timePowerupStarted = timeLeft;
 
-						switch (buses[target].powerup)
-						{
-						case smelly_dude:
-							AE::sounds()->playSound("./res/sound/flies.wav", glm::vec3(0.0f), 1.0f);
-							break;
-						case attractive_person:
-							AE::sounds()->playSound("./res/sound/magnet.wav", glm::vec3(0.0f), 1.0f);
-							break;
-						case freeze_buses:
-							AE::sounds()->playSound("./res/sound/frozen.wav", glm::vec3(0.0f), 1.0f);
-							break;
-						case star:
-							AE::sounds()->playSound("./res/sound/star.wav", glm::vec3(0.0f), 1.0f);
-							break;
-						}
-						specialPassengers.erase(specialPassengers.begin() + j);
-						j--;
-					}
-				}
-			}
-		}
-	}
+	//					switch (buses[target].powerup)
+	//					{
+	//					case smelly_dude:
+	//						AE::sounds()->playSound("./res/sound/flies.wav", glm::vec3(0.0f), 1.0f);
+	//						break;
+	//					case attractive_person:
+	//						AE::sounds()->playSound("./res/sound/magnet.wav", glm::vec3(0.0f), 1.0f);
+	//						break;
+	//					case freeze_buses:
+	//						AE::sounds()->playSound("./res/sound/frozen.wav", glm::vec3(0.0f), 1.0f);
+	//						break;
+	//					case star:
+	//						AE::sounds()->playSound("./res/sound/star.wav", glm::vec3(0.0f), 1.0f);
+	//						break;
+	//					}
+	//					specialPassengers.erase(specialPassengers.begin() + j);
+	//					j--;
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
 	
-	if (carOnScreen)
-	{
-		for (int i = 0; i < 4; i++)
-		{
-			//if (!playerActive[i])
-			//{
-			//	continue;
-			//}
-			if (CollisionHandler::PLAYERvCAR(buses[i], car.getPosition()).status)
-				launchPassengers(i, 2);
+	//if (carOnScreen)
+	//{
+	//	for (int i = 0; i < 4; i++)
+	//	{
+	//		//if (!playerActive[i])
+	//		//{
+	//		//	continue;
+	//		//}
+	//		if (CollisionHandler::PLAYERvCAR(buses[i], car.getPosition()).status)
+	//			launchPassengers(i, 2);
 
-		}
-	}
+	//	}
+	//}
 
 	//update powerup stuff
 	updatePowerups();
@@ -2101,4 +2105,23 @@ void State_Gameplay::drawPowerupIndicators()
 
 		}
 	}
+}
+
+void State_Gameplay::initWorld()
+{
+	//reset the physics world
+	World::gameWorld()->init();
+	//if the bus is active, add its rigid body to the physics world. 
+	for (int i = 0; i < 4; i++)
+	{
+		if (playerActive[i])
+		{
+			//buses[i].setRigidBody(&World::gameWorld()->hitboxes[2]);
+			buses[i].getRigidBody()->setCollisionShape(&World::gameWorld()->hitboxes[2]);
+			World::gameWorld()->physicsWorld->addRigidBody(buses[i].getRigidBody());			
+		}
+	}
+	//Add the ground to the physics world
+
+	//Add the world bounds to the physics world
 }

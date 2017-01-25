@@ -84,6 +84,13 @@
     <ClCompile Include="src\State_Tutorial.cpp">
       <Filter>game states</Filter>
     </ClCompile>
+    <ClCompile Include="src\World.cpp">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="bullet\src\BulletDynamics\Dynamics\btDiscreteDynamicsWorld.cpp" />
+    <ClCompile Include="src\State_BulletTest.cpp">
+      <Filter>game states</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Mesh.h">
@@ -152,11 +159,20 @@
     <ClInclude Include="include\AudioEngine.h">
       <Filter>headers</Filter>
     </ClInclude>
-    <ClInclude Include="src\State_Loading.h">
-      <Filter>game states</Filter>
-    </ClInclude>
     <ClInclude Include="include\State_Tutorial.h">
       <Filter>game states</Filter>
+    </ClInclude>
+    <ClInclude Include="include\World.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\State_BulletTest.h">
+      <Filter>game states</Filter>
+    </ClInclude>
+    <ClInclude Include="include\State_Loading.h">
+      <Filter>game states</Filter>
+    </ClInclude>
+    <ClInclude Include="include\loadShader.h">
+      <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -166,5 +182,10 @@
     <None Include="shaders\passThru_v.glsl">
       <Filter>Shaders</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="lib\bullet\BulletCollision.lib" />
+    <Library Include="lib\bullet\BulletDynamics.lib" />
+    <Library Include="lib\bullet\LinearMath.lib" />
   </ItemGroup>
 </Project>

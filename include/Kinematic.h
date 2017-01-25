@@ -2,7 +2,7 @@
 #define KINEMATIC_H
 
 #include "GameObject.h"
-
+#include <BulletDynamics\Dynamics\btRigidBody.h>
 /*
 Kinematic class
 - Child of GameObject class
@@ -58,6 +58,7 @@ protected:
 	glm::vec3 velocity; //The instantaneous velocity of the object, calculated by integrating acceleration into the previous frame's velocity
 	glm::vec3 impulse; //Essentially instantaneous acceleration...gets zeroed out within the same frame it is added. Use this for things like collision or jumping
 	float mass; //How heavy the object is (in kg)
+	btRigidBody *rigidBody;
 
 	static float dragConstant; //Constant drag force applied to all objects opposite their direction of travel, slows them down and stops them if no force is applied
 	static glm::vec3 gravity; //Constant downward force, not necessarily -9.81 m/s/s but currently set to this
