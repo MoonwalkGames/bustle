@@ -84,12 +84,12 @@
     <ClCompile Include="src\State_Tutorial.cpp">
       <Filter>game states</Filter>
     </ClCompile>
-    <ClCompile Include="src\World.cpp">
-      <Filter>source</Filter>
-    </ClCompile>
     <ClCompile Include="bullet\src\BulletDynamics\Dynamics\btDiscreteDynamicsWorld.cpp" />
     <ClCompile Include="src\State_BulletTest.cpp">
       <Filter>game states</Filter>
+    </ClCompile>
+    <ClCompile Include="src\World.cpp">
+      <Filter>source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -162,9 +162,6 @@
     <ClInclude Include="include\State_Tutorial.h">
       <Filter>game states</Filter>
     </ClInclude>
-    <ClInclude Include="include\World.h">
-      <Filter>headers</Filter>
-    </ClInclude>
     <ClInclude Include="include\State_BulletTest.h">
       <Filter>game states</Filter>
     </ClInclude>
@@ -172,6 +169,9 @@
       <Filter>game states</Filter>
     </ClInclude>
     <ClInclude Include="include\loadShader.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\World.h">
       <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>

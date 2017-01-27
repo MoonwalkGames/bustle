@@ -7,16 +7,8 @@
 #include <glm\vec3.hpp>
 #include <iostream>
 #include <map>
-
-glm::vec3 btVector3toVec3(btVector3 vector)
-{
-	return glm::vec3(vector.x, vector.y, vector.z);
-}
-btVector3 vec3tobtVector3(glm::vec3 vector)
-{
-	return btVector3(vector.x, vector.y, vector.z);
-}
-
+//class World;
+class mRigidBody;
 class mDebugDraw : public btIDebugDraw
 {
 private:
@@ -78,24 +70,9 @@ public:
 	void clean();
 };
 
-class rigidBody
-{
-public:
-	rigidBody(std::string name, World::shapeTypes type, glm::vec3 extent, glm::vec3 startposition);
-	rigidBody(std::string name, World::shapeTypes type, glm::vec3 extent, glm::vec3 startPosition, float mass, float friction = 0, float restitution = 0);
-	void setPosition(glm::vec3 _position);
-	void setMass(float _mass);
-	void setRestitution(float _restitution);
-	void setFriction(float _friction);
-private:
-	btCollisionShape* mShape;
-	btRigidBody* mRigidBody;
-	//btDefaultMotionState * mMotionState;
-};
-
 class World
 {
-	
+
 protected:
 	World();
 public:
@@ -111,10 +88,32 @@ public:
 	std::vector<btBoxShape> hitboxes;
 	mDebugDraw debugDrawer;
 	void drawWireframe();
-	rigidBody* getRigidBody(std::string name) const;
-	void addRigidBody(rigidBody* _body, std::string _name);
-	
+	mRigidBody* getRigidBody(std::string name) const;
+	void addRigidBody(mRigidBody* _body, std::string _name);
+	std::map<std::string, mRigidBody *> getMap() { return mRigidBodies; }
 private:
 	static World *mInstance;
-	std::map<std::string, rigidBody *> mRigidBodies;
+	std::map<std::string, mRigidBody *> mRigidBodies;
 };
+
+class mRigidBody
+{
+public:
+	mRigidBody(std::string name, World::shapeTypes type, glm::vec3 extent, glm::vec3 startposition);
+	mRigidBody(std::string name, World::shapeTypes type, glm::vec3 extent, glm::vec3 startPosition, float mass, float friction, float restitution);
+	void setPosition(glm::vec3 _position);
+	void setMass(float _mass);
+	void setRestitution(float _restitution);
+	void setFriction(float _friction);
+	std::string getName() const { return name; }
+	btCollisionShape* getShape() { return mShape; }
+	btRigidBody* getBody() { return rigidBody; }
+	int getIndex() const { return index; }
+private:
+	btCollisionShape* mShape;
+	btRigidBody* rigidBody;
+	std::string name;
+	int index;
+	//btDefaultMotionState * mMotionState;
+};
+

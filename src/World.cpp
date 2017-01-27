@@ -48,17 +48,18 @@ void World::init()
 	gameWorld();
 }
 
-rigidBody::rigidBody(std::string name, World::shapeTypes type, glm::vec3 extent, glm::vec3 startposition)
+mRigidBody::mRigidBody(std::string name, World::shapeTypes type, glm::vec3 extent, glm::vec3 startposition)
 {
 	btTransform transform;
-	transform.setIdentity;
+	transform.setIdentity();
 	transform.setOrigin(btVector3(startposition.x, startposition.y, startposition.z));
-	btDefaultMotionState motionState(transform);
+	btDefaultMotionState* motionState = new btDefaultMotionState(transform);
 
 	switch (type)
 	{
 	case World::shapeTypes::cube:
-		mShape = new btBoxShape(vec3tobtVector3(extent));
+		//mShape = new btBoxShape(vec3tobtVector3(extent));
+		mShape = new btBoxShape(btVector3(extent.x, extent.y, extent.z));
 		break;
 	case World::shapeTypes::sphere:
 		mShape = new btSphereShape(extent.length());
@@ -70,24 +71,33 @@ rigidBody::rigidBody(std::string name, World::shapeTypes type, glm::vec3 extent,
 
 	btVector3 inertia(0.0, 0.0, 0.0);
 
-	btRigidBody body = btRigidBody(0.0f, &motionState, mShape, inertia);
+	btScalar mass = 0;
+
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(0.0f, motionState, mShape, inertia);
+
+	btRigidBody* body = new btRigidBody(rbInfo);
+
+	this->rigidBody = body;
 
 	World::gameWorld()->addRigidBody(this, name);
 }
-rigidBody::rigidBody(std::string name, World::shapeTypes type, glm::vec3 extent, glm::vec3 startPosition, float mass, float friction = 0, float restitution = 0)
+mRigidBody::mRigidBody(std::string _name, World::shapeTypes type, glm::vec3 extent, glm::vec3 startPosition, float mass, float friction = 0, float restitution = 0)
 {
+	name = _name;
 	btTransform transform;
-	transform.setIdentity;
-	transform.setOrigin(vec3tobtVector3(startPosition));
-	btDefaultMotionState motionState(transform);
+	transform.setIdentity();
+	//transform.setOrigin(vec3tobtVector3(startPosition));
+	transform.setOrigin(btVector3(startPosition.x, startPosition.y, startPosition.z));
+	btDefaultMotionState* motionstate = new btDefaultMotionState(transform);
 
 	switch (type)
 	{
 	case World::shapeTypes::cube:
-		mShape = new btBoxShape(vec3tobtVector3(extent));
+		//mShape = new btBoxShape(vec3tobtVector3(extent));
+		mShape = new btBoxShape(btVector3(extent.x, extent.y, extent.z));
 		break;
 	case World::shapeTypes::sphere:
-		mShape = new btSphereShape(extent.length());
+		mShape = new btSphereShape(extent.x);
 		break;
 	case World::shapeTypes::capsule:
 		mShape = new btCapsuleShape(extent.x, extent.y);
@@ -96,17 +106,33 @@ rigidBody::rigidBody(std::string name, World::shapeTypes type, glm::vec3 extent,
 
 	btVector3 inertia(0.0, 0.0, 0.0);
 
-	if (mass != 0)
+	/*if (mass != 0)
 		mShape->calculateLocalInertia(mass, inertia);
 
-	btRigidBody btbody = btRigidBody(0.0f, &motionState, mShape, inertia);
-	this->mRigidBody = &btbody;
+	btRigidBody btbody(0.0f, &motionState, mShape, inertia);
+	this->rigidBody = &btbody;
+	World::gameWorld()->addRigidBody(this, name);*/
+
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motionstate, mShape, inertia);
+
+	btRigidBody* body = new btRigidBody(rbInfo);
+
+	body->setRestitution(restitution);
+
+	body->setFriction(friction);
+
+	this->rigidBody = body;
+
 	World::gameWorld()->addRigidBody(this, name);
 }
 
-void World::addRigidBody(rigidBody * _body, const std::string _name)
+void World::addRigidBody(mRigidBody * _body, std::string _name)
 {
-	mRigidBodies.insert(_name, _body);
+	//std::pair<int, std::string> info((int)mRigidBodies.size(), _name);
+	//mRigidBodies.insert(_name, _body);
+	mRigidBodies[_name] = _body;
+	physicsWorld->addRigidBody(_body->getBody());
+	
 }
 
 void World::drawWireframe()
