@@ -17,7 +17,7 @@ void State_BulletTest::load()
 	World::gameWorld()->physicsWorld->setGravity(btVector3(0, -9.81, 0));
 	mRigidBody ground = mRigidBody("ground", World::shapeTypes::cube, glm::vec3(10.0f), glm::vec3(0), 0, 1.0, 1.0);
 	mRigidBody ball = mRigidBody("ball", World::shapeTypes::sphere, glm::vec3(0.5f), glm::vec3(0.0f, 15.0f, 0.0f), 5.0f, 1.0f, 1.0f);
-	ball.setPosition(glm::vec3(0.0f, 100.0f, 0.0f));
+//	ball.setPosition(glm::vec3(0.0f, 100.0f, 0.0f));
 	World::gameWorld()->addRigidBody(ground, ground.getName());
 	World::gameWorld()->addRigidBody(ball, ball.getName());
 
@@ -52,6 +52,7 @@ void State_BulletTest::update()
 	}
 	if (DH::getKey('j'))
 		//World::gameWorld()->rigidBodies[1]->applyCentralImpulse(btVector3(0.0, 10.0, 0.0));
+		World::gameWorld()->getRigidBody("ball")->setPosition(glm::vec3(0.0f, 12.0f, 0.0f));
 		
 	if (DH::getKey('r'))
 	{

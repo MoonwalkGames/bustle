@@ -88,7 +88,7 @@ public:
 	std::vector<btBoxShape> hitboxes;
 	mDebugDraw debugDrawer;
 	void drawWireframe();
-	mRigidBody* getRigidBody(std::string name) const;
+	mRigidBody* getRigidBody(std::string name);
 	void addRigidBody(mRigidBody& _body, std::string _name);
 	std::map<std::string, mRigidBody> getMap() { return mRigidBodies; }
 private:

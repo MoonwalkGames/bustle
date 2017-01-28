@@ -313,3 +313,8 @@ btVector3 mRigidBody::getInertia(float _mass)
 		mShape->calculateLocalInertia(_mass, inertia);
 	return inertia;
 }
+
+mRigidBody* World::getRigidBody(std::string name)
+{
+	return &mRigidBodies.at(name);
+}
