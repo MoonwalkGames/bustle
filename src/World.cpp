@@ -271,3 +271,28 @@ void mDebugDraw::draw3dText(const btVector3& location, const char* textString)
 {
 
 }
+
+void mRigidBody::setPosition(glm::vec3 _position)
+{
+
+}
+
+void mRigidBody::setMass(float _mass)
+{
+	btVector3 inertia(0.0, 0.0, 0.0);
+
+	if (_mass != 0)
+		mShape->calculateLocalInertia(_mass, inertia);
+
+	rigidBody->setMassProps(_mass, inertia);
+}
+
+void mRigidBody::setRestitution(float _restitution)
+{
+	rigidBody->setRestitution(_restitution);
+}
+
+void mRigidBody::setFriction(float _friction)
+{
+	rigidBody->setFriction(_friction);
+}
