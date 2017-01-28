@@ -79,7 +79,7 @@ mRigidBody::mRigidBody(std::string name, World::shapeTypes type, glm::vec3 exten
 
 	this->rigidBody = body;
 
-	World::gameWorld()->addRigidBody(this, name);
+	World::gameWorld()->addRigidBody(*this, name);
 }
 mRigidBody::mRigidBody(std::string _name, World::shapeTypes type, glm::vec3 extent, glm::vec3 startPosition, float mass, float friction = 0, float restitution = 0)
 {
@@ -124,15 +124,16 @@ mRigidBody::mRigidBody(std::string _name, World::shapeTypes type, glm::vec3 exte
 
 	this->rigidBody = body;
 
-	World::gameWorld()->addRigidBody(this, name);
+	World::gameWorld()->addRigidBody(*this, name);
 }
 
-void World::addRigidBody(mRigidBody * _body, std::string _name)
+void World::addRigidBody(mRigidBody& _body, std::string _name)
 {
 	//std::pair<int, std::string> info((int)mRigidBodies.size(), _name);
 	//mRigidBodies.insert(_name, _body);
-	mRigidBodies[_name] = _body;
-	physicsWorld->addRigidBody(_body->getBody());
+	//mRigidBodies[_name] = _body;
+	mRigidBodies.emplace(_name, _body);
+	physicsWorld->addRigidBody(_body.getBody());
 	
 }
 

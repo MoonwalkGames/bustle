@@ -89,11 +89,11 @@ public:
 	mDebugDraw debugDrawer;
 	void drawWireframe();
 	mRigidBody* getRigidBody(std::string name) const;
-	void addRigidBody(mRigidBody* _body, std::string _name);
-	std::map<std::string, mRigidBody *> getMap() { return mRigidBodies; }
+	void addRigidBody(mRigidBody& _body, std::string _name);
+	std::map<std::string, mRigidBody> getMap() { return mRigidBodies; }
 private:
 	static World *mInstance;
-	std::map<std::string, mRigidBody *> mRigidBodies;
+	std::map<std::string, mRigidBody> mRigidBodies;
 };
 
 class mRigidBody
