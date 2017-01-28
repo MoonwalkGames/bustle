@@ -104,7 +104,6 @@ mRigidBody::mRigidBody(std::string _name, World::shapeTypes type, glm::vec3 exte
 		break;
 	}
 
-	btVector3 inertia(0.0, 0.0, 0.0);
 
 	/*if (mass != 0)
 		mShape->calculateLocalInertia(mass, inertia);
@@ -112,6 +111,8 @@ mRigidBody::mRigidBody(std::string _name, World::shapeTypes type, glm::vec3 exte
 	btRigidBody btbody(0.0f, &motionState, mShape, inertia);
 	this->rigidBody = &btbody;
 	World::gameWorld()->addRigidBody(this, name);*/
+
+	btVector3 inertia = this->getInertia(mass);
 
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motionstate, mShape, inertia);
 
@@ -295,4 +296,13 @@ void mRigidBody::setRestitution(float _restitution)
 void mRigidBody::setFriction(float _friction)
 {
 	rigidBody->setFriction(_friction);
+}
+
+btVector3 mRigidBody::getInertia(float _mass)
+{
+	btVector3 inertia(0.0, 0.0, 0.0);
+
+	if (_mass != 0)
+		mShape->calculateLocalInertia(_mass, inertia);
+	return inertia;
 }

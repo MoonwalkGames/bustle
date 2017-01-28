@@ -103,6 +103,7 @@ public:
 	mRigidBody(std::string name, World::shapeTypes type, glm::vec3 extent, glm::vec3 startPosition, float mass, float friction, float restitution);
 	void setPosition(glm::vec3 _position);
 	void setMass(float _mass);
+	btVector3 getInertia(float _mass);
 	void setRestitution(float _restitution);
 	void setFriction(float _friction);
 	std::string getName() const { return name; }
