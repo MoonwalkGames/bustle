@@ -276,7 +276,13 @@ void mDebugDraw::draw3dText(const btVector3& location, const char* textString)
 
 void mRigidBody::setPosition(glm::vec3 _position)
 {
+	//make a transform
+	btTransform transform;
+	transform.setIdentity();
+	transform.setOrigin(btVector3(_position.x, _position.y, _position.z));
+	//apply it to the rigid body
 
+	this->getBody()->setWorldTransform(transform);
 }
 
 void mRigidBody::setMass(float _mass)
