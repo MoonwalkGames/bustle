@@ -318,3 +318,17 @@ mRigidBody* World::getRigidBody(std::string name)
 {
 	return &mRigidBodies.at(name);
 }
+
+void mRigidBody::applyForce(glm::vec3 force)
+{
+	rigidBody->applyCentralForce(btVector3(force.x, force.y, force.z));
+}
+void  mRigidBody::applyImpulse(glm::vec3 impulse)
+{
+	rigidBody->applyCentralImpulse(btVector3(impulse.x, impulse.y, impulse.z));
+}
+
+void mRigidBody::setVelocity(glm::vec3 velocity)
+{
+	rigidBody->setLinearVelocity(btVector3(velocity.x, velocity.y, velocity.z));
+}

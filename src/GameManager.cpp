@@ -35,9 +35,9 @@ void GameManager::setActiveState(STATE newActiveState)
 	//delete activeState; ////NEED TO RE-ADD THIS, CREATES MINOR MEMORY LEAK OTHERWISE
 	activeState = nullptr;
 
-	if (newActiveState == STATE_GAMEPLAY)
-		activeState = new State_Gameplay();
-	else if (newActiveState == STATE_ENDROUND)
+	//if (newActiveState == STATE_GAMEPLAY)
+	//	activeState = new State_Gameplay();
+	if (newActiveState == STATE_ENDROUND)
 		activeState = new State_EndRound();
 	else if (newActiveState == STATE_MAINMENU)
 		activeState = new State_MainMenu();
@@ -50,7 +50,7 @@ void GameManager::setActiveState(STATE newActiveState)
 	else
 	{
 		std::cout << "ERROR: INVALID STATE NUMBER, DEFAULTING TO TEST STATE!!!" << std::endl;
-		activeState = new State_Gameplay();
+		//activeState = new State_Gameplay();
 	}
 
 	loadActiveState();

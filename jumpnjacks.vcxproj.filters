@@ -51,9 +51,6 @@
     <ClCompile Include="src\Collision.cpp">
       <Filter>source</Filter>
     </ClCompile>
-    <ClCompile Include="src\State_Gameplay.cpp">
-      <Filter>game states</Filter>
-    </ClCompile>
     <ClCompile Include="src\Passenger.cpp">
       <Filter>source</Filter>
     </ClCompile>
@@ -134,9 +131,6 @@
     </ClInclude>
     <ClInclude Include="include\Passenger.h">
       <Filter>headers</Filter>
-    </ClInclude>
-    <ClInclude Include="include\State_Gameplay.h">
-      <Filter>game states</Filter>
     </ClInclude>
     <ClInclude Include="include\Sprite.h">
       <Filter>headers</Filter>

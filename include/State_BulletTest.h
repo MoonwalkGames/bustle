@@ -21,7 +21,7 @@ private:
 	glm::vec3 ballTransform;
 	GameObject ground;
 	GameObject ball;
-	
+	GameObject cube;
 
 	btTransform groundTransform;
 };

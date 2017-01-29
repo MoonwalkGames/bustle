@@ -14,12 +14,15 @@ void State_BulletTest::load()
 	///-----includes_end-----
 	ground = GameObject(glm::vec3(0.0, 0.0f, 0.0f), glm::vec3(0), glm::vec3(20.0f), MESH_UNITCUBE, TEX_BACKGROUNDSIDEWALK);
 	ball = GameObject(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0), glm::vec3(0.5f), MESH_UNITSPHERE, TEX_BACKGROUNDSIDEWALK);
+	cube = GameObject(glm::vec3(0), glm::vec3(0), glm::vec3(1.0), MESH_UNITCUBE, TEX_BACKGROUNDSIDEWALK);
 	World::gameWorld()->physicsWorld->setGravity(btVector3(0, -9.81, 0));
 	mRigidBody ground = mRigidBody("ground", World::shapeTypes::cube, glm::vec3(10.0f), glm::vec3(0), 0, 1.0, 1.0);
-	mRigidBody ball = mRigidBody("ball", World::shapeTypes::sphere, glm::vec3(0.5f), glm::vec3(0.0f, 15.0f, 0.0f), 5.0f, 1.0f, 1.0f);
+	mRigidBody ball = mRigidBody("ball", World::shapeTypes::sphere, glm::vec3(0.5f), glm::vec3(0.0f, 15.0f, 0.0f), 5.0f, 0.5f, 0.5);
+	mRigidBody cube = mRigidBody("cube", World::shapeTypes::cube, glm::vec3(1.0f), glm::vec3(3.0, 13.0, 3.0), 10.0f, 1.0f, 0.2f);
 //	ball.setPosition(glm::vec3(0.0f, 100.0f, 0.0f));
 	World::gameWorld()->addRigidBody(ground, ground.getName());
 	World::gameWorld()->addRigidBody(ball, ball.getName());
+	World::gameWorld()->addRigidBody(cube, cube.getName());
 
 	
 	World::gameWorld()->debugDrawer.setDebugMode(btIDebugDraw::DBG_DrawWireframe);
@@ -36,19 +39,20 @@ void State_BulletTest::update()
 
 	if (DH::getKey('w'))
 	{
-		//World::gameWorld()->rigidBodies[1]->applyCentralForce(btVector3(0.0, 0.0, 100.0));
+		//World::gameWorld()->physicsWorld->->applyCentralForce(btVector3(0.0, 0.0, 100.0));
+		World::gameWorld()->getRigidBody("ball")->setVelocity(glm::vec3(0.0, 0.0, 10.0));
 	}
 	if (DH::getKey('s'))
 	{
-		//World::gameWorld()->rigidBodies[1]->applyCentralForce(btVector3(0.0, 0.0, -100.0));
+		World::gameWorld()->getRigidBody("ball")->setVelocity(glm::vec3(0.0, 0.0, -10.0));
 	}
 	if (DH::getKey('a'))
 	{
-		//World::gameWorld()->rigidBodies[1]->applyCentralForce(btVector3(-100.0, 0.0, 0.0));
+		World::gameWorld()->getRigidBody("ball")->setVelocity(glm::vec3(-10.0, 0.0, 0.0));
 	}
 	if (DH::getKey('d'))
 	{
-		//World::gameWorld()->rigidBodies[1]->applyCentralForce(btVector3(100.0, 0.0, 0.0));
+		World::gameWorld()->getRigidBody("ball")->setVelocity(glm::vec3(10.0, 0.0, 0.0));
 	}
 	if (DH::getKey('j'))
 		//World::gameWorld()->rigidBodies[1]->applyCentralImpulse(btVector3(0.0, 10.0, 0.0));
@@ -62,19 +66,25 @@ void State_BulletTest::update()
 
 	auto transform = World::gameWorld()->physicsWorld->getCollisionObjectArray()[1]->getWorldTransform().getOrigin();
 	auto rotation = World::gameWorld()->physicsWorld->getCollisionObjectArray()[1]->getWorldTransform().getRotation(); //btcollisionobject
+	auto cubeTransform = World::gameWorld()->physicsWorld->getCollisionObjectArray()[2]->getWorldTransform().getOrigin();
+	auto cubeRotation = World::gameWorld()->physicsWorld->getCollisionObjectArray()[2]->getWorldTransform().getRotation();
 	//auto transform = World::gameWorld()->physicsWorld->getCollisionObjectArray()[World::gameWorld()->;
 	//auto transform = World::gameWorld()->getMap().find()
 	ball.setPosition(glm::vec3(transform.x(), transform.y(), transform.z()));
 	ball.setRotation(glm::vec3(rotation.x(), rotation.y(), rotation.z()));
-
+	cube.setPosition(glm::vec3(cubeTransform.x(), cubeTransform.y(), cubeTransform.z()));
+	cube.setRotation(glm::vec3(cubeRotation.x(), cubeRotation.y(), cubeRotation.z()));
 	printf("ball: %f, %f, %f\n", transform.x(), transform.y(), transform.z());
 	World::gameWorld()->physicsWorld->stepSimulation(DH::getDeltaTime() , 10);
 	ball.update(DH::getDeltaTime());
 	ground.update(DH::getDeltaTime());
+	cube.update(DH::getDeltaTime());
 	AM::assets()->bindTexture(TEX_ENDGRAPH);
 	ground.draw();
 	AM::assets()->bindTexture(TEX_LEVELPLAY);
 	ball.draw();
+	AM::assets()->bindTexture(TEX_BACKGROUNDSIDEWALK);
+	cube.draw();
 	//World::gameWorld()->drawWireframe();
 	//dynamicsWorld->getCollisionObjectArray()[1]->
 }
