@@ -332,3 +332,8 @@ void mRigidBody::setVelocity(glm::vec3 velocity)
 {
 	rigidBody->setLinearVelocity(btVector3(velocity.x, velocity.y, velocity.z));
 }
+
+void setAcceleration(glm::vec3 acceleration)
+{
+
+}
